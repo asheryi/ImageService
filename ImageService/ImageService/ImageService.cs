@@ -44,19 +44,60 @@ namespace ImageService
     public partial class ImageService : ServiceBase
     {
 
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
+
         private ImageServer m_imageServer;          // The Image Server
 		private IImageServiceModal modal;
 		private IImageController controller;
 		private ILoggingService logging;
+        private EventLog eventLogger;
+        private IContainer components;
 
-		// Here You will Use the App Config!
-        protected override void OnStart(string[] args)
+
+        public ImageService()
         {
 
         }
 
+
+		// Here You will Use the App Config!
+        protected override void OnStart(string[] args)
+        {
+            eventLogger.WriteEntry("start pending");
+
+
+            // Update the service state to Start Pending.  
+            ServiceStatus serviceStatus = new ServiceStatus();
+            serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
+            serviceStatus.dwWaitHint = 100000;
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+
+            // TODO fill
+
+
+            // Update the service state to Running.  
+            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            eventLogger.WriteEntry("it's on");
+        }
+
         protected override void OnStop()
         {
+            eventLogger.WriteEntry("in onStop");
+        }
+
+        private void InitializeComponent()
+        {
+            this.eventLogger = new System.Diagnostics.EventLog();
+            ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
+            // 
+            // ImageService
+            // 
+            this.ServiceName = "ImageService";
+            ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
 
         }
     }
