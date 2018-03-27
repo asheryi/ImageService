@@ -57,7 +57,7 @@ namespace ImageService
 
         public ImageService()
         {
-
+            
         }
 
 
