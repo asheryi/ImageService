@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,7 +49,7 @@ namespace ImageService.Modal
                 MoveFile(path, dstPath);
 
                 Image image = Image.FromFile(path);
-                Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
+                Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
 
                 dstPath = m_OutputFolder + "/" + m_thumsNailOutputFolder + "/" + year + "/" + month;
                 CreateFolder(dstPath);
@@ -60,13 +59,13 @@ namespace ImageService.Modal
 
 
                 result = true;
+
+                return dstPath;
             } catch(IOException e)
             {
                 result = false;
+                return "IO EXCEPTION";
             }
-
-
-
 
 
         }

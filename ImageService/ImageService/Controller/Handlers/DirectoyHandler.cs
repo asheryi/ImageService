@@ -24,6 +24,25 @@ namespace ImageService.Controller.Handlers
 
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
 
+        public DirectoyHandler(IImageController controller, ILoggingService logging, string path)
+        {
+            m_controller = controller;
+            m_logging = logging;
+            m_path = path;
+            m_dirWatchers = new List<FileSystemWatcher>();
+
+            string[] filters = new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
+            foreach (string filter in filters)
+            {
+                FileSystemWatcher f = new FileSystemWatcher(m_path);
+                f.Filter = filter;
+                f.Created += new FileSystemEventHandler(OnCreated);
+                m_dirWatchers.Add(f);
+
+            }
+
+        }
+
         public void StartHandleDirectory(string dirPath)
         {
 
@@ -55,24 +74,7 @@ namespace ImageService.Controller.Handlers
             }
         }
 
-        public DirectoyHandler(IImageController controller,ILoggingService logging,string path)
-        {
-            m_controller = controller;
-            m_logging = logging;
-            m_path = path;
-
-            string[]  filters= new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
-            foreach (string filter in filters)
-            {
-                FileSystemWatcher f = new FileSystemWatcher(m_path);
-                f.Filter = filter;
-                f.Created += new FileSystemEventHandler(OnCreated);
-                m_dirWatchers.Add(f);
-
-            }
-
-
-        }
+        
 
         
         private void OnCreated(object source, FileSystemEventArgs e)
@@ -84,7 +86,7 @@ namespace ImageService.Controller.Handlers
 
             commandTask.Start();
             string message = commandTask.Result;
-            if (1)//!succeed) ////////////////////////////////////////
+            if (true)//!succeed) ////////////////////////////////////////
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
             }

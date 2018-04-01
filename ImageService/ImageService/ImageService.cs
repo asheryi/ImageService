@@ -12,6 +12,7 @@ using ImageService.Server;
 using ImageService.Controller;
 using ImageService.Modal;
 using ImageService.Logging;
+using System.Threading;
 using ImageService.Logging.Modal;
 using System.Configuration;
 using ImageService.Infrastructure;
@@ -48,8 +49,6 @@ namespace ImageService
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 
         private ImageServer m_imageServer;          // The Image Server
-		private IImageServiceModal modal;
-		private IImageController controller;
 		private ILoggingService logging;
         private EventLog eventLogger;
         private IContainer components;
@@ -64,29 +63,42 @@ namespace ImageService
 		// Here You will Use the App Config!
         protected override void OnStart(string[] args)
         {
-            eventLogger.WriteEntry("start pending");
+            try
+            {
+                eventLogger.WriteEntry("start pending");
+
+                Thread.Sleep(60000);
 
 
-            // Update the service state to Start Pending.  
-            ServiceStatus serviceStatus = new ServiceStatus();
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            serviceStatus.dwWaitHint = 100000;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                // Update the service state to Start Pending.  
+                ServiceStatus serviceStatus = new ServiceStatus();
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
+                serviceStatus.dwWaitHint = 100000;
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
 
-            // TODO fill
+                // TODO fill
+                //m_imageServer = new ImageServer(new string[] { "C:\\Users\\1\\Desktop\\watch" });
+                Thread _thread = new Thread(DoWork);
 
+                // Update the service state to Running.  
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            // Update the service state to Running.  
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+                eventLogger.WriteEntry("it's on");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception.
+                eventLogger.WriteEntry(ex.Message, EventLogEntryType.Error);
+            }
 
-            eventLogger.WriteEntry("it's on");
         }
 
         protected override void OnStop()
         {
             eventLogger.WriteEntry("in onStop");
+            m_imageServer.terminate();
         }
 
         private void InitializeComponent()
@@ -100,5 +112,12 @@ namespace ImageService
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
 
         }
+
+        private void DoWork()
+        {
+           
+        }
     }
+
+
 }

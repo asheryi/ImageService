@@ -30,6 +30,9 @@ namespace ImageService.Server
                 CommandRecieved += handler.OnCommandRecieved;
                 handler.DirectoryClose += Handler_DirectoryClose; 
             }
+
+            m_controller = new ImageController(new ImageServiceModal("C:\\Users\\1\\Desktop\\manage",120));
+            m_logging = new LoggingService();
         }
 
         private void Handler_DirectoryClose(object sender, DirectoryCloseEventArgs e)
@@ -38,11 +41,9 @@ namespace ImageService.Server
             m_logging.Log(e.Message,Logging.Modal.MessageTypeEnum.INFO);
         }
 
-        private void terminate()
+        public void terminate()
         {
             CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
-
-            int x = CommandEnum[0];
         }
     }
 }
