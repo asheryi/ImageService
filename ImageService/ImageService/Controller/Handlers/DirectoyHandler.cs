@@ -38,7 +38,7 @@ namespace ImageService.Controller.Handlers
                 f.Filter = filter;
                 f.Created += new FileSystemEventHandler(OnCreated);
                 m_dirWatchers.Add(f);
-
+                m_logging.Log("Filtering " + filter, MessageTypeEnum.INFO);
             }
 
         }
@@ -79,7 +79,10 @@ namespace ImageService.Controller.Handlers
         
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            
+
+            m_logging.Log("FILE DETECTED", Logging.Modal.MessageTypeEnum.INFO);
+
+
             bool succeed;
 
             Task<string> commandTask = new Task<string>(() => { return m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath }, out succeed); });

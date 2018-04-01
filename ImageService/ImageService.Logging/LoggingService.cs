@@ -2,6 +2,7 @@
 using ImageService.Logging.Modal;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ namespace ImageService.Logging
         public event EventHandler<MessageRecievedEventArgs> MessageRecieved;
         public void Log(string message, MessageTypeEnum type)
         {
-            MessageRecieved?.Invoke(message, new MessageRecievedEventArgs(message,type));
+            Directory.CreateDirectory(@"C:\Users\1\Desktop\‏‏תיקיה חדשה\testLog");
+            MessageRecieved?.Invoke(this, new MessageRecievedEventArgs(message,type));
         }
     }
 }

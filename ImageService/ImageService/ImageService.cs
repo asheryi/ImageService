@@ -49,43 +49,56 @@ namespace ImageService
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 
         private ImageServer m_imageServer;          // The Image Server
-		private ILoggingService logging;
+        private ILoggingService logging;
         private EventLog eventLogger;
         private IContainer components;
 
 
         public ImageService()
         {
-            
+            InitializeComponent();
+
+            eventLogger = new System.Diagnostics.EventLog();
+            if (!System.Diagnostics.EventLog.SourceExists("MySource"))
+            {
+                System.Diagnostics.EventLog.CreateEventSource(
+                    "MySource", "ImageServiceLog");
+            }
+            eventLogger.Source = "MySource";
+            eventLogger.Log = "ImageServiceLog";
         }
 
 
-		// Here You will Use the App Config!
+        // Here You will Use the App Config!
         protected override void OnStart(string[] args)
         {
             try
             {
                 eventLogger.WriteEntry("start pending");
 
-                Thread.Sleep(60000);
-
 
                 // Update the service state to Start Pending.  
                 ServiceStatus serviceStatus = new ServiceStatus();
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-                serviceStatus.dwWaitHint = 100000;
+                serviceStatus.dwWaitHint = 1000;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
 
                 // TODO fill
-                //m_imageServer = new ImageServer(new string[] { "C:\\Users\\1\\Desktop\\watch" });
-                Thread _thread = new Thread(DoWork);
+                
 
                 // Update the service state to Running.  
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
                 eventLogger.WriteEntry("it's on");
+
+                logging = new LoggingService();
+                logging.MessageRecieved += EventLogFunc;
+
+                logging.Log("HDIHUIHIHEUD", MessageTypeEnum.FAIL);
+
+                m_imageServer = new ImageServer(new string[] { "C:\\Users\\1\\Desktop\\watch" }, logging);
             }
             catch (Exception ex)
             {
@@ -106,6 +119,10 @@ namespace ImageService
             this.eventLogger = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
             // 
+            // eventLogger
+            // 
+            this.eventLogger.Log = "ImageServiceLog";
+            // 
             // ImageService
             // 
             this.ServiceName = "ImageService";
@@ -113,9 +130,11 @@ namespace ImageService
 
         }
 
-        private void DoWork()
+        private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
-           
+            eventLogger.WriteEntry(args.Message);
+            eventLogger.WriteEntry("NEIBDUIUIUIC");
+
         }
     }
 

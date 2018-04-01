@@ -22,8 +22,8 @@ namespace ImageService.Server
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
         #endregion
 
-        public ImageServer(string[] paths)
-        {
+        public ImageServer(string[] paths,ILoggingService logger)
+        {   
             foreach (string path in paths)
             {
                 IDirectoryHandler handler = new DirectoyHandler(m_controller, m_logging, path);
@@ -32,7 +32,10 @@ namespace ImageService.Server
             }
 
             m_controller = new ImageController(new ImageServiceModal("C:\\Users\\1\\Desktop\\manage",120));
-            m_logging = new LoggingService();
+            m_logging = logger;
+
+            m_logging.Log("Created Server", Logging.Modal.MessageTypeEnum.INFO);
+
         }
 
         private void Handler_DirectoryClose(object sender, DirectoryCloseEventArgs e)
@@ -44,6 +47,7 @@ namespace ImageService.Server
         public void terminate()
         {
             CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
+            m_logging.Log("Server Down", Logging.Modal.MessageTypeEnum.WARNING);
         }
     }
 }
