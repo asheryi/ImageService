@@ -28,15 +28,47 @@ namespace ImageService.Modal
         }
 
 
+        static bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open,
+                         FileAccess.ReadWrite, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
+        }
 
         public string AddFile(string path, out bool result)
         {
             try
             {
-                if (!File.Exists(path))
+                //if (!File.Exists(path))
+                //{
+                //    result = false;
+                //    return "File Not Exists!";
+                //}
+
+                FileInfo fileInfo = new FileInfo(path);
+                while (IsFileLocked(fileInfo))
                 {
-                    result = false;
-                    return "File Not Exists!";
+                    Thread.Sleep(500);
                 }
 
                 DateTime creationTime = File.GetLastWriteTime(path);
@@ -44,17 +76,20 @@ namespace ImageService.Modal
             
                 int year = creationTime.Year;
                 int month = creationTime.Month;
-                string dstPath = m_OutputFolder + "/" + year + "/" + month;            
+                string dstPath = m_OutputFolder + @"\" + year + @"\" + month;            
                    CreateFolder(dstPath);
                 MoveFile(path, dstPath);
+                //result = false;
+                //return dstPath;
 
-                Image image = Image.FromFile(path);
+               // string fileNmae=fileInfo.Name.Replace('')
+                Image image = Image.FromFile(dstPath+@"\"+fileInfo.Name);
                 Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
-
-                dstPath = m_OutputFolder + "/" + m_thumsNailOutputFolder + "/" + year + "/" + month;
+                
+                dstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + year + @"\" + month; 
                 CreateFolder(dstPath);
 
-                thumb.Save(Path.ChangeExtension(dstPath, "jpg"));
+                thumb.Save(Path.ChangeExtension(dstPath+ @"\" + fileInfo.Name, fileInfo.Extension));
 
 
 
@@ -64,7 +99,7 @@ namespace ImageService.Modal
             } catch(IOException e)
             {
                 result = false;
-                return "IO EXCEPTION";
+                return e.ToString();
             }
 
 

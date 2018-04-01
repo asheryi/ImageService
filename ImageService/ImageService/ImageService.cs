@@ -98,7 +98,9 @@ namespace ImageService
 
                 logging.Log("HDIHUIHIHEUD", MessageTypeEnum.FAIL);
                 eventLogger.WriteEntry("BEFORE CREATE SERVER");
-                m_imageServer = new ImageServer(new string[] { @"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1\2" }, logging);
+                string manage_path = @"C:\Users\1\Desktop\manage";
+
+                m_imageServer = new ImageServer(new string[] { @"C:\Users\1\Desktop\watch", @"C:\Users\1\Desktop\watch2" }, logging,new ImageServiceModal(manage_path,120));
                 eventLogger.WriteEntry("AFTER CREATE SERVER");
 
             }
@@ -120,6 +122,10 @@ namespace ImageService
         {
             this.eventLogger = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
+
+
+            this.ServiceName = "ImageService";
+
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
 
         }
@@ -127,8 +133,6 @@ namespace ImageService
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
             eventLogger.WriteEntry(args.Message);
-            eventLogger.WriteEntry("NEIBDUIUIUIC");
-
         }
     }
 

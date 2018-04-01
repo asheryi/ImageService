@@ -23,21 +23,29 @@ namespace ImageService.Server
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
         #endregion
 
-        public ImageServer(string[] paths,ILoggingService logger)
+        public ImageServer(string[] paths,ILoggingService logger,IImageServiceModal modal)
         {
+            m_controller = new ImageController(modal);
+
             logger.Log("before create Directory", Logging.Modal.MessageTypeEnum.INFO);
-            Directory.CreateDirectory(@"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1\server BEFORE");
-            foreach (string path in paths)
+
+            List<IDirectoryHandler> handlers = new List<IDirectoryHandler>();
+
+            for(int i=0;i<paths.Length;i++) 
             {
-                IDirectoryHandler handler = new DirectoyHandler(m_controller, m_logging, path);
-                CommandRecieved += handler.OnCommandRecieved;
-                handler.DirectoryClose += Handler_DirectoryClose; 
+                string path = paths[i];
+                logger.Log("creating Directory handler in server", Logging.Modal.MessageTypeEnum.INFO);
+                handlers.Add(new DirectoyHandler(m_controller, logger, path));
+                    
+                CommandRecieved += handlers[i].OnCommandRecieved;
+                handlers[i].DirectoryClose += Handler_DirectoryClose;
+                handlers[i].StartHandleDirectory();
+                
             }
             logger.Log("after create Directory", Logging.Modal.MessageTypeEnum.INFO);
 
 
-            m_controller = new ImageController(new ImageServiceModal(@"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1", 120));
-            Directory.CreateDirectory(@"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1\server");
+            m_controller = new ImageController(new ImageServiceModal(@"C:\Users\1\Desktop\manage", 120));
             m_logging = logger;
 
             m_logging.Log("Created Server", Logging.Modal.MessageTypeEnum.INFO);

@@ -29,9 +29,13 @@ namespace ImageService.Controller.Handlers
             m_controller = controller;
             m_logging = logging;
             m_path = path;
-            m_dirWatchers = new List<FileSystemWatcher>();
-
             string[] filters = new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
+
+
+            m_dirWatchers = new List<FileSystemWatcher>(filters.Length);
+
+            m_logging.Log("Creating Directory handler", MessageTypeEnum.INFO);
+
             foreach (string filter in filters)
             {
                 FileSystemWatcher f = new FileSystemWatcher(m_path);
@@ -43,7 +47,7 @@ namespace ImageService.Controller.Handlers
 
         }
 
-        public void StartHandleDirectory(string dirPath)
+        public void StartHandleDirectory()
         {
 
 
