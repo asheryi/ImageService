@@ -17,6 +17,7 @@ namespace ImageService.Modal
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
+        private const string m_thumsNailOutputFolder = "ThumbsNail";
         #endregion
 
         public ImageServiceModal(string outputFolder,int thumbnailSize)
@@ -24,7 +25,7 @@ namespace ImageService.Modal
             this.m_OutputFolder = outputFolder;
             this.m_thumbnailSize = thumbnailSize;
 
-            CreateFolder(Path.Combine(m_OutputFolder, "ThumbsNail"));
+            CreateFolder(Path.Combine(m_OutputFolder, m_thumsNailOutputFolder));
         }
 
 
@@ -48,7 +49,13 @@ namespace ImageService.Modal
                    CreateFolder(dstPath);
                 MoveFile(path, dstPath);
 
+                Image image = Image.FromFile(path);
+                Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
 
+                dstPath = m_OutputFolder + "/" + m_thumsNailOutputFolder + "/" + year + "/" + month;
+                CreateFolder(dstPath);
+
+                thumb.Save(Path.ChangeExtension(dstPath, "jpg"));
 
 
 

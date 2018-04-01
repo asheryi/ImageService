@@ -35,6 +35,10 @@ namespace ImageService.Controller
                 resultSuccesful = false; //TODO check
                 return "";
             }
+
+            Task t = new Task(() => commands[commandID].Execute(args, out resultSuccesful));
+
+
             return commands[commandID].Execute(args, out resultSuccesful);
         }
     }

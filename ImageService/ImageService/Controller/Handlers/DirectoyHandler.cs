@@ -79,8 +79,12 @@ namespace ImageService.Controller.Handlers
         {
             
             bool succeed;
-            string message = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[]{ e.FullPath }, out succeed);
-            if (!succeed)
+
+            Task<string> commandTask = new Task<string>(() => { return m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath }, out succeed); });
+
+            commandTask.Start();
+            string message = commandTask.Result;
+            if (1)//!succeed) ////////////////////////////////////////
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
             }
