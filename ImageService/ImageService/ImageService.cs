@@ -59,13 +59,13 @@ namespace ImageService
             InitializeComponent();
 
             eventLogger = new System.Diagnostics.EventLog();
-            if (!System.Diagnostics.EventLog.SourceExists("MySource"))
+            if (!System.Diagnostics.EventLog.SourceExists("MyImageServiceSource"))
             {
                 System.Diagnostics.EventLog.CreateEventSource(
-                    "MySource", "ImageServiceLog");
+                    "MyImageServiceSource", "MyImageServiceLog");
             }
-            eventLogger.Source = "MySource";
-            eventLogger.Log = "ImageServiceLog";
+            eventLogger.Source = "MyImageServiceSource";
+            eventLogger.Log = "MyImageServiceLog";
         }
 
 
@@ -74,7 +74,7 @@ namespace ImageService
         {
             try
             {
-                eventLogger.WriteEntry("start pending");
+                eventLogger.WriteEntry("START PENDING");
 
 
                 // Update the service state to Start Pending.  
@@ -91,14 +91,16 @@ namespace ImageService
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-                eventLogger.WriteEntry("it's on");
+                eventLogger.WriteEntry("Now ITS ON!!");
 
                 logging = new LoggingService();
                 logging.MessageRecieved += EventLogFunc;
 
                 logging.Log("HDIHUIHIHEUD", MessageTypeEnum.FAIL);
+                eventLogger.WriteEntry("BEFORE CREATE SERVER");
+                m_imageServer = new ImageServer(new string[] { @"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1\2" }, logging);
+                eventLogger.WriteEntry("AFTER CREATE SERVER");
 
-                m_imageServer = new ImageServer(new string[] { "C:\\Users\\1\\Desktop\\watch" }, logging);
             }
             catch (Exception ex)
             {
@@ -118,14 +120,6 @@ namespace ImageService
         {
             this.eventLogger = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
-            // 
-            // eventLogger
-            // 
-            this.eventLogger.Log = "ImageServiceLog";
-            // 
-            // ImageService
-            // 
-            this.ServiceName = "ImageService";
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
 
         }

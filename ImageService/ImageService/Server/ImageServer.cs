@@ -4,6 +4,7 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Modal;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,15 +24,20 @@ namespace ImageService.Server
         #endregion
 
         public ImageServer(string[] paths,ILoggingService logger)
-        {   
+        {
+            logger.Log("before create Directory", Logging.Modal.MessageTypeEnum.INFO);
+            Directory.CreateDirectory(@"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1\server BEFORE");
             foreach (string path in paths)
             {
                 IDirectoryHandler handler = new DirectoyHandler(m_controller, m_logging, path);
                 CommandRecieved += handler.OnCommandRecieved;
                 handler.DirectoryClose += Handler_DirectoryClose; 
             }
+            logger.Log("after create Directory", Logging.Modal.MessageTypeEnum.INFO);
 
-            m_controller = new ImageController(new ImageServiceModal("C:\\Users\\1\\Desktop\\manage",120));
+
+            m_controller = new ImageController(new ImageServiceModal(@"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1", 120));
+            Directory.CreateDirectory(@"C:\Users\Brain\Documents\Visual Studio 2015\Projects\MyNewService\1\server");
             m_logging = logger;
 
             m_logging.Log("Created Server", Logging.Modal.MessageTypeEnum.INFO);
