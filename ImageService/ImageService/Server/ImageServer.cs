@@ -45,7 +45,7 @@ namespace ImageService.Server
             logger.Log("after create Directory", Logging.Modal.MessageTypeEnum.INFO);
 
 
-            m_controller = new ImageController(new ImageServiceModal(@"C:\Users\1\Desktop\manage", 120));
+            m_controller = new ImageController(modal);
             m_logging = logger;
 
             m_logging.Log("Created Server", Logging.Modal.MessageTypeEnum.INFO);

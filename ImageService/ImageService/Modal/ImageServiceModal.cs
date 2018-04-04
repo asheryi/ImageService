@@ -1,4 +1,4 @@
-﻿using ImageService.Infrastructure;
+﻿using ImageService.Logging;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,14 +16,16 @@ namespace ImageService.Modal
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
+        private ILoggingService m_logger;
         private const string m_thumsNailOutputFolder = "ThumbsNail";
+
         #endregion
 
-        public ImageServiceModal(string outputFolder,int thumbnailSize)
+        public ImageServiceModal(ILoggingService logger,string outputFolder,int thumbnailSize)
         {
             this.m_OutputFolder = outputFolder;
             this.m_thumbnailSize = thumbnailSize;
-
+            this.m_logger = logger;
             CreateFolder(Path.Combine(m_OutputFolder, m_thumsNailOutputFolder));
         }
 
@@ -78,18 +80,25 @@ namespace ImageService.Modal
                 int month = creationTime.Month;
                 string dstPath = m_OutputFolder + @"\" + year + @"\" + month;            
                    CreateFolder(dstPath);
-                MoveFile(path, dstPath);
+
+                string thumbsDstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + year + @"\" + month;
+
+
+                string newName = GenerateFileName(fileInfo, dstPath, thumbsDstPath);
+
+                MoveFile(path, dstPath,newName);
                 //result = false;
                 //return dstPath;
 
-               // string fileNmae=fileInfo.Name.Replace('')
-                Image image = Image.FromFile(dstPath+@"\"+fileInfo.Name);
+                // string fileNmae=fileInfo.Name.Replace('')
+                Image image  = Image.FromStream(new MemoryStream(File.ReadAllBytes(dstPath + @"\" + newName)));
+                //Image image = Image.FromFile(dstPath+@"\"+ newName);
+                
                 Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
                 
-                dstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + year + @"\" + month; 
-                CreateFolder(dstPath);
+                CreateFolder(thumbsDstPath);
 
-                thumb.Save(Path.ChangeExtension(dstPath+ @"\" + fileInfo.Name, fileInfo.Extension));
+                thumb.Save(Path.ChangeExtension(thumbsDstPath + @"\" + newName, fileInfo.Extension));
 
 
 
@@ -104,7 +113,27 @@ namespace ImageService.Modal
 
 
         }
+        private string GenerateFileName(FileInfo fileInfo,string orgSizePath,string thumbnailPath)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
+            string extension = fileInfo.Extension;
+            
 
+            m_logger.Log(orgSizePath + @"\" + fileName, Logging.Modal.MessageTypeEnum.FAIL);
+            m_logger.Log(thumbnailPath + @"\" + fileName, Logging.Modal.MessageTypeEnum.FAIL);
+
+            if (!File.Exists(orgSizePath + @"\" +fileInfo.Name) && !File.Exists(thumbnailPath + @"\" + fileInfo.Name))
+                return fileInfo.Name;
+            m_logger.Log("NEVER HAVE I EVER", Logging.Modal.MessageTypeEnum.FAIL);
+
+
+            int fileIndex_ = 1;
+            while (File.Exists(orgSizePath + @"\" + fileName+ "("+fileIndex_+")" + extension) || File.Exists(thumbnailPath + @"\" + fileName + "(" + fileIndex_ + ")" + extension))
+            {
+                fileIndex_++;
+            }
+            return fileName + "(" + fileIndex_ + ")" + extension;
+        }
         private void CreateFolder(string targetPath)
         {
             if (!Directory.Exists(targetPath))
@@ -113,9 +142,10 @@ namespace ImageService.Modal
             }
         }
 
-        private void MoveFile(string srcPathWithFileName,string dstPath)
+        private void MoveFile(string srcPathWithFileName,string dstPath,string newName)
         {
-            File.Move(srcPathWithFileName, Path.Combine(dstPath, Path.GetFileName(srcPathWithFileName)));
+            File.Move(srcPathWithFileName, Path.Combine(dstPath,newName));
+
         }
 
 

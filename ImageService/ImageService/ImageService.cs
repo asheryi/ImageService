@@ -96,11 +96,10 @@ namespace ImageService
                 logging = new LoggingService();
                 logging.MessageRecieved += EventLogFunc;
 
-                logging.Log("HDIHUIHIHEUD", MessageTypeEnum.FAIL);
                 eventLogger.WriteEntry("BEFORE CREATE SERVER");
-                string manage_path = @"C:\Users\1\Desktop\manage";
+                string manage_path = @"C:\Users\Brain\Desktop\manage";
 
-                m_imageServer = new ImageServer(new string[] { @"C:\Users\1\Desktop\watch", @"C:\Users\1\Desktop\watch2" }, logging,new ImageServiceModal(manage_path,120));
+                m_imageServer = new ImageServer(new string[] { @"C:\Users\Brain\Desktop\watch", @"C:\Users\Brain\Desktop\watch2" }, logging,new ImageServiceModal(logging,manage_path,120));
                 eventLogger.WriteEntry("AFTER CREATE SERVER");
 
             }

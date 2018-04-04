@@ -66,8 +66,10 @@ namespace ImageService.Controller.Handlers
             {
                 return;
             }
+           
+            //In the future we would like to close specipc directory handler
 
-            if(e.CommandID == (int)(CommandEnum.CloseCommand))
+            if (e.CommandID == (int)(CommandEnum.CloseCommand))
             {
                 foreach(FileSystemWatcher watcher in m_dirWatchers)
                 {
