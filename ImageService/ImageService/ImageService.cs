@@ -58,14 +58,17 @@ namespace ImageService
         {
             InitializeComponent();
 
+
             eventLogger = new System.Diagnostics.EventLog();
-            if (!System.Diagnostics.EventLog.SourceExists("MyImageServiceSource"))
+            string sourceName = ConfigurationManager.AppSettings["SourceName"];
+            string logName = ConfigurationManager.AppSettings["LogName"];
+            if (!System.Diagnostics.EventLog.SourceExists(sourceName))
             {
                 System.Diagnostics.EventLog.CreateEventSource(
-                    "MyImageServiceSource", "MyImageServiceLog");
+                   sourceName, logName);
             }
-            eventLogger.Source = "MyImageServiceSource";
-            eventLogger.Log = "MyImageServiceLog";
+            eventLogger.Source = sourceName;
+            eventLogger.Log = logName;
         }
 
 
@@ -96,10 +99,12 @@ namespace ImageService
                 logging = new LoggingService();
                 logging.MessageRecieved += EventLogFunc;
 
-                eventLogger.WriteEntry("BEFORE CREATE SERVER");
-                string manage_path = @"C:\Users\1\Desktop\manage";
 
-                m_imageServer = new ImageServer(new string[] { @"C:\Users\1\Desktop\watch", @"C:\Users\1\Desktop\watch2" }, logging,new ImageServiceModal(logging,manage_path,120));
+
+                eventLogger.WriteEntry("BEFORE CREATE SERVER");
+                string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
+
+                m_imageServer = new ImageServer(@ConfigurationManager.AppSettings["Handler"].Split(';'), logging,new ImageServiceModal(logging,manage_path,Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"])));
                 eventLogger.WriteEntry("AFTER CREATE SERVER");
 
             }
