@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,7 @@ namespace ImageService.Modal
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
         private ILoggingService m_logger;
         private const string m_thumsNailOutputFolder = "ThumbsNail";
+        private const string m_undefinedTakenDate = "Undefined-dates images";
 
         #endregion
 
@@ -27,6 +29,7 @@ namespace ImageService.Modal
             this.m_thumbnailSize = thumbnailSize;
             this.m_logger = logger;
             CreateFolder(Path.Combine(m_OutputFolder, m_thumsNailOutputFolder));
+            CreateFolder(Path.Combine(m_OutputFolder, m_undefinedTakenDate));
         }
 
 
@@ -73,15 +76,24 @@ namespace ImageService.Modal
                     Thread.Sleep(500);
                 }
 
-                DateTime creationTime = File.GetLastWriteTime(path);
+                string dstPath, thumbsDstPath;
 
-            
-                int year = creationTime.Year;
-                int month = creationTime.Month;
-                string dstPath = m_OutputFolder + @"\" + year + @"\" + month;            
-                   CreateFolder(dstPath);
+                try
+                {
+                    DateTime creationTime = GetDateTakenFromImage(path);
 
-                string thumbsDstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + year + @"\" + month;
+
+                    int year = creationTime.Year;
+                    int month = creationTime.Month;
+                    dstPath = m_OutputFolder + @"\" + year + @"\" + month;
+                    CreateFolder(dstPath);
+
+                    thumbsDstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + year + @"\" + month;
+                } catch(ArgumentException e)
+                {
+                    dstPath = m_OutputFolder + @"\" + m_undefinedTakenDate;
+                    thumbsDstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + m_undefinedTakenDate;
+                }
 
 
                 string newName = GenerateFileName(fileInfo, dstPath, thumbsDstPath);
@@ -124,8 +136,6 @@ namespace ImageService.Modal
 
             if (!File.Exists(orgSizePath + @"\" +fileInfo.Name) && !File.Exists(thumbnailPath + @"\" + fileInfo.Name))
                 return fileInfo.Name;
-            m_logger.Log("NEVER HAVE I EVER", Logging.Modal.MessageTypeEnum.FAIL);
-
 
             int fileIndex_ = 1;
             while (File.Exists(orgSizePath + @"\" + fileName+ "("+fileIndex_+")" + extension) || File.Exists(thumbnailPath + @"\" + fileName + "(" + fileIndex_ + ")" + extension))
@@ -148,7 +158,21 @@ namespace ImageService.Modal
 
         }
 
+        //we init this once so that if the function is repeatedly called
+        //it isn't stressing the garbage man
+        private static Regex r = new Regex(":");
 
+        //retrieves the datetime WITHOUT loading the whole image
+        private DateTime GetDateTakenFromImage(string path)
+        {
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (Image myImage = Image.FromStream(fs, false, false))
+            {
+                PropertyItem propItem = myImage.GetPropertyItem(36867);
+                string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
+                return DateTime.Parse(dateTaken);
+            }
+        }
 
     }
 }

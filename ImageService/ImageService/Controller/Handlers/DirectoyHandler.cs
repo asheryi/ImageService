@@ -16,10 +16,12 @@ namespace ImageService.Controller.Handlers
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
+        private delegate void ServerCommand(CommandRecievedEventArgs e);
         private IImageController m_controller;              // The Image Processing Controller
         private ILoggingService m_logging;
         private List<FileSystemWatcher> m_dirWatchers;             // The Watchers of the Dir based on each extension watched
         private string m_path; // The Path of directory
+        private Dictionary<int, ServerCommand> m_serverCommands;
         #endregion
 
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
@@ -31,6 +33,8 @@ namespace ImageService.Controller.Handlers
             m_path = path;
             string[] filters = new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
 
+            m_serverCommands = new Dictionary<int, ServerCommand>();
+            m_serverCommands.Add((int)(CommandEnum.CloseCommand), closeCommand);
 
             m_dirWatchers = new List<FileSystemWatcher>(filters.Length);
 
@@ -45,6 +49,17 @@ namespace ImageService.Controller.Handlers
                 m_logging.Log("Filtering " + filter, MessageTypeEnum.INFO);
             }
 
+        }
+
+        private void closeCommand(CommandRecievedEventArgs e)
+        {
+            foreach (FileSystemWatcher watcher in m_dirWatchers)
+            {
+                watcher.EnableRaisingEvents = false;
+            }
+
+
+            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(e.RequestDirPath, m_path + " is closed for buisness ."));
         }
 
         public void StartHandleDirectory()
@@ -66,18 +81,10 @@ namespace ImageService.Controller.Handlers
             {
                 return;
             }
-           
+
             //In the future we would like to close specipc directory handler
 
-            if (e.CommandID == (int)(CommandEnum.CloseCommand))
-            {
-                foreach(FileSystemWatcher watcher in m_dirWatchers)
-                {
-                    watcher.EnableRaisingEvents = false;
-                    DirectoryClose?.Invoke(this,new DirectoryCloseEventArgs(e.RequestDirPath,"Directory closed"));
-                }
-
-            }
+            m_serverCommands[(int)(e.CommandID)]?.Invoke(e);
         }
 
         
@@ -95,7 +102,7 @@ namespace ImageService.Controller.Handlers
 
             commandTask.Start();
             string message = commandTask.Result;
-            if (true)//!succeed) ////////////////////////////////////////
+            if (true) ////////////////////////////////////////
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
             }

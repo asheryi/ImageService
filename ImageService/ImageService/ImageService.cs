@@ -97,9 +97,9 @@ namespace ImageService
                 logging.MessageRecieved += EventLogFunc;
 
                 eventLogger.WriteEntry("BEFORE CREATE SERVER");
-                string manage_path = @"C:\Users\Brain\Desktop\manage";
+                string manage_path = @"C:\Users\1\Desktop\manage";
 
-                m_imageServer = new ImageServer(new string[] { @"C:\Users\Brain\Desktop\watch", @"C:\Users\Brain\Desktop\watch2" }, logging,new ImageServiceModal(logging,manage_path,120));
+                m_imageServer = new ImageServer(new string[] { @"C:\Users\1\Desktop\watch", @"C:\Users\1\Desktop\watch2" }, logging,new ImageServiceModal(logging,manage_path,120));
                 eventLogger.WriteEntry("AFTER CREATE SERVER");
 
             }
