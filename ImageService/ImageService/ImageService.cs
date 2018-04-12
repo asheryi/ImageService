@@ -48,16 +48,15 @@ namespace ImageService
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 
-        private ImageServer m_imageServer;          // The Image Server
-        private ILoggingService logging;
-        private EventLog eventLogger;
+        private ImageServer m_imageServer;//The Image Server
+        private ILoggingService logger;//the logger of the system.
+        private EventLog eventLogger;//write to logger event.
         private IContainer components;
 
-
+    
         public ImageService()
         {
             InitializeComponent();
-
 
             eventLogger = new System.Diagnostics.EventLog();
             string sourceName = ConfigurationManager.AppSettings["SourceName"];
@@ -72,40 +71,37 @@ namespace ImageService
         }
 
 
-        // Here You will Use the App Config!
+       
+        /// <summary>
+        /// OnStart starting the Service.
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
             try
             {
-                eventLogger.WriteEntry("START PENDING");
-
 
                 // Update the service state to Start Pending.  
                 ServiceStatus serviceStatus = new ServiceStatus();
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
                 serviceStatus.dwWaitHint = 1000;
-                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-
-
-                // TODO fill
-                
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);                
 
                 // Update the service state to Running.  
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-                eventLogger.WriteEntry("Now ITS ON!!");
+                eventLogger.WriteEntry("Service is ON");
 
-                logging = new LoggingService();
-                logging.MessageRecieved += EventLogFunc;
+                logger = new LoggingService();
+                //this function is subscribes to the event of logger.
+                logger.MessageRecieved += EventLogFunc;
 
 
 
-                eventLogger.WriteEntry("BEFORE CREATE SERVER");
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
 
-                m_imageServer = new ImageServer(@ConfigurationManager.AppSettings["Handler"].Split(';'), logging,new ImageServiceModal(logging,manage_path,Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"])));
-                eventLogger.WriteEntry("AFTER CREATE SERVER");
+                m_imageServer = new ImageServer(@ConfigurationManager.AppSettings["Handler"].Split(';'), logger,new ImageServiceModal(logger,manage_path,Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"])));
 
             }
             catch (Exception ex)
@@ -115,25 +111,30 @@ namespace ImageService
             }
 
         }
-
+        /// <summary>
+        ///  OnStop Stopping the Service.
+        /// </summary>
         protected override void OnStop()
         {
-            eventLogger.WriteEntry("in onStop");
+            eventLogger.WriteEntry("Stopping Service");
             m_imageServer.terminate();
         }
-
+        /// <summary>
+        /// InitializeComponent.
+        /// </summary>
         private void InitializeComponent()
         {
             this.eventLogger = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
-
-
             this.ServiceName = "ImageService";
-
             ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
 
         }
-
+        /// <summary>
+        /// EventLogFunc writes the events to the log.
+        /// </summary>
+        /// <param name="sender"></param>object that call the function.
+        /// <param name="args"></param>MessageRecievedEventArgs.
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
             eventLogger.WriteEntry(args.Message);

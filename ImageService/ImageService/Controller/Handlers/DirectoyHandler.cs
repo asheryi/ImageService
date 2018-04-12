@@ -16,12 +16,12 @@ namespace ImageService.Controller.Handlers
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
-        private delegate void Command(CommandRecievedEventArgs e);
+        private delegate void CommandFunction(CommandRecievedEventArgs e);
         private IImageController m_controller; // The Image Processing Controller
         private ILoggingService m_logging;    //the logger of the system. 
         private List<FileSystemWatcher> m_dirWatchers;   // The Watchers of the Dir based on each extension watched
         private string m_path; // The Path of directory
-        private Dictionary<int, Command> m_Commands;//Dictionary of commands.
+        private Dictionary<int, CommandFunction> m_Commands;//Dictionary of commands.
         #endregion
         ///
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
@@ -38,7 +38,7 @@ namespace ImageService.Controller.Handlers
             m_path = path;
             string[] filters = new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
 
-            m_Commands = new Dictionary<int, Command>();
+            m_Commands = new Dictionary<int, CommandFunction>();
             m_Commands.Add((int)(CommandEnum.CloseCommand), closeCommand);
 
             m_dirWatchers = new List<FileSystemWatcher>(filters.Length);
@@ -57,7 +57,7 @@ namespace ImageService.Controller.Handlers
 
         }
         /// <summary>
-        /// closeCommand close DirectoyHandler
+        /// closeCommand close DirectoyHandler.
         /// </summary>
         /// <param name="e"></param> CommandRecievedEventArgs
         private void closeCommand(CommandRecievedEventArgs e)
@@ -72,7 +72,7 @@ namespace ImageService.Controller.Handlers
             DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(e.RequestDirPath, m_path + " is closed for buisness ."));
         }
         /// <summary>
-        /// StartHandleDirectory
+        /// StartHandleDirectory start watching.
         /// </summary>
         public void StartHandleDirectory()
         {
@@ -83,7 +83,7 @@ namespace ImageService.Controller.Handlers
             }
         }
         /// <summary>
-        /// OnCommandRecieved
+        /// OnCommandRecieved passing the command sent to DirectoryHandler.
         /// </summary>
         /// <param name="sender"></param> the object who call the function.
         /// <param name="e"></param> CommandRecievedEventArgs.
