@@ -16,16 +16,21 @@ namespace ImageService.Controller.Handlers
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
-        private delegate void ServerCommand(CommandRecievedEventArgs e);
-        private IImageController m_controller;              // The Image Processing Controller
-        private ILoggingService m_logging;
-        private List<FileSystemWatcher> m_dirWatchers;             // The Watchers of the Dir based on each extension watched
+        private delegate void Command(CommandRecievedEventArgs e);
+        private IImageController m_controller; // The Image Processing Controller
+        private ILoggingService m_logging;    //the logger of the system. 
+        private List<FileSystemWatcher> m_dirWatchers;   // The Watchers of the Dir based on each extension watched
         private string m_path; // The Path of directory
-        private Dictionary<int, ServerCommand> m_serverCommands;
+        private Dictionary<int, Command> m_Commands;//Dictionary of commands.
         #endregion
-
+        ///
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
-
+        /// <summary>
+        /// DirectoyHandler constructor.
+        /// </summary>
+        /// <param name="controller"></param> the Controller Of The System.
+        /// <param name="logging"></param> the Logger Of The System.
+        /// <param name="path"></param> the path that the DirectoyHandler responsible for.
         public DirectoyHandler(IImageController controller, ILoggingService logging, string path)
         {
             m_controller = controller;
@@ -33,8 +38,8 @@ namespace ImageService.Controller.Handlers
             m_path = path;
             string[] filters = new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
 
-            m_serverCommands = new Dictionary<int, ServerCommand>();
-            m_serverCommands.Add((int)(CommandEnum.CloseCommand), closeCommand);
+            m_Commands = new Dictionary<int, Command>();
+            m_Commands.Add((int)(CommandEnum.CloseCommand), closeCommand);
 
             m_dirWatchers = new List<FileSystemWatcher>(filters.Length);
 
@@ -44,39 +49,47 @@ namespace ImageService.Controller.Handlers
             {
                 FileSystemWatcher f = new FileSystemWatcher(m_path);
                 f.Filter = filter;
+                //subscribe to the event of new file added to the watching folder.
                 f.Created += new FileSystemEventHandler(OnCreated);
                 m_dirWatchers.Add(f);
                 m_logging.Log("Filtering " + filter, MessageTypeEnum.INFO);
             }
 
         }
-
+        /// <summary>
+        /// closeCommand close DirectoyHandler
+        /// </summary>
+        /// <param name="e"></param> CommandRecievedEventArgs
         private void closeCommand(CommandRecievedEventArgs e)
         {
+            //closing all the watchers before close the DirectoyHandler.
             foreach (FileSystemWatcher watcher in m_dirWatchers)
             {
                 watcher.EnableRaisingEvents = false;
             }
 
-
+                
             DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(e.RequestDirPath, m_path + " is closed for buisness ."));
         }
-
+        /// <summary>
+        /// StartHandleDirectory
+        /// </summary>
         public void StartHandleDirectory()
         {
-
-
-
             // Begin watching.
             foreach (FileSystemWatcher watcher in m_dirWatchers)
             {
                 watcher.EnableRaisingEvents = true;
             }
-
         }
-
+        /// <summary>
+        /// OnCommandRecieved
+        /// </summary>
+        /// <param name="sender"></param> the object who call the function.
+        /// <param name="e"></param> CommandRecievedEventArgs.
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
+            //if the command is not specific for this DirectoyHandler or is not fload command ignore.
             if (e.RequestDirPath!="*" && e.RequestDirPath != this.m_path)
             {
                 return;
@@ -84,40 +97,33 @@ namespace ImageService.Controller.Handlers
 
             //In the future we would like to close specipc directory handler
 
-            m_serverCommands[(int)(e.CommandID)]?.Invoke(e);
+            m_Commands[(int)(e.CommandID)]?.Invoke(e);
         }
 
-        
 
-        
+
+        /// <summary>
+        /// OnCreated new file in the watch folder.
+        /// </summary>
+        /// <param name="source"></param> the object who call the function.
+        /// <param name="e"></param> FileSystemEventArgs.
         private void OnCreated(object source, FileSystemEventArgs e)
         {
 
             m_logging.Log("FILE DETECTED", Logging.Modal.MessageTypeEnum.INFO);
 
 
-            bool succeed;
-
-            Task<string> commandTask = new Task<string>(() => { return m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath }, out succeed); });
+            bool  succeed=true;
+            //each command will treat in separate Task.
+            Task<string> commandTask = new Task<string>(() => { return m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath },out succeed); });
 
             commandTask.Start();
+            //getting the Task result.
             string message = commandTask.Result;
-            if (true) ////////////////////////////////////////
+            if (!succeed)
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-        // Implement Here!
     }
 }
