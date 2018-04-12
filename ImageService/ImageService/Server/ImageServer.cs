@@ -23,7 +23,6 @@ namespace ImageService.Server
         {
             m_controller = new ImageController(modal);
 
-            logger.Log("before create Directory", Logging.Modal.MessageTypeEnum.INFO);
             // Creating list of handlers
             List<IDirectoryHandler> handlers = new List<IDirectoryHandler>();
 
@@ -42,6 +41,8 @@ namespace ImageService.Server
 
         }
 
+
+
         /// <summary>
         /// Registered function to the event of IDirectoryHandler that happens
         /// in the closing of a DH .
@@ -55,6 +56,9 @@ namespace ImageService.Server
             // Logging the message of the closed directory
             m_logger.Log(e.Message,Logging.Modal.MessageTypeEnum.INFO);
         }
+
+
+
         /// <summary>
         /// Terminates the server and all of the Directory handlers (DH-s)
         /// </summary>

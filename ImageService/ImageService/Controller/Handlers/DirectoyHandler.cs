@@ -39,8 +39,6 @@ namespace ImageService.Controller.Handlers
 
             m_dirWatchers = new List<FileSystemWatcher>(filters.Length);
 
-            m_logging.Log("Creating Directory handler", MessageTypeEnum.INFO);
-
             foreach (string filter in filters)
             {
                 FileSystemWatcher f = new FileSystemWatcher(m_path);
@@ -48,7 +46,6 @@ namespace ImageService.Controller.Handlers
                 //subscribe to the event of new file added to the watching folder.
                 f.Created += new FileSystemEventHandler(OnCreated);
                 m_dirWatchers.Add(f);
-                m_logging.Log("Filtering " + filter, MessageTypeEnum.INFO);
             }
 
         }
