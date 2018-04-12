@@ -28,9 +28,9 @@ namespace ImageService.Controller.Handlers
         /// <summary>
         /// DirectoyHandler constructor.
         /// </summary>
-        /// <param name="controller"></param> the Controller Of The System.
-        /// <param name="logging"></param> the Logger Of The System.
-        /// <param name="path"></param> the path that the DirectoyHandler responsible for.
+        /// <param name="controller">the Controller Of The System.</param> 
+        /// <param name="logging">the Logger Of The System.</param> 
+        /// <param name="path">the path that the DirectoyHandler responsible for.</param>
         public DirectoyHandler(IImageController controller, ILoggingService logging, string path)
         {
             m_controller = controller;
@@ -59,7 +59,7 @@ namespace ImageService.Controller.Handlers
         /// <summary>
         /// closeCommand close DirectoyHandler.
         /// </summary>
-        /// <param name="e"></param> CommandRecievedEventArgs
+        /// <param name="e">arguments for the function</param> 
         private void closeCommand(CommandRecievedEventArgs e)
         {
             //closing all the watchers before close the DirectoyHandler.
@@ -85,8 +85,8 @@ namespace ImageService.Controller.Handlers
         /// <summary>
         /// OnCommandRecieved passing the command sent to DirectoryHandler.
         /// </summary>
-        /// <param name="sender"></param> the object who call the function.
-        /// <param name="e"></param> CommandRecievedEventArgs.
+        /// <param name="sender">the object who call the function.</param> 
+        /// <param name="e">arguments for the function.</param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             //if the command is not specific for this DirectoyHandler or is not fload command ignore.
@@ -105,8 +105,8 @@ namespace ImageService.Controller.Handlers
         /// <summary>
         /// OnCreated new file in the watch folder.
         /// </summary>
-        /// <param name="source"></param> the object who call the function.
-        /// <param name="e"></param> FileSystemEventArgs.
+        /// <param name="source">the object who call the function.</param> 
+        /// <param name="e">arguments for the function.</param> 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
 

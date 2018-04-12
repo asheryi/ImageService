@@ -17,7 +17,7 @@ namespace ImageService.Controller
         /// <summary>
         /// ImageController constructor.
         /// </summary>
-        /// <param name="modal"></param>The Modal Of The System.
+        /// <param name="modal">The Modal Of The System.</param>
         public ImageController(IImageServiceModal modal)
         {
             m_modal = modal; //Storing the Modal Of The System
@@ -30,9 +30,9 @@ namespace ImageService.Controller
         /// <summary>
         /// treat the command whitch were sent to the ImageController.
         /// </summary>
-        /// <param name="commandID"></param> indicates the command.
-        /// <param name="args"></param> arguments need to the command.
-        /// <param name="resultSuccesful"></param> indicates if the command execution succeeded or not.
+        /// <param name="commandID">indicates the command.</param> 
+        /// <param name="args">arguments need to the command.</param> 
+        /// <param name="resultSuccesful">indicates if the command execution succeeded or not.</param>
         /// <returns></returns>
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {

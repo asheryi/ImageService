@@ -133,8 +133,8 @@ namespace ImageService
         /// <summary>
         /// EventLogFunc writes the events to the log.
         /// </summary>
-        /// <param name="sender"></param>object that call the function.
-        /// <param name="args"></param>MessageRecievedEventArgs.
+        /// <param name="sender">object that call the function.</param>
+        /// <param name="args">MessageRecievedEventArgs.</param>
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
             eventLogger.WriteEntry(args.Message);
