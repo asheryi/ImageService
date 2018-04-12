@@ -17,9 +17,9 @@ namespace ImageService.Modal
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
-        private ILoggingService m_logger;
-        private const string m_thumsNailOutputFolder = "ThumbsNail";
-        private const string m_undefinedTakenDate = "Undefined-dates images";
+        private ILoggingService m_logger;         // the logger
+        private const string m_thumsNailOutputFolder = "ThumbsNail"; // Thumbnails folder name
+        private const string m_undefinedTakenDate = "Undefined-dates images"; // Outcasts folder (without photo date)
 
         #endregion
 
@@ -32,7 +32,11 @@ namespace ImageService.Modal
             CreateFolder(Path.Combine(m_OutputFolder, m_undefinedTakenDate));
         }
 
-
+        /// <summary>
+        /// Check if a file is already done downloading .
+        /// </summary>
+        /// <param name="file">file info</param>
+        /// <returns>true iff  file is not done downloading</returns>
         static bool IsFileLocked(FileInfo file)
         {
             FileStream stream = null;
@@ -60,16 +64,17 @@ namespace ImageService.Modal
             return false;
         }
 
+        /// <summary>
+        /// The AddFile function is the main function to add a file (with a given
+        /// path ) to the specific directoy (according to the taken date of the photo).
+        /// </summary>
+        /// <param name="path">path of the file</param>
+        /// <param name="result">updated to true iff succeded</param>
+        /// <returns>string of failure in case of failure , and path in case of success</returns>
         public string AddFile(string path, out bool result)
         {
             try
             {
-                //if (!File.Exists(path))
-                //{
-                //    result = false;
-                //    return "File Not Exists!";
-                //}
-
                 FileInfo fileInfo = new FileInfo(path);
                 while (IsFileLocked(fileInfo))
                 {
@@ -89,7 +94,7 @@ namespace ImageService.Modal
                     CreateFolder(dstPath);
 
                     thumbsDstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + year + @"\" + month;
-                } catch(ArgumentException e)
+                } catch(ArgumentException)
                 {
                     dstPath = m_OutputFolder + @"\" + m_undefinedTakenDate;
                     thumbsDstPath = m_OutputFolder + @"\" + m_thumsNailOutputFolder + @"\" + m_undefinedTakenDate;
@@ -99,21 +104,13 @@ namespace ImageService.Modal
                 string newName = GenerateFileName(fileInfo, dstPath, thumbsDstPath);
 
                 MoveFile(path, dstPath,newName);
-                //result = false;
-                //return dstPath;
 
-                // string fileNmae=fileInfo.Name.Replace('')
                 Image image  = Image.FromStream(new MemoryStream(File.ReadAllBytes(dstPath + @"\" + newName)));
-                //Image image = Image.FromFile(dstPath+@"\"+ newName);
-                
                 Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
                 
                 CreateFolder(thumbsDstPath);
 
                 thumb.Save(Path.ChangeExtension(thumbsDstPath + @"\" + newName, fileInfo.Extension));
-
-
-
                 result = true;
 
                 return dstPath;
@@ -122,17 +119,24 @@ namespace ImageService.Modal
                 result = false;
                 return e.ToString();
             }
-
-
         }
+
+        /// <summary>
+        /// Generates a file name to be in the output folder .
+        /// 
+        /// It's purpose is to handle the case of multiple files with same name
+        /// so a we scan for the first index which the same file with the index
+        /// afterwards doesn't exsists in both the output folder , and in the 
+        /// Thumbnails folder .
+        /// </summary>
+        /// <param name="fileInfo">the file info .</param> : 
+        /// <param name="orgSizePath">the original photo path</param> 
+        /// <param name="thumbnailPath">the thumbnail to be path .</param> - 
+        /// <returns>the name to be in the output folder.</returns> 
         private string GenerateFileName(FileInfo fileInfo,string orgSizePath,string thumbnailPath)
         {
             string fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
             string extension = fileInfo.Extension;
-            
-
-            m_logger.Log(orgSizePath + @"\" + fileName, Logging.Modal.MessageTypeEnum.FAIL);
-            m_logger.Log(thumbnailPath + @"\" + fileName, Logging.Modal.MessageTypeEnum.FAIL);
 
             if (!File.Exists(orgSizePath + @"\" +fileInfo.Name) && !File.Exists(thumbnailPath + @"\" + fileInfo.Name))
                 return fileInfo.Name;
@@ -144,6 +148,11 @@ namespace ImageService.Modal
             }
             return fileName + "(" + fileIndex_ + ")" + extension;
         }
+
+        /// <summary>
+        /// Creates a folder , if it doesn't exsists aleready.
+        /// </summary>
+        /// <param name="targetPath">path of the folder to create</param>
         private void CreateFolder(string targetPath)
         {
             if (!Directory.Exists(targetPath))
@@ -152,11 +161,19 @@ namespace ImageService.Modal
             }
         }
 
+        /// <summary>
+        /// Moves a file from src to dst with a new name .
+        /// </summary>
+        /// <param name="srcPathWithFileName"> source file path with the file name</param>
+        /// <param name="dstPath"> destination path</param>
+        /// <param name="newName">new name of the file</param>
         private void MoveFile(string srcPathWithFileName,string dstPath,string newName)
         {
             File.Move(srcPathWithFileName, Path.Combine(dstPath,newName));
 
         }
+
+        /**********This is used to take the date of the picture taken*********/
 
         //we init this once so that if the function is repeatedly called
         //it isn't stressing the garbage man

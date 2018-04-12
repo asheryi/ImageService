@@ -21,11 +21,10 @@ namespace ImageService.Commands
         {
 
             string fullPath = args[0];
+            // The String Will Return the New Path if result = true, 
+            // and will return the error message if false .
+
             return m_modal.AddFile(fullPath,out result);
-
-
-
-            // The String Will Return the New Path if result = true, and will return the error message
         }
     }
 }
