@@ -1,7 +1,4 @@
-﻿using GUI.Model;
-using GUI.ViewModels;
-using GUI.Views.UserControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,19 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GUI
+namespace GUI.Views.UserControls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LogsView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LogsView : UserControl
     {
-        public MainWindow()
+        public LogsView()
         {
             InitializeComponent();
-            LogsViewModal logViewModal = new LogViewModal();
-            LogsView logView = new LogView();
-          LogsModel  logModel = new LogsModel();
         }
     }
 }

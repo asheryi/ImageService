@@ -1,0 +1,107 @@
+commit 1e0c51c2e90426222d5a112c11da8b103794528c
+Author: Brain <avi19900@gmail.com>
+Date:   Thu Apr 12 18:14:51 2018 +0300
+
+    edit ImageService ImageController and DirectoryHandler comments
+
+commit 2f91db3e40cbbee5813d8c89afd8b3287b750d4e
+Author: Brain <avi19900@gmail.com>
+Date:   Thu Apr 12 18:08:56 2018 +0300
+
+    edit ImageService comments
+
+commit 48f3e5a2b7e38528eb698a2f8451a48bbbd5200f
+Author: Brain <avi19900@gmail.com>
+Date:   Thu Apr 12 17:47:08 2018 +0300
+
+    edit comments  for DirectoryHandler and ImageController
+
+commit f96c40516fc94057d12a0ee3c651e2a65fea3cc7
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Thu Apr 12 17:44:00 2018 +0300
+
+    notes
+
+commit 2631fdbc629d3418f5e272826651bd364645d52c
+Author: Brain <avi19900@gmail.com>
+Date:   Wed Apr 11 22:31:49 2018 +0300
+
+    App config support
+
+commit 62f4c9bc33c1835b6943c409c82dd25b1fe6767a
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Wed Apr 11 22:01:42 2018 +0300
+
+    Close service support , and dateless photos support .
+
+commit afa5ccc5ff92bad9676bd6f246666419bcb818f4
+Author: Brain <avi19900@gmail.com>
+Date:   Thu Apr 5 00:09:29 2018 +0300
+
+    handle multiple moving files with same name
+
+commit 022d7b98f9b181a49162c14cb683f6c4b7b138b3
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Sun Apr 1 17:26:30 2018 +0300
+
+    thumbnails update
+
+commit 7338f33ee36de7614f7fdd7b7af1b28a8d5011ef
+Author: Brain <avi19900@gmail.com>
+Date:   Sun Apr 1 15:20:10 2018 +0300
+
+    log responding
+
+commit d9d9b33228a9054876b5155d5ea1ce84a39ab684
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Sun Apr 1 14:53:48 2018 +0300
+
+    debugging service
+
+commit 33f2bd01e007d5b24ef5bf485a106ea96133699d
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Sun Apr 1 13:55:50 2018 +0300
+
+    service update
+
+commit 6396394fc44a8a49cf34623f295eec33f37ca24c
+Author: Brain <avi19900@gmail.com>
+Date:   Sun Apr 1 12:17:41 2018 +0300
+
+    thumbnails and task
+
+commit 950b894ed900ca4e928549a5c22e25a1d3659d59
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Tue Mar 27 17:49:57 2018 +0300
+
+    In process of writing the modal , logger , and service
+
+commit 9db26b47a2a82fd87596fd7feb951c20d4603879
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Tue Mar 27 11:59:22 2018 +0300
+
+    Initial service update - checking
+
+commit 66347562441702556d36aac35bd21d1cd3f893e8
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Tue Mar 27 11:21:19 2018 +0300
+
+    First upload
+
+commit 0ee79aad0bb70e61358e9ef81affbc15ceb743e3
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Tue Mar 27 11:18:22 2018 +0300
+
+    First upload
+
+commit f51b0b08e6e24a000a27ec3fbf213e632b577a30
+Author: 1 <1@DESKTOP-EMCG80V>
+Date:   Tue Mar 27 11:08:44 2018 +0300
+
+    Add project files.
+
+commit 2700ab21298cad7b18448be8d4d2dcfd39318f10
+Author: 1 <1@DESKTOP-EMCG80V>
+Date:   Tue Mar 27 11:08:43 2018 +0300
+
+    Add .gitignore and .gitattributes.
