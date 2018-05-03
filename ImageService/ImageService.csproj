@@ -69,12 +69,14 @@
     <Compile Include="ImageService.Logging\LoggingService.cs" />
     <Compile Include="ImageService.Logging\Model\MessageRecievedEventArgs.cs" />
     <Compile Include="ImageService.Logging\Model\MessageTypeEnum.cs" />
+    <Compile Include="ImageService\Commands\CloseHandlerCommand.cs" />
     <Compile Include="ImageService\Commands\ICommand.cs" />
     <Compile Include="ImageService\Commands\NewFileCommand.cs" />
     <Compile Include="ImageService\Comunication\ClientHandler.cs" />
     <Compile Include="ImageService\Comunication\IClientHandler.cs" />
-    <Compile Include="ImageService\Comunication\Server.cs" />
+    <Compile Include="ImageService\Comunication\SingletonServer.cs" />
     <Compile Include="ImageService\Controller\Handlers\DirectoyHandler.cs" />
+    <Compile Include="ImageService\Controller\Handlers\HandlersManager.cs" />
     <Compile Include="ImageService\Controller\Handlers\IDirectoryHandler.cs" />
     <Compile Include="ImageService\Controller\IImageController.cs" />
     <Compile Include="ImageService\Controller\ImageController.cs" />

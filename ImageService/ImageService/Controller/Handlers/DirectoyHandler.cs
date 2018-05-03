@@ -53,7 +53,7 @@ namespace ImageService.Controller.Handlers
         /// closeCommand close DirectoyHandler.
         /// </summary>
         /// <param name="e">arguments for the function</param> 
-        private void closeCommand(CommandRecievedEventArgs e)
+        public void closeCommand(CommandRecievedEventArgs e)
         {
             //closing all the watchers before close the DirectoyHandler.
             foreach (FileSystemWatcher watcher in m_dirWatchers)
@@ -75,23 +75,26 @@ namespace ImageService.Controller.Handlers
                 watcher.EnableRaisingEvents = true;
             }
         }
-        /// <summary>
-        /// OnCommandRecieved passing the command sent to DirectoryHandler.
-        /// </summary>
-        /// <param name="sender">the object who call the function.</param> 
-        /// <param name="e">arguments for the function.</param>
-        public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
-        {
-            //if the command is not specific for this DirectoyHandler or is not fload command ignore.
-            if (e.RequestDirPath!="*" && e.RequestDirPath != this.m_path)
-            {
-                return;
-            }
 
-            //In the future we would like to close specipc directory handler
+        // TODO DELETE THIS
 
-            m_Commands[(int)(e.CommandID)]?.Invoke(e);
-        }
+        ///// <summary>
+        ///// OnCommandRecieved passing the command sent to DirectoryHandler.
+        ///// </summary>
+        ///// <param name="sender">the object who call the function.</param> 
+        ///// <param name="e">arguments for the function.</param>
+        //public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
+        //{
+        //    //if the command is not specific for this DirectoyHandler or is not fload command ignore.
+        //    if (e.RequestDirPath!="*" && e.RequestDirPath != this.m_path)
+        //    {
+        //        return;
+        //    }
+
+        //    //In the future we would like to close specipc directory handler
+
+        //    m_Commands[(int)(e.CommandID)]?.Invoke(e);
+        //}
 
 
 
@@ -117,6 +120,18 @@ namespace ImageService.Controller.Handlers
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
             }
+        }
+
+        public void Close()
+        {
+            //closing all the watchers before close the DirectoyHandler.
+            foreach (FileSystemWatcher watcher in m_dirWatchers)
+            {
+                watcher.EnableRaisingEvents = false;
+            }
+
+
+            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path + " is closed for buisness ."));
         }
     }
 }

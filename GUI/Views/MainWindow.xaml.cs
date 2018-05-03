@@ -11,9 +11,10 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        LogsModel logsModel;
-        LogsViewModel logViewModel;
-        LogsView logsView;
+        private LogsModel logsModel;
+        private LogsViewModel logViewModel;
+        private LogsView logsView;
+        private Client client;
         public MainWindow()
         {
             InitializeComponent();
@@ -30,6 +31,8 @@ namespace GUI
             // logsView.DataContext = logViewModel.Logs;
             logsView.DataContext = logViewModel;
 
+            client = new Model.Client();
+
 
         }
 
@@ -39,6 +42,8 @@ namespace GUI
         {
             Log log = new Log(MessageTypeEnum.FAIL, "Hey");
             logsModel.Logs.Add(log);
+            client.SendRequest();
+
         }
     }
 }

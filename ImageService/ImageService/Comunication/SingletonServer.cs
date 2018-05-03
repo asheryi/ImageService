@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace ImageService.Comunication
 {
-    class Server
+    class SingletonServer
     {
         private int port;
         private TcpListener listener;
         private IClientHandler ch;
-        public Server(int port, IClientHandler ch)
+        public SingletonServer(int port, IClientHandler ch)
         {
             this.port = port;
             this.ch = ch;

@@ -17,26 +17,29 @@ namespace ImageService.Server
 
         #region Properties
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
+
+        public event Action serverDown;
+
         #endregion
 
         public ImageServer(string[] paths,ILoggingService logger,IImageServiceModel Model)
         {
-            m_controller = new ImageController(Model);
-
+            HandlersManager handlers = new HandlersManager();
             // Creating list of handlers
-            List<IDirectoryHandler> handlers = new List<IDirectoryHandler>();
 
             for(int i=0;i<paths.Length;i++) 
             {
                 string path = paths[i];
-                handlers.Add(new DirectoyHandler(m_controller, logger, path));
+                IDirectoryHandler handler = new DirectoyHandler(m_controller, logger, path);
+                handlers.Add(path,handler);
                     
-                CommandRecieved += handlers[i].OnCommandRecieved;
-                handlers[i].DirectoryClose += Handler_DirectoryClose;
-                handlers[i].StartHandleDirectory();
-            }
+                //CommandRecieved += handler.OnCommandRecieved;
+                handler.DirectoryClose += Handler_DirectoryClose;
+                serverDown += handler.Close;
+                handler.StartHandleDirectory();
+            }            
 
-            m_controller = new ImageController(Model);
+            m_controller = new ImageController(Model,handlers);
             m_logger = logger;
 
         }
@@ -52,7 +55,7 @@ namespace ImageService.Server
         private void Handler_DirectoryClose(object sender, DirectoryCloseEventArgs e)
         {
             // unsubsribe the DH from the event of CommandRecieved .
-            CommandRecieved -= ((IDirectoryHandler)sender).OnCommandRecieved;
+            serverDown -= ((IDirectoryHandler)sender).Close;
             // Logging the message of the closed directory
             m_logger.Log(e.Message,Logging.Model.MessageTypeEnum.INFO);
         }
@@ -64,7 +67,9 @@ namespace ImageService.Server
         /// </summary>
         public void terminate()
         {
-            CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
+            //CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
+
+            serverDown?.Invoke();
             m_logger.Log("Server Down", Logging.Model.MessageTypeEnum.WARNING);
         }
     }

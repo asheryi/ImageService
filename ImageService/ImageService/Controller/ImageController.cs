@@ -1,4 +1,5 @@
 ﻿using ImageService.Commands;
+using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
 using ImageService.Model;
 using System.Collections.Generic;
@@ -13,12 +14,13 @@ namespace ImageService.Controller
         /// ImageController constructor.
         /// </summary>
         /// <param name="Model">The Model Of The System.</param>
-        public ImageController(IImageServiceModel Model)
+        public ImageController(IImageServiceModel Model,HandlersManager handlersManager)
         {
             m_Model = Model; //Storing the Model Of The System
             commands = new Dictionary<int, ICommand>()
             {
                 { (int)CommandEnum.NewFileCommand,new NewFileCommand(Model) }
+                , { (int)CommandEnum.CloseCommand, new CloseHandlerCommand(handlersManager)}
             };
         }
 

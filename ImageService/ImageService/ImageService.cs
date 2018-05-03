@@ -47,7 +47,8 @@ namespace ImageService
         private ILoggingService logger;//the logger of the system.
         private EventLog eventLogger;//writea to logger event.
         private IContainer components;
-       // private ICollection<Log>  logs;//stores system logs.
+        private Comunication.SingletonServer server;
+        private ICollection<Log>  logs;//stores system logs.
 
 
         public ImageService()
@@ -87,16 +88,16 @@ namespace ImageService
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-                //Log log = new Log(MessageTypeEnum.INFO, "Service is ON");
+                EventLogFunc(this, new MessageRecievedEventArgs("Service is ON", MessageTypeEnum.INFO));
 
-                //logs.Add(log);
-                //eventLogger.WriteEntry(log.Message);
+                logs = new List<Log>();
 
                 logger = new LoggingService();
                 //this function is subscribes to the event of logger.
                 logger.MessageRecieved += EventLogFunc;
-
-
+                
+                server= new Comunication.SingletonServer(8000,new Comunication.ClientHandler());
+                server.Start();
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
 
@@ -138,9 +139,14 @@ namespace ImageService
         /// <param name="args">MessageRecievedEventArgs.</param>
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
-            //logs.Add(new Log(args.Type, args.Message));
+            logs.Add(new Log(args.Type, args.Message));
             eventLogger.WriteEntry(args.Message);
         }
+        
+        
+        
+        
+        
         /// <summary>
         /// GetAllLogs returns all logs since the system started.
         /// </summary>

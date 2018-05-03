@@ -7,6 +7,11 @@ namespace ImageService.Controller.Handlers
     {
         event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
         void StartHandleDirectory();             // The Function Recieves the directory to Handle
-        void OnCommandRecieved(object sender, CommandRecievedEventArgs e);     // The Event that will be activated upon new Command
+
+        // TODO DELETE THis
+
+        //void OnCommandRecieved(object sender, CommandRecievedEventArgs e);     // The Event that will be activated upon new Command
+
+        void Close();
     }
 }
