@@ -1,11 +1,11 @@
-﻿using ImageService.Modal;
+﻿using ImageService.Model;
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
-using ImageService.Logging.Modal;
+using ImageService.Logging.Model;
 
 namespace ImageService.Controller.Handlers
 {
@@ -103,7 +103,7 @@ namespace ImageService.Controller.Handlers
         private void OnCreated(object source, FileSystemEventArgs e)
         {
 
-            m_logging.Log("FILE DETECTED", Logging.Modal.MessageTypeEnum.INFO);
+            m_logging.Log("FILE DETECTED", Logging.Model.MessageTypeEnum.INFO);
 
 
             bool  succeed=true;

@@ -1,4 +1,4 @@
-﻿namespace ImageService.Logging.Modal
+﻿namespace ImageService.Logging.Model
 {
     public enum MessageTypeEnum : int
     {

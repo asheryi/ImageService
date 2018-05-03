@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImageService.Modal
+namespace ImageService.Model
 {
     public class DirectoryCloseEventArgs : EventArgs
     {

@@ -7,9 +7,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace ImageService.Modal
+namespace ImageService.Model
 {
-    public class ImageServiceModal : IImageServiceModal
+    public class ImageServiceModel : IImageServiceModel
     {
         #region Members
         private string m_OutputFolder;            // The Output Folder
@@ -20,7 +20,7 @@ namespace ImageService.Modal
 
         #endregion
 
-        public ImageServiceModal(ILoggingService logger,string outputFolder,int thumbnailSize)
+        public ImageServiceModel(ILoggingService logger,string outputFolder,int thumbnailSize)
         {
             this.m_OutputFolder = outputFolder;
             this.m_thumbnailSize = thumbnailSize;

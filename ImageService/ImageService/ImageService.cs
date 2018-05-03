@@ -4,10 +4,13 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Runtime.InteropServices;
 using ImageService.Server;
-using ImageService.Modal;
 using ImageService.Logging;
-using ImageService.Logging.Modal;
 using System.Configuration;
+using System.Collections.Generic;
+using ImageService.Logging.Model;
+using ImageService.Model;
+//using ImageService.Logging.Model;
+//using ImageService.Model;
 
 namespace ImageService
 {
@@ -42,20 +45,21 @@ namespace ImageService
 
         private ImageServer m_imageServer;//The Image Server
         private ILoggingService logger;//the logger of the system.
-        private EventLog eventLogger;//write to logger event.
+        private EventLog eventLogger;//writea to logger event.
         private IContainer components;
+       // private ICollection<Log>  logs;//stores system logs.
 
-    
+
         public ImageService()
         {
             InitializeComponent();
 
-            eventLogger = new System.Diagnostics.EventLog();
+            eventLogger = new EventLog();
             string sourceName = ConfigurationManager.AppSettings["SourceName"];
             string logName = ConfigurationManager.AppSettings["LogName"];
-            if (!System.Diagnostics.EventLog.SourceExists(sourceName))
+            if (!EventLog.SourceExists(sourceName))
             {
-                System.Diagnostics.EventLog.CreateEventSource(
+                EventLog.CreateEventSource(
                    sourceName, logName);
             }
             eventLogger.Source = sourceName;
@@ -83,7 +87,10 @@ namespace ImageService
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-                eventLogger.WriteEntry("Service is ON");
+                //Log log = new Log(MessageTypeEnum.INFO, "Service is ON");
+
+                //logs.Add(log);
+                //eventLogger.WriteEntry(log.Message);
 
                 logger = new LoggingService();
                 //this function is subscribes to the event of logger.
@@ -93,7 +100,7 @@ namespace ImageService
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
 
-                m_imageServer = new ImageServer(@ConfigurationManager.AppSettings["Handler"].Split(';'), logger,new ImageServiceModal(logger,manage_path,Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"])));
+                m_imageServer = new ImageServer(@ConfigurationManager.AppSettings["Handler"].Split(';'), logger,new ImageServiceModel(logger,manage_path,Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"])));
 
             }
             catch (Exception ex)
@@ -108,7 +115,9 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            eventLogger.WriteEntry("Stopping Service");
+          //  Log log = new Log(MessageTypeEnum.INFO, "Stopping Service");
+            //logs.Add(log);
+            //eventLogger.WriteEntry(log.Message);
             m_imageServer.terminate();
         }
         /// <summary>
@@ -129,8 +138,17 @@ namespace ImageService
         /// <param name="args">MessageRecievedEventArgs.</param>
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
+            //logs.Add(new Log(args.Type, args.Message));
             eventLogger.WriteEntry(args.Message);
         }
+        /// <summary>
+        /// GetAllLogs returns all logs since the system started.
+        /// </summary>
+        //private ICollection<Log> GetAllLogs()
+        //{
+        //    return logs;
+        //}
+
     }
 
 

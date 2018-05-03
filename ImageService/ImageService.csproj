@@ -67,10 +67,13 @@
     <Compile Include="ImageService.Infrastructure\Enums\CommandEnum.cs" />
     <Compile Include="ImageService.Logging\ILoggingService.cs" />
     <Compile Include="ImageService.Logging\LoggingService.cs" />
-    <Compile Include="ImageService.Logging\Modal\MessageRecievedEventArgs.cs" />
-    <Compile Include="ImageService.Logging\Modal\MessageTypeEnum.cs" />
+    <Compile Include="ImageService.Logging\Model\MessageRecievedEventArgs.cs" />
+    <Compile Include="ImageService.Logging\Model\MessageTypeEnum.cs" />
     <Compile Include="ImageService\Commands\ICommand.cs" />
     <Compile Include="ImageService\Commands\NewFileCommand.cs" />
+    <Compile Include="ImageService\Comunication\ClientHandler.cs" />
+    <Compile Include="ImageService\Comunication\IClientHandler.cs" />
+    <Compile Include="ImageService\Comunication\Server.cs" />
     <Compile Include="ImageService\Controller\Handlers\DirectoyHandler.cs" />
     <Compile Include="ImageService\Controller\Handlers\IDirectoryHandler.cs" />
     <Compile Include="ImageService\Controller\IImageController.cs" />
@@ -78,10 +81,10 @@
     <Compile Include="ImageService\ImageService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ImageService\Modal\Event\CommandRecievedEventArgs.cs" />
-    <Compile Include="ImageService\Modal\Event\DirectoryCloseEventArgs.cs" />
-    <Compile Include="ImageService\Modal\IImageServiceModal.cs" />
-    <Compile Include="ImageService\Modal\ImageServiceModal.cs" />
+    <Compile Include="ImageService\Model\Event\CommandRecievedEventArgs.cs" />
+    <Compile Include="ImageService\Model\Event\DirectoryCloseEventArgs.cs" />
+    <Compile Include="ImageService\Model\IImageServiceModel.cs" />
+    <Compile Include="ImageService\Model\ImageServiceModel.cs" />
     <Compile Include="ImageService\Server\ImageServer.cs" />
     <Compile Include="ImageService\ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -90,6 +93,8 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageService\Program.cs" />
+    <Compile Include="ImageService.Logging\Model\Log.cs" />
+    <Compile Include="ImageService\SingletonCommunication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

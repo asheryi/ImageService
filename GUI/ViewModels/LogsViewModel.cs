@@ -1,13 +1,9 @@
 ﻿using GUI.Model;
-using System;
-using System.Collections.Generic;
+using ImageService.Logging.Model;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 namespace GUI.ViewModels
 {
-    class LogsViewModal
+    class LogsViewModel
     {
         private LogsModel model;
         public ObservableCollection<Log> Logs
@@ -18,7 +14,7 @@ namespace GUI.ViewModels
             }
         }
 
-        public LogsViewModal(LogsModel model)
+        public LogsViewModel(LogsModel model)
         {
             this.model = model;
         }

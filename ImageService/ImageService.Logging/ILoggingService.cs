@@ -1,4 +1,4 @@
-﻿using ImageService.Logging.Modal;
+﻿using ImageService.Logging.Model;
 using System;
 
 namespace ImageService.Logging

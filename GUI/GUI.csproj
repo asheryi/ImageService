@@ -57,9 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\Log.cs" />
+    <Compile Include="Model\Client.cs" />
     <Compile Include="Model\LogsModel.cs" />
-    <Compile Include="ViewModels\LogsViewModal.cs" />
+    <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -70,6 +70,7 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Commands\DelegateCommandBase.cs" />
     <Compile Include="Commands\WeakEventHandlerManager.cs" />
+    <Compile Include="Views\UserControls\TypeToBrushConverter.cs" />
     <Compile Include="Views\UserControls\LogsView.xaml.cs">
       <DependentUpon>LogsView.xaml</DependentUpon>
     </Compile>

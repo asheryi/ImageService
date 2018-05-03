@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
+using ImageService.Logging.Model;
 
 namespace GUI.Model
 {
@@ -20,7 +16,7 @@ namespace GUI.Model
             }
             private set
             {
-                Logs = value;
+                logs = value;
                 OnPropertyChanged("Logs");
             }
         }
@@ -29,12 +25,14 @@ namespace GUI.Model
         {
             this.Logs = prev_logs;
 
-
+        }
+        public LogsModel()
+        {
+            this.Logs = new ObservableCollection<Log>();
         }
 
 
 
-        
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

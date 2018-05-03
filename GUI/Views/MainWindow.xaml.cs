@@ -1,20 +1,8 @@
 ﻿using GUI.Model;
 using GUI.ViewModels;
 using GUI.Views.UserControls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ImageService.Logging.Model;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GUI
 {
@@ -23,12 +11,34 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        LogsModel logsModel;
+        LogsViewModel logViewModel;
+        LogsView logsView;
         public MainWindow()
         {
             InitializeComponent();
-            LogsViewModal logViewModal = new LogViewModal();
-            LogsView logView = new LogView();
-          LogsModel  logModel = new LogsModel();
+            //Here we Start the Tcp Connection
+            //if fail return;
+            //else:
+            //Ask for All logs from the service assume we already got it and its call Logs
+           // ObservableCollection<Log> logs=new ObservableCollection<Log>();
+           
+              logsModel = new LogsModel(new System.Collections.ObjectModel.ObservableCollection<Log>() { new Log(MessageTypeEnum.WARNING,"I I I I "), new Log(MessageTypeEnum.INFO, "fmdljcudI ") });
+             logViewModel = new LogsViewModel(logsModel);
+             logsView = new LogsView();
+            LogsViewTab.Content = logsView;
+            // logsView.DataContext = logViewModel.Logs;
+            logsView.DataContext = logViewModel;
+
+
+        }
+
+    
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            Log log = new Log(MessageTypeEnum.FAIL, "Hey");
+            logsModel.Logs.Add(log);
         }
     }
 }

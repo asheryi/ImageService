@@ -6,15 +6,25 @@
              xmlns:local="clr-namespace:GUI.Views.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:TypeToBrushConverter x:Key="TypeToBrushConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="logsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="5.714,1.566" AutoGenerateColumns="False" Height="300" Width="300">
+        <DataGrid ItemsSource="{Binding Logs}" x:Name="logsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                  AutoGenerateColumns="False" RenderTransformOrigin="5.714,1.566" Height="300" Background="#FFF5EEEE">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Type"/>
-                <DataGridTemplateColumn Header="Message" Width="*"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="{Binding Type, Converter={StaticResource TypeToBrushConverter}}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Message" Binding ="{Binding Message}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -2,7 +2,7 @@
 using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
-using ImageService.Modal;
+using ImageService.Model;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ namespace ImageService.Server
     public class ImageServer
     {
         #region Members
-        private IImageController m_controller; // the controller to the modal
+        private IImageController m_controller; // the controller to the Model
         private ILoggingService m_logger; // the logger
         #endregion
 
@@ -19,9 +19,9 @@ namespace ImageService.Server
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
         #endregion
 
-        public ImageServer(string[] paths,ILoggingService logger,IImageServiceModal modal)
+        public ImageServer(string[] paths,ILoggingService logger,IImageServiceModel Model)
         {
-            m_controller = new ImageController(modal);
+            m_controller = new ImageController(Model);
 
             // Creating list of handlers
             List<IDirectoryHandler> handlers = new List<IDirectoryHandler>();
@@ -36,7 +36,7 @@ namespace ImageService.Server
                 handlers[i].StartHandleDirectory();
             }
 
-            m_controller = new ImageController(modal);
+            m_controller = new ImageController(Model);
             m_logger = logger;
 
         }
@@ -54,7 +54,7 @@ namespace ImageService.Server
             // unsubsribe the DH from the event of CommandRecieved .
             CommandRecieved -= ((IDirectoryHandler)sender).OnCommandRecieved;
             // Logging the message of the closed directory
-            m_logger.Log(e.Message,Logging.Modal.MessageTypeEnum.INFO);
+            m_logger.Log(e.Message,Logging.Model.MessageTypeEnum.INFO);
         }
 
 
@@ -65,7 +65,7 @@ namespace ImageService.Server
         public void terminate()
         {
             CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
-            m_logger.Log("Server Down", Logging.Modal.MessageTypeEnum.WARNING);
+            m_logger.Log("Server Down", Logging.Model.MessageTypeEnum.WARNING);
         }
     }
 }

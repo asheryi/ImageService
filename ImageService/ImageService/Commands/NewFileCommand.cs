@@ -1,14 +1,14 @@
-﻿using ImageService.Modal;
+﻿using ImageService.Model;
 
 namespace ImageService.Commands
 {
     public class NewFileCommand : ICommand
     {
-        private IImageServiceModal m_modal;
+        private IImageServiceModel m_Model;
 
-        public NewFileCommand(IImageServiceModal modal)
+        public NewFileCommand(IImageServiceModel Model)
         {
-            m_modal = modal;            // Storing the Modal
+            m_Model = Model;            // Storing the Model
         }
 
         public string Execute(string[] args, out bool result)
@@ -18,7 +18,7 @@ namespace ImageService.Commands
             // The String Will Return the New Path if result = true, 
             // and will return the error message if false .
 
-            return m_modal.AddFile(fullPath,out result);
+            return m_Model.AddFile(fullPath,out result);
         }
     }
 }
