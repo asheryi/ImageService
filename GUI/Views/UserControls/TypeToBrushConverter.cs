@@ -2,10 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Collections.Generic;
-using System.Drawing;
-using ImageService.Logging.Model;
-using System.Diagnostics;
-using System.Windows;
+using SharedResources.Logging;
 
 namespace GUI.Views.UserControls
 {

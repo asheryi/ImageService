@@ -7,8 +7,11 @@ using ImageService.Server;
 using ImageService.Logging;
 using System.Configuration;
 using System.Collections.Generic;
-using ImageService.Logging.Model;
 using ImageService.Model;
+using SharedResources.Logging;
+using ImageService.Logging.Model;
+using ImageService.Comunication;
+using SharedResources;
 //using ImageService.Logging.Model;
 //using ImageService.Model;
 
@@ -49,12 +52,11 @@ namespace ImageService
         private IContainer components;
         private Comunication.SingletonServer server;
         private ICollection<Log>  logs;//stores system logs.
-
-
+        public event EventHandler<Log> LogAnnouncement;
         public ImageService()
         {
             InitializeComponent();
-
+           
             eventLogger = new EventLog();
             string sourceName = ConfigurationManager.AppSettings["SourceName"];
             string logName = ConfigurationManager.AppSettings["LogName"];
@@ -75,6 +77,7 @@ namespace ImageService
         /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
+
             try
             {
 
@@ -82,26 +85,35 @@ namespace ImageService
                 ServiceStatus serviceStatus = new ServiceStatus();
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
                 serviceStatus.dwWaitHint = 1000;
-                SetServiceStatus(this.ServiceHandle, ref serviceStatus);                
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
                 // Update the service state to Running.  
                 serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
                 SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+              
+                logs = new List<Log>();
 
                 EventLogFunc(this, new MessageRecievedEventArgs("Service is ON", MessageTypeEnum.INFO));
 
-                logs = new List<Log>();
+                
 
                 logger = new LoggingService();
                 //this function is subscribes to the event of logger.
                 logger.MessageRecieved += EventLogFunc;
-                
-                server= new Comunication.SingletonServer(8000,new Comunication.ClientHandler());
+                EventLogFunc(this, new MessageRecievedEventArgs("MessageRecieved", MessageTypeEnum.INFO));
+
+                server = SingletonServer.Instance;
+                EventLogFunc(this, new MessageRecievedEventArgs("SingletonServer.Instance", MessageTypeEnum.INFO));
+
                 server.Start();
+                EventLogFunc(this, new MessageRecievedEventArgs("server.Start()", MessageTypeEnum.INFO));
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
-
-                m_imageServer = new ImageServer(@ConfigurationManager.AppSettings["Handler"].Split(';'), logger,new ImageServiceModel(logger,manage_path,Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"])));
+                string[] directoriesPaths = @ConfigurationManager.AppSettings["Handler"].Split(';');
+                int thumbnailSize = Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"]);
+                logger.Logs = logs;
+                m_imageServer = new ImageServer(directoriesPaths, logger,new ImageServiceModel(logger,manage_path,thumbnailSize), this,eventLogger);
+                EventLogFunc(this, new MessageRecievedEventArgs(" new ImageServer", MessageTypeEnum.INFO));
 
             }
             catch (Exception ex)
@@ -116,9 +128,11 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-          //  Log log = new Log(MessageTypeEnum.INFO, "Stopping Service");
-            //logs.Add(log);
-            //eventLogger.WriteEntry(log.Message);
+            server.Stop();
+            Log log = new Log(MessageTypeEnum.INFO, "Stopping Service");
+        
+            logs.Add(log);
+            eventLogger.WriteEntry(log.Message);
             m_imageServer.terminate();
         }
         /// <summary>
@@ -139,14 +153,17 @@ namespace ImageService
         /// <param name="args">MessageRecievedEventArgs.</param>
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
-            logs.Add(new Log(args.Type, args.Message));
+             Log log = new Log(args.Type, args.Message);
+            logs.Add(log);
+            LogAnnouncement?.Invoke(this, log);
             eventLogger.WriteEntry(args.Message);
+
         }
-        
-        
-        
-        
-        
+
+
+
+
+
         /// <summary>
         /// GetAllLogs returns all logs since the system started.
         /// </summary>

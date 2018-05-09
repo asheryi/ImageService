@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService", "ImageServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{21CD10F7-E805-459E-B883-ABCB0E2EA89C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedResources", "SharedResources\SharedResources.csproj", "{E4C0B003-757A-4E9F-ABE2-9FA4AB8B991A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{21CD10F7-E805-459E-B883-ABCB0E2EA89C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21CD10F7-E805-459E-B883-ABCB0E2EA89C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21CD10F7-E805-459E-B883-ABCB0E2EA89C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C0B003-757A-4E9F-ABE2-9FA4AB8B991A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4C0B003-757A-4E9F-ABE2-9FA4AB8B991A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4C0B003-757A-4E9F-ABE2-9FA4AB8B991A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4C0B003-757A-4E9F-ABE2-9FA4AB8B991A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

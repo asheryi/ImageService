@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -57,8 +61,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IResponseHandler.cs" />
     <Compile Include="Model\Client.cs" />
     <Compile Include="Model\LogsModel.cs" />
+    <Compile Include="ServiceReplyResponseHandler.cs" />
     <Compile Include="ViewModels\LogsViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -101,6 +107,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -114,6 +121,10 @@
     <ProjectReference Include="..\ImageService\ImageService.csproj">
       <Project>{04FEDC98-2455-428E-999B-A20A5E49F92E}</Project>
       <Name>ImageService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharedResources\SharedResources.csproj">
+      <Project>{E4C0B003-757A-4E9F-ABE2-9FA4AB8B991A}</Project>
+      <Name>SharedResources</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

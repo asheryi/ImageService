@@ -3,9 +3,9 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
-using ImageService.Logging.Model;
+using SharedResources.Logging;
+using SharedResources.Commands;
 
 namespace ImageService.Controller.Handlers
 {
@@ -35,7 +35,7 @@ namespace ImageService.Controller.Handlers
             string[] filters = new string[] { "*.jpg", "*.png", "*.gif", "*.bmp" };
 
             m_Commands = new Dictionary<int, CommandFunction>();
-            m_Commands.Add((int)(CommandEnum.CloseCommand), closeCommand);
+            m_Commands.Add((int)(CommandEnum.CloseHandlerCommand), closeCommand);
 
             m_dirWatchers = new List<FileSystemWatcher>(filters.Length);
 
@@ -62,7 +62,7 @@ namespace ImageService.Controller.Handlers
             }
 
                 
-            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(e.RequestDirPath, m_path + " is closed for buisness ."));
+         //  DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(e.RequestDirPath, m_path + " is closed for buisness ."));
         }
         /// <summary>
         /// StartHandleDirectory start watching.
@@ -106,19 +106,21 @@ namespace ImageService.Controller.Handlers
         private void OnCreated(object source, FileSystemEventArgs e)
         {
 
-            m_logging.Log("FILE DETECTED", Logging.Model.MessageTypeEnum.INFO);
+            m_logging.Log("FILE DETECTED : " + e.Name, MessageTypeEnum.INFO);
+            
+            
 
+            bool succeed;
+            string message =  m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath },out succeed);
 
-            bool  succeed=true;
-            //each command will treat in separate Task.
-            Task<string> commandTask = new Task<string>(() => { return m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath },out succeed); });
-
-            commandTask.Start();
             //getting the Task result.
-            string message = commandTask.Result;
             if (!succeed)
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
+            }
+            else
+            {
+                m_logging.Log("Succeeded to move the file " +e.Name +" to :  " +message, MessageTypeEnum.INFO);
             }
         }
 

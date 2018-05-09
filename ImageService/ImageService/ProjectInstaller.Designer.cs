@@ -39,9 +39,9 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "image service observer";
-            this.serviceInstaller1.DisplayName = "Image Service";
-            this.serviceInstaller1.ServiceName = "ImageService";
+            this.serviceInstaller1.Description = "image service observer System";
+            this.serviceInstaller1.DisplayName = "Image Service System";
+            this.serviceInstaller1.ServiceName = "Image Service System";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

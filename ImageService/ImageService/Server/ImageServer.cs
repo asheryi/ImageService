@@ -1,10 +1,10 @@
-﻿using ImageService.Controller;
+﻿using SharedResources.Logging;
+using ImageService.Controller;
 using ImageService.Controller.Handlers;
-using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Model;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ImageService.Server
 {
@@ -22,12 +22,12 @@ namespace ImageService.Server
 
         #endregion
 
-        public ImageServer(string[] paths,ILoggingService logger,IImageServiceModel Model)
+        public ImageServer(string[] paths,ILoggingService logger,IImageServiceModel Model,ImageService service,EventLog eventLogger)
         {
             HandlersManager handlers = new HandlersManager();
             // Creating list of handlers
-
-            for(int i=0;i<paths.Length;i++) 
+            m_controller = new ImageController(Model, handlers, logger, eventLogger);
+            for (int i=0;i<paths.Length;i++) 
             {
                 string path = paths[i];
                 IDirectoryHandler handler = new DirectoyHandler(m_controller, logger, path);
@@ -39,7 +39,9 @@ namespace ImageService.Server
                 handler.StartHandleDirectory();
             }            
 
-            m_controller = new ImageController(Model,handlers);
+            
+           service.LogAnnouncement += m_controller.ReceiveLog;
+          
             m_logger = logger;
 
         }
@@ -57,7 +59,7 @@ namespace ImageService.Server
             // unsubsribe the DH from the event of CommandRecieved .
             serverDown -= ((IDirectoryHandler)sender).Close;
             // Logging the message of the closed directory
-            m_logger.Log(e.Message,Logging.Model.MessageTypeEnum.INFO);
+            m_logger.Log(e.Message,MessageTypeEnum.INFO);
         }
 
 
@@ -70,7 +72,7 @@ namespace ImageService.Server
             //CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
 
             serverDown?.Invoke();
-            m_logger.Log("Server Down", Logging.Model.MessageTypeEnum.WARNING);
+            m_logger.Log("Server Down", MessageTypeEnum.WARNING);
         }
     }
 }

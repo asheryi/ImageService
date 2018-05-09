@@ -1,8 +1,17 @@
-﻿using GUI.Model;
+﻿using SharedResources.Logging;
+using GUI.Model;
 using GUI.ViewModels;
 using GUI.Views.UserControls;
 using ImageService.Logging.Model;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System;
+using System.Diagnostics;
+using System.Windows.Data;
+using System.Collections.Generic;
+using SharedResources;
+using System.Windows.Media;
+using SharedResources.Commands;
 
 namespace GUI
 {
@@ -17,22 +26,38 @@ namespace GUI
         private Client client;
         public MainWindow()
         {
+            
+
             InitializeComponent();
             //Here we Start the Tcp Connection
             //if fail return;
             //else:
             //Ask for All logs from the service assume we already got it and its call Logs
-           // ObservableCollection<Log> logs=new ObservableCollection<Log>();
-           
-              logsModel = new LogsModel(new System.Collections.ObjectModel.ObservableCollection<Log>() { new Log(MessageTypeEnum.WARNING,"I I I I "), new Log(MessageTypeEnum.INFO, "fmdljcudI ") });
+            // ObservableCollection<Log> logs=new ObservableCollection<Log>();
+             ObservableCollection<Log> Logs = new ObservableCollection<Log>();
+             BindingOperations.EnableCollectionSynchronization(Logs, Logs);
+             logsModel = new LogsModel(Logs);
              logViewModel = new LogsViewModel(logsModel);
-             logsView = new LogsView();
-            LogsViewTab.Content = logsView;
-            // logsView.DataContext = logViewModel.Logs;
-            logsView.DataContext = logViewModel;
+              logsView = new LogsView();
+            try
+            {
+                IResponseHandler handler = new ServiceReplyResponseHandler();
+                client = new Client(handler);
+                handler.RegisterFuncToEvent(CommandEnum.GetAllLogsCommand,recieveLogs);
+                handler.RegisterFuncToEvent(CommandEnum.SendLog, recieveOneLog);
 
-            client = new Model.Client();
+                client.Recieve();
+                LogsViewTab.Content = logsView;
+                logsView.DataContext = logViewModel;
 
+               
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                this.Background=Brushes.Gray;
+            }
+            
 
         }
 
@@ -42,8 +67,27 @@ namespace GUI
         {
             Log log = new Log(MessageTypeEnum.FAIL, "Hey");
             logsModel.Logs.Add(log);
-            client.SendRequest();
+            ////client.SendRequest();
 
         }
+        private void recieveLogs(object sender,ContentEventArgs args)
+        {
+            ICollection<Log> logs = args.geContent<ICollection<Log>>();
+          //  ICollection<Log> logs = ObjectConverter<ICollection<Log>>.Deserialize(args.Content);
+            foreach (Log log in logs)
+            {
+                logsModel.Logs.Add(log);
+            }
+
+        }
+
+        private void recieveOneLog(object sender, ContentEventArgs args)
+        {
+            logsModel.Logs.Add(args.geContent<Log>());
+          //  logsModel.Logs.Add(ObjectConverter<Log>.Deserialize(args.Content));
+        }
+
+
+
     }
 }

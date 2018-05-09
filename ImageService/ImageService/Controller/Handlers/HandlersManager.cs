@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ImageService.Controller.Handlers
 {
-    class HandlersManager
+   public class HandlersManager
     {
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedResources.Logging;
+using System;
 
 namespace ImageService.Logging.Model
 {

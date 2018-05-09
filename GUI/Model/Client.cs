@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SharedResources;
+using SharedResources.Commands;
+using SharedResources.Communication;
+using SharedResources.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,31 +17,109 @@ namespace GUI.Model
 {
     class Client
     {
-       private TcpClient client;
-        public Client()
+        private TcpClient client;
+        private NetworkStream stream;
+        private BinaryReader reader;
+        private BinaryWriter writer ;
+        private IResponseHandler responser;
+        //private EventHandler<ContentEventArgs> logReceive;
+        //private EventHandler<ContentEventArgs> configReceive;
+        // IDictionary<int, EventHandler<Log>> eventHandlerDic;
+
+       
+
+
+        //public bool register(CommandEnum command,<ContentEventArgs>)
+
+
+
+
+        //public EventHandler<ContentEventArgs> LogReceive
+        //{
+        //    set
+        //    {
+        //        logReceive = value;
+        //        eventHandlerDic.Add(CommandEnum.SendLog, null);
+        //    }
+        //    get
+        //    {
+        //        return logReceive;
+        //    }
+        //}
+        //EventArgs<Service>
+        public Client(IResponseHandler responser)
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
              client = new TcpClient();
             client.Connect(ep);
             Debug.WriteLine("You are connected");
-           
+
+            stream = client.GetStream();
+            reader = new BinaryReader(stream);
+            writer = new BinaryWriter(stream);
+            //eventHandlerDic = new Dictionary<int, EventHandler<EventArgs>>()
+            //{
+            //    { (int)CommandEnum.SendLog,logReceive }
+
+            //};
+
+            this.responser = responser;
+           
+
         }
         public void SendRequest()
         {
-            using (NetworkStream stream = client.GetStream())
-            using (BinaryReader reader = new BinaryReader(stream))
-            using (BinaryWriter writer = new BinaryWriter(stream))
-            {
+            
+            
                 // Send data to server
-                Debug.Write("Please enter a number: ");
                 //  int num = int.Parse(Console.ReadLine());
-                int num = 9;
-                writer.Write(num);
+                 string  result = "1:";
+                byte[] byData = System.Text.Encoding.UTF8.GetBytes(result);
+                 //writer.WriteLine(byData);
+                 stream.Write(byData,0,byData.Length);
                 // Get result from server
-                int result = reader.ReadInt32();
-                Debug.WriteLine("Result = {0}", result);
-            }
-            client.Close();
+
+
+                Byte[] data = new Byte[256];
+                String responseData = String.Empty;
+                Int32 bytes = stream.Read(data, 0, data.Length);
+                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
+                ServiceReply reply = JsonConvert.DeserializeObject<ServiceReply>(responseData);
+                Log log = JsonConvert.DeserializeObject<Log>(reply.Content);
+                  Debug.WriteLine("Result = {0}", log.Message);
+
+          
+
+           // client.Close();
+        }
+
+        public void Recieve()
+        {
+            new Task(() =>
+            {
+                while (true)
+                {
+                   
+                    try
+                    {
+                        string responseData = reader.ReadString();
+
+                        // Log log = ObjectConverter<Log>.Deserialize(reply.Content);
+                        ///Log log = ObjectConverter<Log>.Deserialize(responseData);
+                        //Debug.WriteLine("Result = " + log.Message);
+
+                        responser.Handle(responseData);
+                        
+                    }
+                    catch(Exception)
+                    {
+                        Debug.WriteLine("Deserialize fails");
+
+                    }
+                   
+                }
+
+            }).Start();
         }
     }
 }

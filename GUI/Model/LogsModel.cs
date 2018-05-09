@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
 using ImageService.Logging.Model;
+using SharedResources.Logging;
 
 namespace GUI.Model
 {
@@ -17,7 +18,7 @@ namespace GUI.Model
             private set
             {
                 logs = value;
-                OnPropertyChanged("Logs");
+                //OnPropertyChanged("Logs");
             }
         }
 

@@ -1,8 +1,14 @@
 ﻿using ImageService.Commands;
+using ImageService.Comunication;
 using ImageService.Controller.Handlers;
-using ImageService.Infrastructure.Enums;
+using ImageService.Logging;
 using ImageService.Model;
+using SharedResources;
+using SharedResources.Commands;
+using SharedResources.Logging;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net.Sockets;
 
 namespace ImageService.Controller
 {
@@ -10,18 +16,26 @@ namespace ImageService.Controller
     {
         private IImageServiceModel m_Model;// The Model Object
         private Dictionary<int, ICommand> commands;
+        private EventLog logger;
+        private IReplyGenerator replyGenerator;
         /// <summary>
         /// ImageController constructor.
         /// </summary>
         /// <param name="Model">The Model Of The System.</param>
-        public ImageController(IImageServiceModel Model,HandlersManager handlersManager)
+        public ImageController(IImageServiceModel Model,HandlersManager handlersManager,ILoggingService logger,EventLog eventLogger)
         {
+            replyGenerator = new ServiceReplyGenerator();
+        
             m_Model = Model; //Storing the Model Of The System
-            commands = new Dictionary<int, ICommand>()
+            SingletonServer singletonServer = SingletonServer.Instance;
+            singletonServer.ClientConnected += ClientConnected;
+              commands = new Dictionary<int, ICommand>()
             {
                 { (int)CommandEnum.NewFileCommand,new NewFileCommand(Model) }
-                , { (int)CommandEnum.CloseCommand, new CloseHandlerCommand(handlersManager)}
+                , { (int)CommandEnum.CloseHandlerCommand, new CloseHandlerCommand(handlersManager)}
+                , { (int)CommandEnum.SendLog, new SendLogCommand() },{ (int)CommandEnum.GetAllLogsCommand,new GetAllLogsCommand(logger.Logs,eventLogger,replyGenerator) }
             };
+            this.logger = eventLogger;
         }
 
         /// <summary>
@@ -38,8 +52,21 @@ namespace ImageService.Controller
                 resultSuccesful = false; 
                 return "";
             }
+           
 
             return commands[commandID].Execute(args, out resultSuccesful);
+        }
+        //Recieve log
+        public void ReceiveLog(object sender, Log log)
+        {
+            bool result;
+            string logString = ObjectConverter.Serialize(log);//Log
+            ExecuteCommand((int)CommandEnum.SendLog,new string[] {logString}, out result);
+        }
+        public void ClientConnected(object sender,int clientID)
+        {
+            bool result;
+            ExecuteCommand((int)CommandEnum.GetAllLogsCommand, new string[] { clientID.ToString() }, out result);
         }
     }
 }

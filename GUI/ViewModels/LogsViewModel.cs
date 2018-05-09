@@ -1,4 +1,5 @@
-﻿using GUI.Model;
+﻿using SharedResources.Logging;
+using GUI.Model;
 using ImageService.Logging.Model;
 using System.Collections.ObjectModel;
 namespace GUI.ViewModels
