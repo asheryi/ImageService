@@ -14,7 +14,7 @@ namespace ImageService.Comunication
         public string Generate(CommandEnum c, object o)
         {
             string data = ObjectConverter.Serialize(o);//object
-            ServiceReply sr = new ServiceReply(CommandEnum.GetAllLogsCommand, data);
+            ServiceReply sr = new ServiceReply(c, data);
             return ObjectConverter.Serialize(sr);//object
         }
     }

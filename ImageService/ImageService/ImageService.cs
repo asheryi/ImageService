@@ -111,6 +111,8 @@ namespace ImageService
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
                 string[] directoriesPaths = @ConfigurationManager.AppSettings["Handler"].Split(';');
                 int thumbnailSize = Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"]);
+               
+                
                 logger.Logs = logs;
                 m_imageServer = new ImageServer(directoriesPaths, logger,new ImageServiceModel(logger,manage_path,thumbnailSize), this,eventLogger);
                 EventLogFunc(this, new MessageRecievedEventArgs(" new ImageServer", MessageTypeEnum.INFO));

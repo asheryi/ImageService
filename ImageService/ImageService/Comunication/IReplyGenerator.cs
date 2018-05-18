@@ -2,7 +2,7 @@
 
 namespace ImageService.Comunication
 {
-    interface IReplyGenerator
+    public interface IReplyGenerator
     {
         string Generate(CommandEnum c, object o);        
     }

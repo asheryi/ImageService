@@ -5,6 +5,7 @@ using ImageService.Logging;
 using ImageService.Model;
 using System;
 using System.Diagnostics;
+using SharedResources;
 
 namespace ImageService.Server
 {

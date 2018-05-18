@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace ImageService.Commands
 {
-    class GetAllLogsCommand : ICommand
+    public class GetAllLogsCommand : ICommand
     {
       
         SingletonServer singletonServer;

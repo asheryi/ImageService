@@ -46,9 +46,11 @@
     <Compile Include="Communication\Logging\MessageTypeEnum.cs" />
     <Compile Include="Communication\ServiceReplyEnum.cs" />
     <Compile Include="ContentEventArgs.cs" />
+    <Compile Include="DirectoryDetails.cs" />
     <Compile Include="ObjectConverter.cs" />
     <Compile Include="ReplyContent.cs" />
     <Compile Include="Respond.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

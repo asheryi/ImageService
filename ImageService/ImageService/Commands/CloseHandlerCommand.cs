@@ -21,6 +21,8 @@ namespace ImageService.Commands
                 return "";
             }
 
+            // ZARICH EIUN
+
             handler.Close();
 
             result = true;

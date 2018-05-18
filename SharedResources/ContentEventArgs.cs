@@ -9,7 +9,7 @@
         {
             Content = content;
         }
-       public T geContent<T>()
+        public T GetContent<T>()
         {
             return ObjectConverter.Deserialize<T>(Content);
         }

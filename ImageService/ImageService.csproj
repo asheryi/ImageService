@@ -73,6 +73,7 @@
     <Compile Include="ImageService.Logging\Model\MessageRecievedEventArgs.cs" />
     <Compile Include="ImageService\Commands\CloseHandlerCommand.cs" />
     <Compile Include="ImageService\Commands\GetAllLogsCommand.cs" />
+    <Compile Include="ImageService\Commands\GetConfigCommand.cs" />
     <Compile Include="ImageService\Commands\ICommand.cs" />
     <Compile Include="ImageService\Commands\NewFileCommand.cs" />
     <Compile Include="ImageService\Commands\SendLogCommand.cs" />

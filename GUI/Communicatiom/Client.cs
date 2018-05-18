@@ -22,11 +22,12 @@ namespace GUI.Model
         private BinaryReader reader;
         private BinaryWriter writer ;
         private IResponseHandler responser;
+        private IPEndPoint ep;
         //private EventHandler<ContentEventArgs> logReceive;
         //private EventHandler<ContentEventArgs> configReceive;
         // IDictionary<int, EventHandler<Log>> eventHandlerDic;
 
-       
+
 
 
         //public bool register(CommandEnum command,<ContentEventArgs>)
@@ -49,24 +50,30 @@ namespace GUI.Model
         //EventArgs<Service>
         public Client(IResponseHandler responser)
         {
-             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-             client = new TcpClient();
-            client.Connect(ep);
-            Debug.WriteLine("You are connected");
+           ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+            client = new TcpClient();
+            this.responser = responser;
 
-            stream = client.GetStream();
-            reader = new BinaryReader(stream);
-            writer = new BinaryWriter(stream);
             //eventHandlerDic = new Dictionary<int, EventHandler<EventArgs>>()
             //{
             //    { (int)CommandEnum.SendLog,logReceive }
 
             //};
 
-            this.responser = responser;
            
 
         }
+        public void Start()
+        {
+
+            client.Connect(ep);
+            Debug.WriteLine("You are connected");
+
+            stream = client.GetStream();
+            reader = new BinaryReader(stream);
+            writer = new BinaryWriter(stream);
+        }
+
         public void SendRequest()
         {
             
@@ -106,7 +113,7 @@ namespace GUI.Model
 
                         // Log log = ObjectConverter<Log>.Deserialize(reply.Content);
                         ///Log log = ObjectConverter<Log>.Deserialize(responseData);
-                        //Debug.WriteLine("Result = " + log.Message);
+
 
                         responser.Handle(responseData);
                         

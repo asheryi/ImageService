@@ -4,6 +4,7 @@ using SharedResources.Communication;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace GUI
 {
@@ -23,18 +24,20 @@ namespace GUI
 
         public bool Handle(string raw_data)
         {
-            try
+            new Task(() =>
             {
-                ServiceReply reply = ObjectConverter.Deserialize<ServiceReply>(raw_data);//<ServiceReply>
-                EventHandler<ContentEventArgs> eventhandler = eventHandlerDic[reply.CommandID];
-                eventhandler?.Invoke(this, new ContentEventArgs(reply.Content));
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+                try
+                {
+                    ServiceReply reply = ObjectConverter.Deserialize<ServiceReply>(raw_data);//<ServiceReply>
+                    EventHandler<ContentEventArgs> eventhandler = eventHandlerDic[reply.CommandID];
+                    eventhandler?.Invoke(this, new ContentEventArgs(reply.Content));
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.StackTrace);
+                }
 
-            
+            }).Start();
             return true;
         }
 

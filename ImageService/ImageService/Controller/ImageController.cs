@@ -29,11 +29,14 @@ namespace ImageService.Controller
             m_Model = Model; //Storing the Model Of The System
             SingletonServer singletonServer = SingletonServer.Instance;
             singletonServer.ClientConnected += ClientConnected;
+    
               commands = new Dictionary<int, ICommand>()
             {
                 { (int)CommandEnum.NewFileCommand,new NewFileCommand(Model) }
                 , { (int)CommandEnum.CloseHandlerCommand, new CloseHandlerCommand(handlersManager)}
-                , { (int)CommandEnum.SendLog, new SendLogCommand() },{ (int)CommandEnum.GetAllLogsCommand,new GetAllLogsCommand(logger.Logs,eventLogger,replyGenerator) }
+                , { (int)CommandEnum.SendLog, new SendLogCommand() },{ (int)CommandEnum.GetAllLogsCommand,
+                      new GetAllLogsCommand(logger.Logs,eventLogger,replyGenerator) },{ (int)CommandEnum.GetConfigCommand,
+                      new GetConfigCommand(replyGenerator,logger) }
             };
             this.logger = eventLogger;
         }
@@ -67,6 +70,9 @@ namespace ImageService.Controller
         {
             bool result;
             ExecuteCommand((int)CommandEnum.GetAllLogsCommand, new string[] { clientID.ToString() }, out result);
+
+ 
+            ExecuteCommand((int)CommandEnum.GetConfigCommand, new string[] { clientID.ToString() }, out result);
         }
     }
 }
