@@ -25,12 +25,13 @@ namespace GUI
            
             InitializeComponent();
             MainWindowViewModel mainWindowVM = new MainWindowViewModel();
-            SettingsViewTab.Content = mainWindowVM.SettingsView;
-            LogsViewTab.Content = mainWindowVM.LogView;
+           
            
             try
             {
                 mainWindowVM.Connect();
+                SettingsViewTab.Content = mainWindowVM.SettingsView;
+                LogsViewTab.Content = mainWindowVM.LogView;
             }
             catch (Exception e)
             {

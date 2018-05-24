@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using SharedResources.Communication;
 using System.IO;
-using SharedResources;
-using System.Collections;
-using SharedResources.Logging;
-using ImageService.Logging;
-using SharedResources.Commands;
 using System.Windows.Data;
 
 namespace ImageService.Comunication
@@ -33,7 +26,7 @@ namespace ImageService.Comunication
 
         private static SingletonServer singleServer;
 
-        public EventLog logger { get; set; }
+        
         public IMessageHandler MessageHandler { get; set; }
         private SingletonServer()
         {
@@ -80,7 +73,6 @@ namespace ImageService.Comunication
                         lock (lockThis)
                         {
                             BinaryWriter writer = new BinaryWriter(client.GetStream());
-                            logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString());
                             writer.Write(replyString);
                         }
                     }
@@ -115,13 +107,10 @@ namespace ImageService.Comunication
                         {
                             return;
                         }
-                    logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString() + " before get stream");
                     BinaryWriter writer = new BinaryWriter(desired_client.GetStream());
-                    logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString() + " before write ");
                     writer.Write(replyString);
                     }catch(Exception e)
                     {
-                        logger.WriteEntry(e.Message);
 
                     }
                 }

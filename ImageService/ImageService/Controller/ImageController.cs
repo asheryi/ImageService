@@ -20,7 +20,6 @@ namespace ImageService.Controller
     {
        
         private Dictionary<int, ICommand> commands;
-        private EventLog eventLog;
         private IMessageGenerator messageGenerator;
         private ILoggingService loggingService;
         /// <summary>
@@ -31,7 +30,6 @@ namespace ImageService.Controller
         {
             imageControllerArgs.ImageServiceModelArgs.LoggingService = imageControllerArgs.LoggingService;
             loggingService = imageControllerArgs.LoggingService;
-            eventLog = imageControllerArgs.EventLog;
 
             //imageControllerArgs.LogAnnouncement += ReceiveLog;
             logAnoun += ReceiveLog;
@@ -44,9 +42,7 @@ namespace ImageService.Controller
             CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.CloseHandlerCommand, closeHandler);
             singletonServer.Start();
 
-            this.eventLog =imageControllerArgs.EventLog;
 
-            singletonServer.logger = this.eventLog;
             singletonServer.ClientConnected += ClientConnected;
             HandlersManager handlersManager = new HandlersManager(this, imageControllerArgs.DirectoriesPaths, loggingService, imageControllerArgs.HandlerDirectoryClose, imageControllerArgs.ServerDown);
 
@@ -55,8 +51,8 @@ namespace ImageService.Controller
                 { (int)CommandEnum.NewFileCommand,new NewFileCommand(new ImageServiceModel(imageControllerArgs.ImageServiceModelArgs)) }
                 , { (int)CommandEnum.CloseHandlerCommand, new CloseHandlerCommand(handlersManager)}
                 , { (int)CommandEnum.SendLog, new SendLogCommand(messageGenerator) },{ (int)CommandEnum.GetAllLogsCommand,
-                      new GetAllLogsCommand(loggingService.Logs,eventLog,messageGenerator,loggingService) },{ (int)CommandEnum.GetConfigCommand,
-                      new GetConfigCommand(messageGenerator,loggingService,eventLog,handlersManager.getHandlersPaths) }
+                      new GetAllLogsCommand(loggingService.Logs,messageGenerator,loggingService) },{ (int)CommandEnum.GetConfigCommand,
+                      new GetConfigCommand(messageGenerator,loggingService,handlersManager.getHandlersPaths) }
             };
         }
 
@@ -96,7 +92,7 @@ namespace ImageService.Controller
                 ExecuteCommand((int)CommandEnum.GetAllLogsCommand, args, out result);
             } catch(Exception e)
             {
-                eventLog.WriteEntry(e.StackTrace);
+                loggingService.Log(e.Message,MessageTypeEnum.FAIL);
             }
             ExecuteCommand((int)CommandEnum.GetConfigCommand, args, out result);
         }

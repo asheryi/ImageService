@@ -10,5 +10,7 @@ namespace GUI.Model
         Settings Settings { get; set; }
         // ObservableCollection<string> Handlers { get;}
         Action<object,string> SendRequest { get; set; }
+
+        void RemoveDirectoryHandler(DirectoryDetails directoryToRemove);
     }
 }

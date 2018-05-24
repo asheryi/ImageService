@@ -33,6 +33,7 @@ namespace GUI.ViewModels
             createSettingsMVVM();
             createLogMVVM();
             client = new Client(handler);
+            
   
         }
         public void Connect()

@@ -17,23 +17,9 @@ namespace ImageService.Server
         #endregion
 
         #region Properties
-        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
-
         public event Action serverDown;
 
         #endregion
-
-        
-        //public ImageServer(ImageServerArgs imageServerArgs)
-        //{
-
-        //    m_controller = new ImageController(imageServerArgs.ImageServiceModel, imageServerArgs.LoggingService, imageServerArgs.EventLog, imageServerArgs.DirectoriesPaths, Handler_DirectoryClose,serverDown);
-        //    // 
-        //    imageServerArgs.ImageService.LogAnnouncement += m_controller.ReceiveLog; // FIX NOT SERVICE
-        //    //imageServerArgs.LogAnnouncement += m_controller.ReceiveLog;
-        //    // FIX INTERFACE < in Controller constructor give event .
-        //    m_logger = imageServerArgs.LoggingService;
-        //}
 
         public ImageServer(ImageServerArgs imageServerArgs,ref EventHandler<Log> LogAnnouncement)
         {
@@ -66,8 +52,6 @@ namespace ImageService.Server
         /// </summary>
         public void terminate()
         {
-            //CommandRecieved?.Invoke(this,new CommandRecievedEventArgs( (int)(CommandEnum.CloseCommand),null,"*"));
-
             serverDown?.Invoke();
             m_logger.Log("Server Down", MessageTypeEnum.WARNING);
         }
