@@ -14,7 +14,6 @@ namespace ImageService.Comunication
 
         private object lockThis = new object();
         private  EventHandler<IPEndPoint> clientConnected;
-
         public int Port { get; set; }
         private TcpListener listener;
         public IClientHandler CH {
