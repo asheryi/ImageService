@@ -5,41 +5,61 @@ using ImageService.Logging;
 using ImageService.Model;
 using SharedResources;
 using SharedResources.Commands;
+using SharedResources.Communication;
 using SharedResources.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace ImageService.Controller
 {
     public class ImageController : IImageController
     {
-        private IImageServiceModel m_Model;// The Model Object
+       
         private Dictionary<int, ICommand> commands;
-        private EventLog logger;
-        private IReplyGenerator replyGenerator;
+        private EventLog eventLog;
+        private IMessageGenerator messageGenerator;
+        private ILoggingService loggingService;
         /// <summary>
         /// ImageController constructor.
         /// </summary>
         /// <param name="Model">The Model Of The System.</param>
-        public ImageController(IImageServiceModel Model,HandlersManager handlersManager,ILoggingService logger,EventLog eventLogger)
+        public ImageController(ImageControllerArgs imageControllerArgs,ref EventHandler<Log> logAnoun)
         {
-            replyGenerator = new ServiceReplyGenerator();
-        
-            m_Model = Model; //Storing the Model Of The System
+            imageControllerArgs.ImageServiceModelArgs.LoggingService = imageControllerArgs.LoggingService;
+            loggingService = imageControllerArgs.LoggingService;
+            eventLog = imageControllerArgs.EventLog;
+
+            //imageControllerArgs.LogAnnouncement += ReceiveLog;
+            logAnoun += ReceiveLog;
+            messageGenerator = new CommunicationMessageGenerator();
+           
+            // m_Model = imageControllerArgs.ImageServiceModel; //Storing the Model Of The System
             SingletonServer singletonServer = SingletonServer.Instance;
+            CommunicationMessageHandler CommunicationMessageMessageHandler = new CommunicationMessageHandler();
+            singletonServer.MessageHandler = CommunicationMessageMessageHandler;
+            CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.CloseHandlerCommand, closeHandler);
+            singletonServer.Start();
+
+            this.eventLog =imageControllerArgs.EventLog;
+
+            singletonServer.logger = this.eventLog;
             singletonServer.ClientConnected += ClientConnected;
-    
-              commands = new Dictionary<int, ICommand>()
+            HandlersManager handlersManager = new HandlersManager(this, imageControllerArgs.DirectoriesPaths, loggingService, imageControllerArgs.HandlerDirectoryClose, imageControllerArgs.ServerDown);
+
+            commands = new Dictionary<int, ICommand>()
             {
-                { (int)CommandEnum.NewFileCommand,new NewFileCommand(Model) }
+                { (int)CommandEnum.NewFileCommand,new NewFileCommand(new ImageServiceModel(imageControllerArgs.ImageServiceModelArgs)) }
                 , { (int)CommandEnum.CloseHandlerCommand, new CloseHandlerCommand(handlersManager)}
-                , { (int)CommandEnum.SendLog, new SendLogCommand() },{ (int)CommandEnum.GetAllLogsCommand,
-                      new GetAllLogsCommand(logger.Logs,eventLogger,replyGenerator) },{ (int)CommandEnum.GetConfigCommand,
-                      new GetConfigCommand(replyGenerator,logger) }
+                , { (int)CommandEnum.SendLog, new SendLogCommand(messageGenerator) },{ (int)CommandEnum.GetAllLogsCommand,
+                      new GetAllLogsCommand(loggingService.Logs,eventLog,messageGenerator,loggingService) },{ (int)CommandEnum.GetConfigCommand,
+                      new GetConfigCommand(messageGenerator,loggingService,eventLog,handlersManager.getHandlersPaths) }
             };
-            this.logger = eventLogger;
         }
+
 
         /// <summary>
         /// treat the command whitch were sent to the ImageController.
@@ -63,16 +83,27 @@ namespace ImageService.Controller
         public void ReceiveLog(object sender, Log log)
         {
             bool result;
-            string logString = ObjectConverter.Serialize(log);//Log
-            ExecuteCommand((int)CommandEnum.SendLog,new string[] {logString}, out result);
+            ExecuteCommand((int)CommandEnum.SendLog,new string[] {((int)log.Type).ToString(), log.Message }, out result);
         }
-        public void ClientConnected(object sender,int clientID)
+        public void ClientConnected(object sender, IPEndPoint p)
         {
             bool result;
-            ExecuteCommand((int)CommandEnum.GetAllLogsCommand, new string[] { clientID.ToString() }, out result);
-
- 
-            ExecuteCommand((int)CommandEnum.GetConfigCommand, new string[] { clientID.ToString() }, out result);
+            string address = p.Address.ToString();
+            string port = p.Port.ToString();
+            string[] args = new string[] { address, port };
+            try
+            {
+                ExecuteCommand((int)CommandEnum.GetAllLogsCommand, args, out result);
+            } catch(Exception e)
+            {
+                eventLog.WriteEntry(e.StackTrace);
+            }
+            ExecuteCommand((int)CommandEnum.GetConfigCommand, args, out result);
+        }
+        public void closeHandler(object sender,ContentEventArgs args)
+        {
+            bool result;
+            ExecuteCommand((int)CommandEnum.CloseHandlerCommand,new string[] { args.GetContent<DirectoryDetails>().DirectoryName }, out result);
         }
     }
 }

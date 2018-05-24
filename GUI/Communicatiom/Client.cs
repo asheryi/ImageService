@@ -21,7 +21,7 @@ namespace GUI.Model
         private NetworkStream stream;
         private BinaryReader reader;
         private BinaryWriter writer ;
-        private IResponseHandler responser;
+        private IMessageHandler messageHandler;
         private IPEndPoint ep;
         //private EventHandler<ContentEventArgs> logReceive;
         //private EventHandler<ContentEventArgs> configReceive;
@@ -48,11 +48,11 @@ namespace GUI.Model
         //    }
         //}
         //EventArgs<Service>
-        public Client(IResponseHandler responser)
+        public Client(IMessageHandler responser)
         {
            ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             client = new TcpClient();
-            this.responser = responser;
+            this.messageHandler = responser;
 
             //eventHandlerDic = new Dictionary<int, EventHandler<EventArgs>>()
             //{
@@ -73,60 +73,41 @@ namespace GUI.Model
             reader = new BinaryReader(stream);
             writer = new BinaryWriter(stream);
         }
-
-        public void SendRequest()
-        {
-            
-            
-                // Send data to server
-                //  int num = int.Parse(Console.ReadLine());
-                 string  result = "1:";
-                byte[] byData = System.Text.Encoding.UTF8.GetBytes(result);
-                 //writer.WriteLine(byData);
-                 stream.Write(byData,0,byData.Length);
-                // Get result from server
-
-
-                Byte[] data = new Byte[256];
-                String responseData = String.Empty;
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-                ServiceReply reply = JsonConvert.DeserializeObject<ServiceReply>(responseData);
-                Log log = JsonConvert.DeserializeObject<Log>(reply.Content);
-                  Debug.WriteLine("Result = {0}", log.Message);
-
-          
-
-           // client.Close();
-        }
-
+        private object lockThis = new object();
         public void Recieve()
         {
             new Task(() =>
             {
                 while (true)
                 {
-                   
                     try
                     {
-                        string responseData = reader.ReadString();
-
-                        // Log log = ObjectConverter<Log>.Deserialize(reply.Content);
-                        ///Log log = ObjectConverter<Log>.Deserialize(responseData);
-
-
-                        responser.Handle(responseData);
-                        
+                            string responseData = reader.ReadString();
+                            messageHandler.Handle(responseData);
                     }
                     catch(Exception)
                     {
                         Debug.WriteLine("Deserialize fails");
-
                     }
-                   
                 }
 
             }).Start();
         }
+        public void Send(string requestString)
+        {
+            new Task(() =>
+            {
+                    try
+                    {
+                         writer.Write(requestString);
+                }
+                catch (Exception)
+                    {
+                        Debug.WriteLine("Deserialize fails");
+
+                    }
+            }).Start();
+        }
+
     }
 }

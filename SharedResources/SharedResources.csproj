@@ -41,15 +41,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandEnum.cs" />
-    <Compile Include="Communication\ServiceReply.cs" />
+    <Compile Include="Communication\IMessageGenerator.cs" />
+    <Compile Include="Communication\IMessageHandler.cs" />
+    <Compile Include="Communication\CommunicationMessage.cs" />
     <Compile Include="Communication\Logging\Log.cs" />
     <Compile Include="Communication\Logging\MessageTypeEnum.cs" />
-    <Compile Include="Communication\ServiceReplyEnum.cs" />
+    <Compile Include="Communication\CommunicationMessageEnum.cs" />
+    <Compile Include="Communication\CommunicationMessageGenerator.cs" />
+    <Compile Include="Communication\CommunicationMessageHandler.cs" />
     <Compile Include="ContentEventArgs.cs" />
     <Compile Include="DirectoryDetails.cs" />
     <Compile Include="ObjectConverter.cs" />
-    <Compile Include="ReplyContent.cs" />
-    <Compile Include="Respond.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>

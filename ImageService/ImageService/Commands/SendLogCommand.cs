@@ -16,16 +16,18 @@ namespace ImageService.Commands
     {
         SingletonServer singletonServer;
         private ICollection<TcpClient> logsClients;
-
-      public  SendLogCommand()
+        private IMessageGenerator replyGenerator;
+      public  SendLogCommand(IMessageGenerator replyGenerator)
         {
             singletonServer = SingletonServer.Instance;
             logsClients = new List<TcpClient>();
+            this.replyGenerator = replyGenerator;
 
         }
         public string Execute(string[] args, out bool result)
         {
-            singletonServer.SendToAll(new ServiceReply(CommandEnum.SendLog,args[0]));
+            singletonServer.SendToAll(replyGenerator.Generate(CommandEnum.SendLog,new Log((MessageTypeEnum)(int.Parse(args[0])),args[1])));
+            //singletonServer.SendToAll(new CommunicationMessage(CommandEnum.SendLog, args[0]));
             result = true;
             return "ok";
         }

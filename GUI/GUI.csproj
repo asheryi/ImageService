@@ -76,14 +76,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IResponseHandler.cs" />
     <Compile Include="Communicatiom\Client.cs" />
     <Compile Include="Model\ISettingsModel.cs" />
     <Compile Include="Model\LogsModel.cs" />
+    <Compile Include="Model\Questionnaire.cs" />
+    <Compile Include="ViewModels\QuestionnaireViewModel.cs" />
     <Compile Include="Model\SettingsModel.cs" />
-    <Compile Include="ServiceReplyResponseHandler.cs" />
     <Compile Include="ViewModels\ISettingsViewModel.cs" />
     <Compile Include="ViewModels\LogsViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

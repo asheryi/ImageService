@@ -1,4 +1,8 @@
-﻿using ImageService.Controller.Handlers;
+﻿using ImageService.Comunication;
+using ImageService.Controller.Handlers;
+using SharedResources;
+using SharedResources.Commands;
+using SharedResources.Communication;
 using System;
 
 namespace ImageService.Commands
@@ -15,17 +19,27 @@ namespace ImageService.Commands
         public string Execute(string[] args, out bool result)
         {
             IDirectoryHandler handler = handlersManager.Remove(args[0]);
-            if(handler == null)
+            result = true;
+            if (handler == null)
             {
                 result = false;
                 return "";
             }
 
             // ZARICH EIUN
-
-            handler.Close();
-
-            result = true;
+            try
+            {
+                handler.Close();
+            }catch(Exception e)
+            {
+                result = false;
+            }
+            if (result)
+            {
+                SingletonServer singletonServer = SingletonServer.Instance;
+                CommunicationMessageGenerator CommunicationMessageGenerator = new CommunicationMessageGenerator();
+                singletonServer.SendToAll(CommunicationMessageGenerator.Generate(CommandEnum.CloseHandlerCommand,new DirectoryDetails(args[0])));
+            }
             return args[0];
         }
     }

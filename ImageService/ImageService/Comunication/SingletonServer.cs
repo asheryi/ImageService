@@ -10,6 +10,9 @@ using System.IO;
 using SharedResources;
 using System.Collections;
 using SharedResources.Logging;
+using ImageService.Logging;
+using SharedResources.Commands;
+using System.Windows.Data;
 
 namespace ImageService.Comunication
 {
@@ -17,23 +20,29 @@ namespace ImageService.Comunication
     {
 
         private object lockThis = new object();
-        private  EventHandler<int> clientConnected;
+        private  EventHandler<IPEndPoint> clientConnected;
+
         public int Port { get; set; }
         private TcpListener listener;
         public IClientHandler CH {
             get;
             set; }
 
+
         private ICollection<TcpClient> clients;
 
         private static SingletonServer singleServer;
 
+        public EventLog logger { get; set; }
+        public IMessageHandler MessageHandler { get; set; }
         private SingletonServer()
         {
             clients = new List<TcpClient>();
-            
+            BindingOperations.EnableCollectionSynchronization(clients, clients);
             this.Port = 8000;
             this.CH = new ClientHandler();
+
+
         }
 
         public static SingletonServer Instance
@@ -48,7 +57,7 @@ namespace ImageService.Comunication
                 return singleServer;
             }
         }
-        public EventHandler<int> ClientConnected
+        public EventHandler<IPEndPoint> ClientConnected
         {
             get
             {
@@ -59,7 +68,8 @@ namespace ImageService.Comunication
                 clientConnected = value;
             }
         }
-        public void SendToAll(ServiceReply serviceReply)
+      
+        public void SendToAll(string replyString)
         {
             new Task(() =>
             {
@@ -69,44 +79,9 @@ namespace ImageService.Comunication
                     {
                         lock (lockThis)
                         {
-                            NetworkStream stream = client.GetStream();
-                            BinaryWriter writer = new BinaryWriter(stream);
-                            writer.Write((ObjectConverter.Serialize(serviceReply)));//serviceReply
-                            //writer.WriteLine(byData);
-                            //writer.BaseStream.Position = 0;
-
-                            //writer.Close();
-                        }
-                    } catch(Exception e)
-                    {
-                        clients.Remove(client);
-                    }
-
-                }
-
-
-
-                //client.Close();
-            }).Start();
-
-        }
-        public void SendToAll(string log)
-        {
-            new Task(() =>
-            {
-                foreach (TcpClient client in new List<TcpClient>(clients))
-                {
-                    try
-                    {
-                        lock (lockThis)
-                        {
-                            NetworkStream stream = client.GetStream();
-                            BinaryWriter writer = new BinaryWriter(stream);
-                            writer.Write(log);
-                            //writer.WriteLine(byData);
-                            //writer.BaseStream.Position = 0;
-
-                            //writer.Close();
+                            BinaryWriter writer = new BinaryWriter(client.GetStream());
+                            logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString());
+                            writer.Write(replyString);
                         }
                     }
                     catch (Exception e)
@@ -115,100 +90,89 @@ namespace ImageService.Comunication
                     }
 
                 }
-
-
-
-                //client.Close();
             }).Start();
 
         }
-
-        public void SendToClient(string replyString, int clientID)
+        public void SendToClient(string replyString, IPEndPoint ip)
         {
-            
             new Task(() =>
             {
                 lock (lockThis)
                 {
-                    //string replyString = (ObjectConverter<ServiceReply>.Serialize(serviceReply));
-                    TcpClient t = ((List<TcpClient>)clients)[clientID];
-                    BinaryWriter writer = new BinaryWriter(t.GetStream());
+                    TcpClient desired_client = null;
+                    try {
+                        foreach(TcpClient client in clients)
+                        {
+                            IPEndPoint ip_client = (IPEndPoint)client.Client.RemoteEndPoint;
+                            if (ip_client.ToString() == ip.ToString())
+                            {
+                                desired_client = client;
+                                break;
+                            }
+                        }
 
+                        if(desired_client == null)
+                        {
+                            return;
+                        }
+                    logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString() + " before get stream");
+                    BinaryWriter writer = new BinaryWriter(desired_client.GetStream());
+                    logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString() + " before write ");
                     writer.Write(replyString);
+                    }catch(Exception e)
+                    {
+                        logger.WriteEntry(e.Message);
+
+                    }
                 }
 
-                //client.Close();
             }).Start();
 
         }
-        public void SendToClient(string log, int clientID, EventLog eventlog)
-        {
-           
-            new Task(() =>
-            {
-
-               // string replyString = (ObjectConverter<ServiceReply>.Serialize(serviceReply));
-                //eventlog.WriteEntry("%%%%%%%%%%" + replyString);
-                TcpClient t = ((List<TcpClient>)clients)[clientID];
-                lock (lockThis)
-                {
-                    BinaryWriter writer = new BinaryWriter(t.GetStream());
-
-                    writer.Write(log);
-                }
-
-                //client.Close();
-            }).Start();
-
-        }
-
-        //public void SendToClient(ServiceReply serviceReply, NetworkStream stream)
-        //{
-        //    new Task(() =>
-        //    {
-
-        //        BinaryWriter writer = new BinaryWriter(stream);
-        //        writer.Write((ObjectConverter<ServiceReply>.Serialize(serviceReply)));
-
-        //        //client.Close();
-        //    }).Start();
-
-        //}
+      
+      
         public void Start()
         {
             IPEndPoint ep = new
             IPEndPoint(IPAddress.Parse("127.0.0.1"), Port);
             listener = new TcpListener(ep);
-
             listener.Start();
-            Debug.WriteLine("Waiting for connections...");
-           
             Task task = new Task(() => {
-                while (true)
+            while (true)
+            {
+                try
                 {
-                    try
-                    {
-                        TcpClient client = listener.AcceptTcpClient();
+                    TcpClient client = listener.AcceptTcpClient();
+                    IPEndPoint pass = (IPEndPoint)(client.Client.RemoteEndPoint);
                         clients.Add(client);
-                        Debug.WriteLine("Got new connection");
-                        //                logger.Log("Got new connection", MessageTypeEnum.INFO);
-                        clientConnected?.Invoke(this, ((List<TcpClient>)clients).IndexOf(client));
-                       // clientConnected?.Invoke(this,ObjectConverter<NetworkStream>.Serialize(client.GetStream()));
-                        //  CH.HandleClient(client);
+                        recieveRequests(client);
+                        clientConnected?.Invoke(this, pass);
                     }
                     catch (SocketException)
                     {
                         break;
                     }
                 }
-               
-                Debug.WriteLine("Server stopped");
             });
             task.Start();
         }
         public void Stop()
         {
             listener.Stop();
+        }        public void recieveRequests(TcpClient client)
+        {
+            Task task = new Task(() =>
+              {
+                  while (true)
+                  {
+
+                      BinaryReader reader = new BinaryReader(client.GetStream());
+                      string request = reader.ReadString();
+                      MessageHandler.Handle(request);
+                   
+                  }
+              });
+            task.Start();
         }
     }
 }

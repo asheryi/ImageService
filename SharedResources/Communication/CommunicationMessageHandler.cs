@@ -6,20 +6,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace GUI
+namespace SharedResources.Communication
 {
-    public class ServiceReplyResponseHandler : IResponseHandler
+    public class CommunicationMessageHandler : IMessageHandler
     {
         private IDictionary<CommandEnum, EventHandler<ContentEventArgs>> eventHandlerDic;
 
         //private IDictionary<CommandEnum, Type> commandToType;
 
-        public ServiceReplyResponseHandler()
+        public CommunicationMessageHandler()
         {
             eventHandlerDic = new Dictionary<CommandEnum, EventHandler<ContentEventArgs>>();
             eventHandlerDic.Add(CommandEnum.GetAllLogsCommand, null);
             eventHandlerDic.Add(CommandEnum.GetConfigCommand, null);
             eventHandlerDic.Add(CommandEnum.SendLog, null);
+            eventHandlerDic.Add(CommandEnum.CloseHandlerCommand, null);
         }
 
         public bool Handle(string raw_data)
@@ -28,7 +29,7 @@ namespace GUI
             {
                 try
                 {
-                    ServiceReply reply = ObjectConverter.Deserialize<ServiceReply>(raw_data);//<ServiceReply>
+                    CommunicationMessage reply = ObjectConverter.Deserialize<CommunicationMessage>(raw_data);//<CommunicationMessage>
                     EventHandler<ContentEventArgs> eventhandler = eventHandlerDic[reply.CommandID];
                     eventhandler?.Invoke(this, new ContentEventArgs(reply.Content));
                 }

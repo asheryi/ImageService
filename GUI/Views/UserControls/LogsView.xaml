@@ -15,7 +15,7 @@
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <DataGrid ItemsSource="{Binding Logs}" x:Name="logsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                  AutoGenerateColumns="False" RenderTransformOrigin="5.714,1.566" Height="300" Background="#FFF5EEEE">
+                  AutoGenerateColumns="False" RenderTransformOrigin="5.714,1.566" Height="252" Background="#FFF5EEEE" Margin="0,48,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}">
                     <DataGridTextColumn.ElementStyle>
@@ -27,5 +27,6 @@
                 <DataGridTextColumn Header="Message" Binding ="{Binding Message}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="115,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" RenderTransformOrigin="-1.4,1.188"/>
     </Grid>
 </UserControl>

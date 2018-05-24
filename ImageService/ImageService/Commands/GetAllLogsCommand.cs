@@ -7,6 +7,8 @@ using SharedResources.Commands;
 using System.Net.Sockets;
 using SharedResources;
 using System.Diagnostics;
+using ImageService.Logging;
+using System.Net;
 
 namespace ImageService.Commands
 {
@@ -16,35 +18,22 @@ namespace ImageService.Commands
         SingletonServer singletonServer;
         private ICollection<TcpClient> logsClients;
         private ICollection<Log> logs;
-        private EventLog eventlogger;
-        private IReplyGenerator replyGenerator;
-
+        private IMessageGenerator replyGenerator;
+        private ILoggingService logger;
         public string Execute(string[] args, out bool result)
         {
-            int clientID = Int32.Parse(args[0]);
-            //string allLogsString = ObjectConverter<ICollection<Log>>.Serialize(logs);
-            //ServiceReply sr = new ServiceReply(CommandEnum.GetAllLogsCommand, allLogsString);
-
-
-
-            singletonServer.SendToClient(this.replyGenerator.Generate(CommandEnum.GetAllLogsCommand,logs), clientID);
-
-            //foreach (Log log in logs)
-            //{
-                
-            //    ServiceReply sr = new ServiceReply(CommandEnum.SendLog, ObjectConverter<Log>.Serialize(log));
-            //    singletonServer.SendToClient(sr, clientID);
-             
-
-            //}
+            IPAddress address = IPAddress.Parse(args[0]);
+            int port = int.Parse(args[1]);
+            IPEndPoint p = new IPEndPoint(address, port);
+            singletonServer.SendToClient(this.replyGenerator.Generate(CommandEnum.GetAllLogsCommand,logs), p);
             result = true;
             return "ok";
         }
-        public GetAllLogsCommand(ICollection<Log> logs,EventLog eventlogger,IReplyGenerator generator)
+        public GetAllLogsCommand(ICollection<Log> logs,EventLog eventlogger,IMessageGenerator generator, ILoggingService logger)
         {
             singletonServer = SingletonServer.Instance;
             logsClients = new List<TcpClient>();
-            this.eventlogger = eventlogger;
+            this.logger = logger;
             this.logs = logs;
             this.replyGenerator = generator;
 

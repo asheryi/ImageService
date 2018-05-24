@@ -10,7 +10,7 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label x:Name="Settings" Grid.ColumnSpan="2" Content="Settings" HorizontalAlignment="Left" Margin="216,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.686,-0.29"/>
+        <TextBlock x:Name="Settings" Grid.ColumnSpan="2" Text="Settings" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.686,-0.29" Width="495"/>
         <Grid Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="202" Margin="10,66,0,0" VerticalAlignment="Top" Width="475">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -30,12 +30,11 @@
             <TextBlock x:Name="textBlock" Grid.Column="1" Grid.Row="0" TextWrapping="Wrap"  Text="{Binding Settings.OutputDirectory}"/>
             <TextBlock x:Name="textBlock1" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Settings.SourceName}" />
             <TextBlock x:Name="textBlock2" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Settings.LogName}"/>
-            <TextBlock x:Name="textBlock3" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap"/>
+            <TextBlock x:Name="textBlock3" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Text="{Binding Settings.ThumbnailSize}"/>
         </Grid>
-        <ListBox x:Name="listBox" ItemsSource="{Binding Settings.Handlers}"  DisplayMemberPath="DirectoryName" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="32,268,0,0" Width="387" Height="70" VerticalAlignment="Top"/>
-           
-        <Button x:Name="removeBtn" Grid.ColumnSpan="2" Content="Remove" HorizontalAlignment="Left" Margin="32,248,0,0" VerticalAlignment="Top" Width="387" IsEnabled="False"/>
+        <ListBox x:Name="listBox" ItemsSource="{Binding Settings.Handlers}" SelectedItem="{Binding Path=HandlerSelected ,Mode=OneWayToSource}"  DisplayMemberPath="DirectoryName" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="32,268,0,0" Width="387" Height="70" VerticalAlignment="Top"/>
 
+        <Button x:Name="SubmitButton" Command="{Binding SubmitCommand}" Grid.ColumnSpan="2" Content="Remove" HorizontalAlignment="Left" Margin="32,248,0,0" VerticalAlignment="Top" Width="387"  AutomationProperties.AutomationId="SubmitButton" />
     </Grid>
 
 

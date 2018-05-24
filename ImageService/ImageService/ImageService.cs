@@ -12,6 +12,7 @@ using SharedResources.Logging;
 using ImageService.Logging.Model;
 using ImageService.Comunication;
 using SharedResources;
+using ImageService.Controller;
 //using ImageService.Logging.Model;
 //using ImageService.Model;
 
@@ -49,7 +50,7 @@ namespace ImageService
         private ImageServer m_imageServer;//The Image Server
         private ILoggingService logger;//the logger of the system.
         private EventLog eventLogger;//writea to logger event.
-        private IContainer components;
+       // private IContainer components;
         private Comunication.SingletonServer server;
         private ICollection<Log>  logs;//stores system logs.
         public event EventHandler<Log> LogAnnouncement;
@@ -95,17 +96,14 @@ namespace ImageService
 
                 EventLogFunc(this, new MessageRecievedEventArgs("Service is ON", MessageTypeEnum.INFO));
 
-                
-
                 logger = new LoggingService();
                 //this function is subscribes to the event of logger.
                 logger.MessageRecieved += EventLogFunc;
                 EventLogFunc(this, new MessageRecievedEventArgs("MessageRecieved", MessageTypeEnum.INFO));
-
                 server = SingletonServer.Instance;
                 EventLogFunc(this, new MessageRecievedEventArgs("SingletonServer.Instance", MessageTypeEnum.INFO));
 
-                server.Start();
+               // server.Start();
                 EventLogFunc(this, new MessageRecievedEventArgs("server.Start()", MessageTypeEnum.INFO));
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
@@ -114,7 +112,28 @@ namespace ImageService
                
                 
                 logger.Logs = logs;
-                m_imageServer = new ImageServer(directoriesPaths, logger,new ImageServiceModel(logger,manage_path,thumbnailSize), this,eventLogger);
+
+                //Create ImageService Args
+                ImageServerArgs imageServerArgs = new ImageServerArgs();
+                imageServerArgs.LoggingService = logger;
+
+                //Create Controller Args
+                ImageControllerArgs imageControllerArgs = new ImageControllerArgs();
+                imageControllerArgs.DirectoriesPaths = directoriesPaths;
+                imageControllerArgs.ImageService = this;
+                imageControllerArgs.EventLog = eventLogger;
+                //Create ImageServiceModelArgs
+                ImageServiceModelArgs imageServiceModelArgs = new ImageServiceModelArgs();
+                imageServiceModelArgs.ManagePath = manage_path;
+                imageServiceModelArgs.ThumbnailsSize = thumbnailSize;
+                imageControllerArgs.ImageServiceModelArgs = imageServiceModelArgs;
+                //LogAnnouncement += imageControllerArgs.LogAnnouncement;
+                imageServerArgs.ImageControllerArgs = imageControllerArgs;
+                //  ImageController m_controller = new ImageController(imageServerArgs.ImageServiceModel, imageServerArgs.LoggingService, imageServerArgs.EventLog, imageServerArgs.DirectoriesPaths, Handler_DirectoryClose, serverDown);
+               // ImageController m_controller = new ImageController(imageControllerArgs);
+               //imageControllerArgs.LogAnnouncement=LogAnnouncement;
+                m_imageServer = new ImageServer(imageServerArgs,ref LogAnnouncement);
+               // m_imageServer = new ImageServer(directoriesPaths, logger,new ImageServiceModel(logger,manage_path,thumbnailSize), this,eventLogger);
                 EventLogFunc(this, new MessageRecievedEventArgs(" new ImageServer", MessageTypeEnum.INFO));
 
             }
@@ -155,7 +174,7 @@ namespace ImageService
         /// <param name="args">MessageRecievedEventArgs.</param>
         private void EventLogFunc(object sender,MessageRecievedEventArgs args)
         {
-             Log log = new Log(args.Type, args.Message);
+            Log log = new Log(args.Type, args.Message);
             logs.Add(log);
             LogAnnouncement?.Invoke(this, log);
             eventLogger.WriteEntry(args.Message);

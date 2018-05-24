@@ -10,6 +10,7 @@ namespace ImageService.Logging
     {
         public event EventHandler<MessageRecievedEventArgs> MessageRecieved;
         private ICollection<Log> logs;
+        private object logsLock=new object();
         public void Log(string message, MessageTypeEnum type)
         {
             MessageRecieved?.Invoke(this, new MessageRecievedEventArgs(message,type));
@@ -18,11 +19,16 @@ namespace ImageService.Logging
         {
             set
             {
-                logs = value;
+                lock(logsLock)
+                { logs = value; }
+               
             }
             get
             {
-                return logs;
+                lock (logsLock)
+                {
+                    return logs;
+                }
             }
         }
     }

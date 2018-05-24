@@ -13,14 +13,25 @@ namespace SharedResources
 
         public Settings(string outputDirectory, string sourceName, string logName, int thumbnailSize)
         {
-            this.outputDirectory = outputDirectory;
-            this.sourceName = sourceName;
-            this.logName = logName;
-            this.thumbnailSize = thumbnailSize;
+            initialize(outputDirectory, sourceName, logName, thumbnailSize);
             Handlers = new ObservableCollection<DirectoryDetails>();
-        
         }
-
+        public void initialize(string outputDirectory, string sourceName, string logName, int thumbnailSize)
+        {
+            this.OutputDirectory = outputDirectory;
+            this.SourceName = sourceName;
+            this.LogName = logName;
+            this.ThumbnailSize = thumbnailSize;
+        }
+        public void updateSettings(Settings settings)
+        {
+            initialize(settings.outputDirectory, settings.sourceName, settings.logName, settings.thumbnailSize);
+            handlers.Clear();
+            foreach (DirectoryDetails directory in settings.Handlers)
+            {
+                this.Handlers.Add(directory);
+            }
+        }
         private string outputDirectory;
         public string OutputDirectory {
             get { return outputDirectory; }
@@ -72,7 +83,7 @@ namespace SharedResources
                 return handlers;
             }
 
-            private set
+            set
             {
                 handlers = value;
             }
@@ -84,5 +95,6 @@ namespace SharedResources
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        
     }
 }

@@ -52,6 +52,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -79,14 +80,13 @@
     <Compile Include="ImageService\Commands\SendLogCommand.cs" />
     <Compile Include="ImageService\Comunication\ClientHandler.cs" />
     <Compile Include="ImageService\Comunication\IClientHandler.cs" />
-    <Compile Include="ImageService\Comunication\IReplyGenerator.cs" />
-    <Compile Include="ImageService\Comunication\ServiceReplyGenerator.cs" />
     <Compile Include="ImageService\Comunication\SingletonServer.cs" />
     <Compile Include="ImageService\Controller\Handlers\DirectoyHandler.cs" />
     <Compile Include="ImageService\Controller\Handlers\HandlersManager.cs" />
     <Compile Include="ImageService\Controller\Handlers\IDirectoryHandler.cs" />
     <Compile Include="ImageService\Controller\IImageController.cs" />
     <Compile Include="ImageService\Controller\ImageController.cs" />
+    <Compile Include="ImageService\Controller\ImageControllerArgs.cs" />
     <Compile Include="ImageService\ImageService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -94,6 +94,7 @@
     <Compile Include="ImageService\Model\Event\DirectoryCloseEventArgs.cs" />
     <Compile Include="ImageService\Model\IImageServiceModel.cs" />
     <Compile Include="ImageService\Model\ImageServiceModel.cs" />
+    <Compile Include="ImageService\Model\ImageServiceModelArgs.cs" />
     <Compile Include="ImageService\Server\ImageServer.cs" />
     <Compile Include="ImageService\ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -102,10 +103,13 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageService\Program.cs" />
+    <Compile Include="ImageService\Server\ImageServerArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ImageService\App.config" />
+    <None Include="ImageService\App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

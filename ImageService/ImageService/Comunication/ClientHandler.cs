@@ -36,9 +36,9 @@ namespace ImageService.Comunication
 
 
 
-              //  ServiceReply reply = new ServiceReply(CommandEnum.GetAllLogsCommand, JsonConvert.SerializeObject(log));
+              //  CommunicationMessage reply = new CommunicationMessage(CommandEnum.GetAllLogsCommand, JsonConvert.SerializeObject(log));
 
-              //  string result = ObjectConverter<ServiceReply>.Serialize(reply);
+              //  string result = ObjectConverter<CommunicationMessage>.Serialize(reply);
                // writer.Write(result);
 
                 //while (true)
@@ -64,9 +64,9 @@ namespace ImageService.Comunication
 
 
 
-                //    ServiceReply reply = new ServiceReply(CommandEnum.GetAllLogsCommand, JsonConvert.SerializeObject(log));
+                //    CommunicationMessage reply = new CommunicationMessage(CommandEnum.GetAllLogsCommand, JsonConvert.SerializeObject(log));
 
-                //    string result = ObjectConverter<ServiceReply>.Serialize(reply);
+                //    string result = ObjectConverter<CommunicationMessage>.Serialize(reply);
                 //    writer.Write(result);
 
                 //}

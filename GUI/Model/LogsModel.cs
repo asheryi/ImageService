@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using ImageService.Logging.Model;
 using SharedResources.Logging;
+using System.Windows.Data;
 
 namespace GUI.Model
 {
@@ -9,6 +10,7 @@ namespace GUI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private ObservableCollection<Log> logs;
+       
         public ObservableCollection<Log> Logs
         {
             get
@@ -30,6 +32,8 @@ namespace GUI.Model
         public LogsModel()
         {
             this.Logs = new ObservableCollection<Log>();
+            BindingOperations.EnableCollectionSynchronization(Logs, Logs);
+
         }
 
 

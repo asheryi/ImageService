@@ -5,12 +5,12 @@ using System;
 namespace SharedResources.Communication
 {
     [Serializable]
-    public class ServiceReply
+    public class CommunicationMessage
     {
         public CommandEnum CommandID { get; private set; }
         public string Content { get; private set; }
 
-        public ServiceReply(CommandEnum commandID, string content)
+        public CommunicationMessage(CommandEnum commandID, string content)
         {
             CommandID = commandID;
             Content = content;

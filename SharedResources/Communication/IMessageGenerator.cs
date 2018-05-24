@@ -1,8 +1,8 @@
 ﻿using SharedResources.Commands;
 
-namespace ImageService.Comunication
+namespace SharedResources.Communication
 {
-    public interface IReplyGenerator
+    public interface IMessageGenerator
     {
         string Generate(CommandEnum c, object o);        
     }

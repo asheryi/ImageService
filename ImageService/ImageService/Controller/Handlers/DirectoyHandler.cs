@@ -17,10 +17,11 @@ namespace ImageService.Controller.Handlers
         private ILoggingService m_logging;    //the logger of the system. 
         private List<FileSystemWatcher> m_dirWatchers;   // The Watchers of the Dir based on each extension watched
         private string m_path; // The Path of directory
+        public delegate string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful);
         private Dictionary<int, CommandFunction> m_Commands;//Dictionary of commands.
         #endregion
         ///
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;//The Event That Notifies that the Directory is being closed
         /// <summary>
         /// DirectoyHandler constructor.
         /// </summary>
@@ -76,25 +77,7 @@ namespace ImageService.Controller.Handlers
             }
         }
 
-        // TODO DELETE THIS
-
-        ///// <summary>
-        ///// OnCommandRecieved passing the command sent to DirectoryHandler.
-        ///// </summary>
-        ///// <param name="sender">the object who call the function.</param> 
-        ///// <param name="e">arguments for the function.</param>
-        //public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
-        //{
-        //    //if the command is not specific for this DirectoyHandler or is not fload command ignore.
-        //    if (e.RequestDirPath!="*" && e.RequestDirPath != this.m_path)
-        //    {
-        //        return;
-        //    }
-
-        //    //In the future we would like to close specipc directory handler
-
-        //    m_Commands[(int)(e.CommandID)]?.Invoke(e);
-        //}
+        
 
 
 

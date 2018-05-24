@@ -5,7 +5,7 @@ namespace SharedResources.Logging
     [Serializable]
     public class Log : EventArgs
     {
-       // private DateTime recieveDate;
+       //private DateTime recieveDate;
         public Log(MessageTypeEnum type = MessageTypeEnum.INFO, string message = "")
         {
             Type = type;

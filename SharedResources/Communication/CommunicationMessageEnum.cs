@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedResources
+namespace SharedResources.Communication
 {
-    public interface  ReplyContent
+    public enum CommunicationMessageEnum:int
     {
-        DateTime recieveAt();
+        LOG,
+        CONFIG
     }
 }
+

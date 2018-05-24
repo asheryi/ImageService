@@ -30,6 +30,15 @@ namespace ImageService.Model
             CreateFolder(Path.Combine(m_OutputFolder, m_undefinedTakenDate));
         }
 
+        public ImageServiceModel(ImageServiceModelArgs imageServiceModelArgs)
+        {
+            this.m_OutputFolder = imageServiceModelArgs.ManagePath;
+            this.m_thumbnailSize = imageServiceModelArgs.ThumbnailsSize;
+            this.m_logger = imageServiceModelArgs.LoggingService;
+            CreateFolder(Path.Combine(m_OutputFolder, m_thumsNailOutputFolder));
+            CreateFolder(Path.Combine(m_OutputFolder, m_undefinedTakenDate));
+        }
+
         /// <summary>
         /// Check if a file is already done downloading .
         /// </summary>
@@ -176,6 +185,7 @@ namespace ImageService.Model
         //we init this once so that if the function is repeatedly called
         //it isn't stressing the garbage man
         private static Regex r = new Regex(":");
+        private ImageServiceModelArgs imageServiceModelArgs;
 
         //retrieves the datetime WITHOUT loading the whole image
         private DateTime GetDateTakenFromImage(string path)

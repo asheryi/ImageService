@@ -7,14 +7,14 @@ using SharedResources.Commands;
 using SharedResources;
 using SharedResources.Communication;
 
-namespace ImageService.Comunication
+namespace SharedResources.Communication
 {
-    public class ServiceReplyGenerator : IReplyGenerator
+    public class CommunicationMessageGenerator : IMessageGenerator
     {
         public string Generate(CommandEnum c, object o)
         {
             string data = ObjectConverter.Serialize(o);//object
-            ServiceReply sr = new ServiceReply(c, data);
+            CommunicationMessage sr = new CommunicationMessage(c, data);
             return ObjectConverter.Serialize(sr);//object
         }
     }

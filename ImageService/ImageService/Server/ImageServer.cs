@@ -23,31 +23,27 @@ namespace ImageService.Server
 
         #endregion
 
-        public ImageServer(string[] paths,ILoggingService logger,IImageServiceModel Model,ImageService service,EventLog eventLogger)
+        
+        //public ImageServer(ImageServerArgs imageServerArgs)
+        //{
+
+        //    m_controller = new ImageController(imageServerArgs.ImageServiceModel, imageServerArgs.LoggingService, imageServerArgs.EventLog, imageServerArgs.DirectoriesPaths, Handler_DirectoryClose,serverDown);
+        //    // 
+        //    imageServerArgs.ImageService.LogAnnouncement += m_controller.ReceiveLog; // FIX NOT SERVICE
+        //    //imageServerArgs.LogAnnouncement += m_controller.ReceiveLog;
+        //    // FIX INTERFACE < in Controller constructor give event .
+        //    m_logger = imageServerArgs.LoggingService;
+        //}
+
+        public ImageServer(ImageServerArgs imageServerArgs,ref EventHandler<Log> LogAnnouncement)
         {
-            HandlersManager handlers = new HandlersManager();
-            // Creating list of handlers
-            m_controller = new ImageController(Model, handlers, logger, eventLogger);
-            for (int i=0;i<paths.Length;i++) 
-            {
-                string path = paths[i];
-                IDirectoryHandler handler = new DirectoyHandler(m_controller, logger, path);
-                handlers.Add(path,handler);
-                    
-                //CommandRecieved += handler.OnCommandRecieved;
-                handler.DirectoryClose += Handler_DirectoryClose;
-                serverDown += handler.Close;
-                handler.StartHandleDirectory();
-            }            
-
-            
-           service.LogAnnouncement += m_controller.ReceiveLog;
-          
-            m_logger = logger;
-
+            m_logger = imageServerArgs.LoggingService;
+            imageServerArgs.ImageControllerArgs.LoggingService = imageServerArgs.LoggingService;
+            imageServerArgs.ImageControllerArgs.HandlerDirectoryClose = Handler_DirectoryClose;
+            imageServerArgs.ImageControllerArgs.ServerDown = serverDown;
+            m_controller = new ImageController(imageServerArgs.ImageControllerArgs,ref LogAnnouncement);
+           
         }
-
-
 
         /// <summary>
         /// Registered function to the event of IDirectoryHandler that happens

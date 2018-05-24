@@ -1,16 +1,22 @@
 ﻿using System.ComponentModel;
 using SharedResources;
+using System.Windows.Data;
+using System;
 
 namespace GUI.Model
 {
-   public class SettingsModel : ISettingsModel
+    public class SettingsModel : ISettingsModel
     {
         private Settings settings;
+       
         public SettingsModel(Settings set)
         {
             
-            settings = set;
+            this.settings = set;
+            BindingOperations.EnableCollectionSynchronization(settings.Handlers, settings.Handlers);
             settings.PropertyChanged += PropertyChanged;
+
+           
 
         }
 
@@ -27,19 +33,20 @@ namespace GUI.Model
 
              set
             {
-                //settings.LogName = value.LogName;
-                //settings.OutputDirectory = value.OutputDirectory;
-                //settings.SourceName = value.SourceName;
-                //settings.ThumbnailSize = value.ThumbnailSize;
-                //settings.Handlers.Clear();
-                //foreach (DirectoryDetails directory in value.Handlers)
-                //{
-                //    settings.Handlers.Add(directory);
-                //}
+              
                 settings = value;
             }
         }
 
+        public Action<object, string> SendRequest
+        {
+            get;
+
+            set;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
+       
     }
 }
+
