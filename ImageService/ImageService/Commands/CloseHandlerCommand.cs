@@ -30,7 +30,7 @@ namespace ImageService.Commands
             try
             {
                 handler.Close();
-            }catch(Exception e)
+            }catch(Exception)
             {
                 result = false;
             }

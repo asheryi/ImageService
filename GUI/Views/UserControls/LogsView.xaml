@@ -17,14 +17,14 @@
         <DataGrid ItemsSource="{Binding Logs}" x:Name="logsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" 
                   AutoGenerateColumns="False" RenderTransformOrigin="5.714,1.566" Background="#FFF5EEEE" Margin="0,48,0,0">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}">
+                <DataGridTextColumn Header="Type" Binding="{Binding Type,Mode = OneWay }">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Background" Value="{Binding Type, Converter={StaticResource TypeToBrushConverter}}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Message" Binding ="{Binding Message}" Width="*"/>
+                <DataGridTextColumn Header="Message" Binding ="{Binding Message,Mode = OneWay}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock x:Name="Logs" Grid.ColumnSpan="2" Text="Logs" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" 
