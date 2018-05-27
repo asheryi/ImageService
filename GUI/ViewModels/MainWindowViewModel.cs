@@ -25,7 +25,9 @@ namespace GUI.ViewModels
         private IMessageHandler handler;
         LogsView logsView;
         private SettingsView settingsView;
-   
+        /// <summary>
+        /// MainWindowViewModel constructor.
+        /// </summary>
         public MainWindowViewModel()
         {
             
@@ -36,16 +38,27 @@ namespace GUI.ViewModels
             
   
         }
+        /// <summary>
+        /// Start the communication with the server.
+        /// </summary>
         public void Connect()
         {
             client.Start();
             client.Recieve();
         }
+        /// <summary>
+        /// Send message to the server.
+        /// </summary>
+        /// <param name="o">The object which raise the event</param>
+        /// <param name="request">The message to be send.</param>
         public void Send(object o,string request)
         {
             Debug.WriteLine(request);
             client.Send(request);
         }
+        /// <summary>
+        /// Creates the MVVM of the SettingsTab
+        /// </summary>
         public void createSettingsMVVM()
         {
             SettingsModel settingsModel = new SettingsModel();
@@ -58,6 +71,9 @@ namespace GUI.ViewModels
             settingsView.DataContext = settingsViewModel;
 
         }
+        /// <summary>
+        /// SerttingsView property.
+        /// </summary>
         public SettingsView SettingsView
         {
             get
@@ -65,6 +81,9 @@ namespace GUI.ViewModels
                 return settingsView;
             }
         }
+        /// <summary>
+        /// Creates the MVVM of the LogsTab.
+        /// </summary>
         public void createLogMVVM()
         {
             LogsModel logsModel = new LogsModel();
@@ -74,6 +93,9 @@ namespace GUI.ViewModels
             handler.RegisterFuncToEvent(CommandEnum.GetAllLogsCommand, logViewModel.recieveLogs);
             handler.RegisterFuncToEvent(CommandEnum.SendLog, logViewModel.recieveOneLog);
         }
+        /// <summary>
+        /// LogView property.
+        /// </summary>
         public LogsView LogView
         {
             get
@@ -81,6 +103,9 @@ namespace GUI.ViewModels
                 return logsView;
             }
         }
+        /// <summary>
+        /// SettingsViewModel property.
+        /// </summary>
         public SettingsViewModel SettingsViewModel
         {
             set
@@ -92,8 +117,5 @@ namespace GUI.ViewModels
                 return this.svm;
             }
         }
-       
-       
-       
     }
 }

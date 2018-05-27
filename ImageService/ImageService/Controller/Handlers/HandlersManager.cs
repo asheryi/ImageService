@@ -16,6 +16,14 @@ namespace ImageService.Controller.Handlers
         private IDictionary<string, IDirectoryHandler> handlers;
         private object handlersLock = new object();
         public delegate string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful);
+        /// <summary>
+        /// HandlersManager constructor.
+        /// </summary>
+        /// <param name="m_controller">Controller of the service</param>
+        /// <param name="paths">Paths of the folder to be watch</param>
+        /// <param name="logger">Logging</param>
+        /// <param name="closeHandler">Close handler EventHandler</param>
+        /// <param name="serverDown">serverDown Action</param>
         public HandlersManager(IImageController m_controller,string[] paths,ILoggingService logger,EventHandler<DirectoryCloseEventArgs> closeHandler,ref Action serverDown)
         {
             handlers = new Dictionary<string, IDirectoryHandler>();
@@ -29,13 +37,23 @@ namespace ImageService.Controller.Handlers
                 handler.StartHandleDirectory();
             }
         }
+        /// <summary>
+        /// HandlersPath collection property
+        /// </summary>
+        /// <returns></returns>
        public ICollection<string> getHandlersPaths()
         {
                 lock (handlersLock)
                 {
+
                     return handlers.Keys;
                 }
         }
+        /// <summary>
+        /// Add DirectoryHandler to the dictionary.
+        /// </summary>
+        /// <param name="handlerPath">path of the handler</param>
+        /// <param name="handler">IDirectoryHandler handler</param>
         public void Add(string handlerPath,IDirectoryHandler handler)
         {
             lock (handlersLock)
@@ -43,7 +61,11 @@ namespace ImageService.Controller.Handlers
                 handlers[handlerPath] = handler;
             }
         }
-
+        /// <summary>
+        /// Remove DirectoryHandler.
+        /// </summary>
+        /// <param name="handlerPath">Path of the DirectoryHandler to be remove.</param>
+        /// <returns>The removed DirectoryHandler.</returns>
         public IDirectoryHandler Remove(string handlerPath)
         {
             IDirectoryHandler handler;

@@ -8,8 +8,10 @@ namespace ImageService.Controller.Handlers
         event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
         void StartHandleDirectory();             // The Function Recieves the directory to Handle
 
-       
 
+        /// <summary>
+        /// Closes the  directory.
+        /// </summary>
         void Close();
     }
 }

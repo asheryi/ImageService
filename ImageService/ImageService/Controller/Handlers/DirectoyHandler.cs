@@ -61,9 +61,7 @@ namespace ImageService.Controller.Handlers
             {
                 watcher.EnableRaisingEvents = false;
             }
-
                 
-         //  DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(e.RequestDirPath, m_path + " is closed for buisness ."));
         }
         /// <summary>
         /// StartHandleDirectory start watching.
@@ -96,7 +94,6 @@ namespace ImageService.Controller.Handlers
             bool succeed;
             string message =  m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, new string[] { e.FullPath },out succeed);
 
-            //getting the Task result.
             if (!succeed)
             {
                 m_logging.Log(message, MessageTypeEnum.FAIL);
@@ -106,7 +103,9 @@ namespace ImageService.Controller.Handlers
                 m_logging.Log("Succeeded to move the file " +e.Name +" to :  " +message, MessageTypeEnum.INFO);
             }
         }
-
+        /// <summary>
+        /// Closes the  directory.
+        /// </summary>
         public void Close()
         {
             //closing all the watchers before close the DirectoyHandler.

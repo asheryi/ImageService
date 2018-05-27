@@ -8,7 +8,6 @@ namespace GUI.Model
 {
     class LogsModel
     {
-       public event PropertyChangedEventHandler PropertyChanged;
       
         private ObservableCollection<Log> logs;//Contains the log sent by the server.
        /// <summary>

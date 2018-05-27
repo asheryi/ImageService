@@ -17,7 +17,7 @@ namespace GUI.ViewModels
         private bool isHandlerSelected=false;//Indicates if the button should be enable or disable.
         private DelegateCommand<object> com;//The remove button subscribe to this delegateCommand.
         private IMessageGenerator messageGenerator;//Generates the message to be send to the server.
-        private ISettingsModel model;
+        private ISettingsModel model;//ISettingsModel.
         /// <summary>
         /// SettingsViewModel constructor.
         /// </summary>
@@ -61,13 +61,6 @@ namespace GUI.ViewModels
             }
 
         }
-
-        private void PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        
-            var command = this.RemoveCommand as DelegateCommand<object>;
-            command.RaiseCanExecuteChanged();
-        }
         /// <summary>
         ///The remove button subscribe to this property.
         /// </summary>
@@ -97,11 +90,11 @@ namespace GUI.ViewModels
                 return false;
             return true;
         }
-
-
-       
-
-      
+        /// <summary>
+        /// Recieve Settings from the server.
+        /// </summary>
+        /// <param name="sender">The object which raise the event</param>
+        /// <param name="args">ContentEventArgs that contains Settings object</param>
         public void recieveSettings(object sender, ContentEventArgs args)
         {
 
@@ -109,15 +102,15 @@ namespace GUI.ViewModels
             Settings.updateSettings(settings);
             
         }
+        /// <summary>
+        /// Removes directoryDetails from listbox.
+        /// </summary>
+        /// <param name="sender">The object which raise the event</param>
+        /// <param name="args">ContentEventArgs that contains DirectoryDetails object</param>
         public void removeHandler(object sender, ContentEventArgs args)
         {
-           
             DirectoryDetails directoryToRemove = args.GetContent<DirectoryDetails>();
-
             model.RemoveDirectoryHandler(directoryToRemove);
-
-        
-
         }
 
     }

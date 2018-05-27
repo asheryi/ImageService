@@ -12,6 +12,9 @@ namespace ImageService.Model
         private ILoggingService loggingService;
         private string managePath;
         private int thumbailSize;
+        /// <summary>
+        /// Logging property.
+        /// </summary>
         public ILoggingService LoggingService
         {
             set
@@ -23,6 +26,9 @@ namespace ImageService.Model
                 return loggingService;
             }
         }
+        /// <summary>
+        /// ManagePath property.
+        /// </summary>
         public string ManagePath
         {
             set
@@ -34,6 +40,9 @@ namespace ImageService.Model
                 return managePath;
             }
         }
+        /// <summary>
+        /// ThumbnailsSize property.
+        /// </summary>
         public int ThumbnailsSize
         {
             set
