@@ -51,8 +51,8 @@ namespace ImageService.Controller
                 { (int)CommandEnum.NewFileCommand,new NewFileCommand(new ImageServiceModel(imageControllerArgs.ImageServiceModelArgs)) }
                 , { (int)CommandEnum.CloseHandlerCommand, new CloseHandlerCommand(handlersManager)}
                 , { (int)CommandEnum.SendLog, new SendLogCommand(messageGenerator) },{ (int)CommandEnum.GetAllLogsCommand,
-                      new GetAllLogsCommand(loggingService.Logs,messageGenerator,loggingService) },{ (int)CommandEnum.GetConfigCommand,
-                      new GetConfigCommand(messageGenerator,loggingService,handlersManager.getHandlersPaths) }
+                      new GetAllLogsCommand(loggingService.Logs,messageGenerator) },{ (int)CommandEnum.GetConfigCommand,
+                      new GetConfigCommand(messageGenerator,handlersManager.getHandlersPaths) }
             };
         }
 

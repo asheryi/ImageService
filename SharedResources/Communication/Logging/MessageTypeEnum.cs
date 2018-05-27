@@ -2,7 +2,7 @@
 {
     public enum MessageTypeEnum : int
     {
-        INFO,
+        INFO, 
         WARNING,
         FAIL
     }

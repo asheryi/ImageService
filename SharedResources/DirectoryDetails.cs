@@ -1,8 +1,7 @@
-﻿using System.ComponentModel;
-
-namespace SharedResources
+﻿namespace SharedResources
 {
-    public class DirectoryDetails : INotifyPropertyChanged
+    // Stores the direcory details
+    public class DirectoryDetails
     {
        public DirectoryDetails(string directoryName)
         {
@@ -17,16 +16,8 @@ namespace SharedResources
                 if(directoryName != value)
                 {
                     directoryName = value;
-
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void NotifyPropertyChanged(string propName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 }

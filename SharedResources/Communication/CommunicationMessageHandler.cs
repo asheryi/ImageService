@@ -8,21 +8,28 @@ using System.Threading.Tasks;
 
 namespace SharedResources.Communication
 {
+    // Handler of the communication messages (specific protocol) 
     public class CommunicationMessageHandler : IMessageHandler
     {
-        private IDictionary<CommandEnum, EventHandler<ContentEventArgs>> eventHandlerDic;
-
-        //private IDictionary<CommandEnum, Type> commandToType;
+        private IDictionary<CommandEnum, EventHandler<ContentEventArgs>> eventHandlerDictionary;
 
         public CommunicationMessageHandler()
         {
-            eventHandlerDic = new Dictionary<CommandEnum, EventHandler<ContentEventArgs>>();
-            eventHandlerDic.Add(CommandEnum.GetAllLogsCommand, null);
-            eventHandlerDic.Add(CommandEnum.GetConfigCommand, null);
-            eventHandlerDic.Add(CommandEnum.SendLog, null);
-            eventHandlerDic.Add(CommandEnum.CloseHandlerCommand, null);
+            // initialize
+            eventHandlerDictionary = new Dictionary<CommandEnum, EventHandler<ContentEventArgs>>();
+            eventHandlerDictionary.Add(CommandEnum.GetAllLogsCommand, null);
+            eventHandlerDictionary.Add(CommandEnum.GetConfigCommand, null);
+            eventHandlerDictionary.Add(CommandEnum.SendLog, null);
+            eventHandlerDictionary.Add(CommandEnum.CloseHandlerCommand, null);
         }
 
+        /// <summary>
+        /// Handles in a new task (paralel) the data from the connection ,
+        /// desrialize it , then according to the command inviokes the specific
+        /// event (by the dictionary).
+        /// </summary>
+        /// <param name="raw_data">data from the connection</param>
+        /// <returns></returns>
         public bool Handle(string raw_data)
         {
             new Task(() =>
@@ -30,7 +37,7 @@ namespace SharedResources.Communication
                 try
                 {
                     CommunicationMessage reply = ObjectConverter.Deserialize<CommunicationMessage>(raw_data);//<CommunicationMessage>
-                    EventHandler<ContentEventArgs> eventhandler = eventHandlerDic[reply.CommandID];
+                    EventHandler<ContentEventArgs> eventhandler = eventHandlerDictionary[reply.CommandID];
                     eventhandler?.Invoke(this, new ContentEventArgs(reply.Content));
                 }
                 catch (Exception)
@@ -42,13 +49,14 @@ namespace SharedResources.Communication
             return true;
         }
 
+        
         public bool RegisterFuncToEvent(CommandEnum c, EventHandler<ContentEventArgs> func)
         {
-            if (!eventHandlerDic.Keys.Contains(c))
+            if (!eventHandlerDictionary.Keys.Contains(c))
             {
                 return false;
             }
-            eventHandlerDic[c] += func;
+            eventHandlerDictionary[c] += func;
             return true;
 
         }

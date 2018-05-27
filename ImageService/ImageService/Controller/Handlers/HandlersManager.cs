@@ -33,7 +33,6 @@ namespace ImageService.Controller.Handlers
         {
                 lock (handlersLock)
                 {
-
                     return handlers.Keys;
                 }
         }

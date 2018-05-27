@@ -12,22 +12,25 @@ using System.Threading.Tasks;
 
 namespace ImageService.Commands
 {
+    // Send specific log to all !
     class SendLogCommand:ICommand
     {
         SingletonServer singletonServer;
-        private ICollection<TcpClient> logsClients;
-        private IMessageGenerator replyGenerator;
-      public  SendLogCommand(IMessageGenerator replyGenerator)
+        private IMessageGenerator messageGenerator;
+        /// <summary>
+        /// Constructor 
+        /// </summary>
+        /// <param name="messageGenerator">generator of messages of communication</param>
+        public SendLogCommand(IMessageGenerator messageGenerator)
         {
             singletonServer = SingletonServer.Instance;
-            logsClients = new List<TcpClient>();
-            this.replyGenerator = replyGenerator;
+            this.messageGenerator = messageGenerator;
 
         }
         public string Execute(string[] args, out bool result)
         {
-            singletonServer.SendToAll(replyGenerator.Generate(CommandEnum.SendLog,new Log((MessageTypeEnum)(int.Parse(args[0])),args[1])));
-            //singletonServer.SendToAll(new CommunicationMessage(CommandEnum.SendLog, args[0]));
+            // Args[0] is message type , Args[1] is the message
+            singletonServer.SendToAll(messageGenerator.Generate(CommandEnum.SendLog,new Log((MessageTypeEnum)(int.Parse(args[0])),args[1])));
             result = true;
             return "ok";
         }

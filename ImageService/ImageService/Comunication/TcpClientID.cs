@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageService.Comunication
 {
@@ -15,6 +9,11 @@ namespace ImageService.Comunication
         public TcpClientID(string[] clientEndPoint):base(clientEndPoint) {
             
         }
+        /// <summary>
+        /// Compares two clientIds
+        /// </summary>
+        /// <param name="clientID"></param>
+        /// <returns>the comparision result</returns>
         public bool compare(ClientID clientID)
         {
            

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharedResources.Commands;
-using SharedResources;
-using SharedResources.Communication;
+﻿using SharedResources.Commands;
 
 namespace SharedResources.Communication
 {
+    // generator of messages according to the specific protocol :
+    // transferring string of serialized command + object to transfer.
     public class CommunicationMessageGenerator : IMessageGenerator
     {
         public string Generate(CommandEnum c, object o)

@@ -78,9 +78,7 @@
     <Compile Include="ImageService\Commands\ICommand.cs" />
     <Compile Include="ImageService\Commands\NewFileCommand.cs" />
     <Compile Include="ImageService\Commands\SendLogCommand.cs" />
-    <Compile Include="ImageService\Comunication\ClientHandler.cs" />
     <Compile Include="ImageService\Comunication\ClientID.cs" />
-    <Compile Include="ImageService\Comunication\IClientHandler.cs" />
     <Compile Include="ImageService\Comunication\SingletonServer.cs" />
     <Compile Include="ImageService\Comunication\TcpClientID.cs" />
     <Compile Include="ImageService\Controller\Handlers\DirectoyHandler.cs" />
