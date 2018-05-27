@@ -13,27 +13,26 @@ namespace GUI.ViewModels
 {
     public class SettingsViewModel
     {
-        private IMessageGenerator messageGenerator;
-        private bool isHandlerSelected=false;
-        private DelegateCommand<object> com;
+        
+        private bool isHandlerSelected=false;//Indicates if the button should be enable or disable.
+        private DelegateCommand<object> com;//The remove button subscribe to this delegateCommand.
+        private IMessageGenerator messageGenerator;//Generates the message to be send to the server.
+        private ISettingsModel model;
+        /// <summary>
+        /// SettingsViewModel constructor.
+        /// </summary>
+        /// <param name="model">SettingsModel</param>
         public SettingsViewModel(ISettingsModel model)
         {
             this.model = model;
-            this.SubmitCommand = new DelegateCommand<object>(this.OnSubmit, this.CanSubmit);
-
-            //this.QuestionnaireViewModel = new QuestionnaireViewModel();
-            this.ResetCommand = new DelegateCommand(this.OnReset);
-
-           // this.QuestionnaireViewModel.PropertyChanged += PropertyChanged;
-            com=this.SubmitCommand as DelegateCommand<object>;
-
+            this.RemoveCommand = new DelegateCommand<object>(this.OnRemove, this.CanRemove);
+            com=this.RemoveCommand as DelegateCommand<object>;
             messageGenerator = new CommunicationMessageGenerator();
-
-
         }
 
-
-        private ISettingsModel model;
+        /// <summary>
+        /// Settings property.
+        /// </summary>
         public Settings Settings
         {
             get
@@ -42,17 +41,20 @@ namespace GUI.ViewModels
             }
         }
         
-        DirectoryDetails directoryDetails;
-    
+        DirectoryDetails selectefDirectoryDetails;
+        /// <summary>
+        /// DirectoryDetails property, the itemSelected event of the listBox
+        /// subscribe to this property.
+        /// </summary>
         public DirectoryDetails HandlerSelected
         {
             set
             {
                
                 
-                directoryDetails = value;
-                bool itemSelected = (directoryDetails == null ? false : true);
-               // QuestionnaireViewModel.Questionnaire.IsHandlerSelected = itemSelected;
+                selectefDirectoryDetails = value;
+                bool itemSelected = (selectefDirectoryDetails == null ? false : true);
+               
                 isHandlerSelected = itemSelected;
                 com.RaiseCanExecuteChanged();
 
@@ -63,45 +65,41 @@ namespace GUI.ViewModels
         private void PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
         
-            var command = this.SubmitCommand as DelegateCommand<object>;
+            var command = this.RemoveCommand as DelegateCommand<object>;
             command.RaiseCanExecuteChanged();
         }
-        public ICommand SubmitCommand { get; private set; }
-
-        public ICommand ResetCommand { get; private set; }
-
-        public QuestionnaireViewModel QuestionnaireViewModel { get; set; }
-
-        private void OnSubmit(object obj)
+        /// <summary>
+        ///The remove button subscribe to this property.
+        /// </summary>
+        public ICommand RemoveCommand { get; private set; }
+        /// <summary>
+        /// Send remove handler request to the server.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnRemove(object obj)
         {
-            if (directoryDetails != null)
+            if (selectefDirectoryDetails != null)
             {
-                string send = messageGenerator.Generate(CommandEnum.CloseHandlerCommand, directoryDetails);
-                string sss = ObjectConverter.Serialize(new CommunicationMessage(CommandEnum.CloseHandlerCommand, directoryDetails.DirectoryName));
-                Debug.WriteLine(sss + "   WOOOOOOOOORKKKKKS");
-                Debug.WriteLine(send + "   NOT ");
-
+                string send = messageGenerator.Generate(CommandEnum.CloseHandlerCommand, selectefDirectoryDetails);
                 model.SendRequest?.Invoke(this, send);
             }
         }
-       
-        private bool CanSubmit(object obj)
+       /// <summary>
+       /// Checks if the remove button can be click.
+       /// </summary>
+       /// <param name="obj"></param>
+       /// <returns></returns>
+        private bool CanRemove(object obj)
         {
 
-            //if (!this.QuestionnaireViewModel.Questionnaire.IsHandlerSelected)
-            //{
-            //    return false;
-            //}
+           
             if (!isHandlerSelected)
                 return false;
             return true;
         }
 
 
-        private void OnReset()
-        {
-            this.QuestionnaireViewModel.Questionnaire = new Questionnaire();
-        }
+       
 
       
         public void recieveSettings(object sender, ContentEventArgs args)
@@ -113,21 +111,12 @@ namespace GUI.ViewModels
         }
         public void removeHandler(object sender, ContentEventArgs args)
         {
-            Debug.WriteLine("WOW IT's HEREEEEEEE");
+           
             DirectoryDetails directoryToRemove = args.GetContent<DirectoryDetails>();
 
             model.RemoveDirectoryHandler(directoryToRemove);
 
-            //Stack<DirectoryDetails> directoryToRemoveStack = new Stack<DirectoryDetails>();
-            //foreach (DirectoryDetails d in Settings.Handlers)
-            //{
-            //    if (d.DirectoryName == directoryToRemove.DirectoryName)
-            //        directoryToRemoveStack.Push(d);
-
-            //}
-            //while (directoryToRemoveStack.Count > 0)
-            //    Settings.Handlers.Remove(directoryToRemoveStack.Pop());
-
+        
 
         }
 

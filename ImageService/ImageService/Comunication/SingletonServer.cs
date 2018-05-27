@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SharedResources.Communication;
 using System.IO;
 using System.Windows.Data;
+using System.Linq;
 
 namespace ImageService.Comunication
 {
@@ -13,11 +14,11 @@ namespace ImageService.Comunication
     {
 
         private object lockThis = new object();
-        private  EventHandler<IPEndPoint> clientConnected;
+
+        private EventHandler<ClientID> clientConnected;
         public int Port { get; set; }
         private TcpListener listener;
-        public IClientHandler CH {
-            get;
+        public IClientHandler CH { get;
             set; }
 
 
@@ -49,7 +50,7 @@ namespace ImageService.Comunication
                 return singleServer;
             }
         }
-        public EventHandler<IPEndPoint> ClientConnected
+        public EventHandler<ClientID> ClientConnected
         {
             get
             {
@@ -64,48 +65,43 @@ namespace ImageService.Comunication
         public void SendToAll(string replyString)
         {
             new Task(() =>
-            {
-                foreach (TcpClient client in new List<TcpClient>(clients))
-                {
-                    try
+            {   
+                    foreach (TcpClient client in new List<TcpClient>(clients))
                     {
-                        lock (lockThis)
+                        try
                         {
-                            BinaryWriter writer = new BinaryWriter(client.GetStream());
-                            writer.Write(replyString);
+                            lock (lockThis)
+                            {
+                                BinaryWriter writer = new BinaryWriter(client.GetStream());
+                                writer.Write(replyString);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            clients.Remove(client);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        clients.Remove(client);
-                    }
-
-                }
+                
             }).Start();
 
         }
-        public void SendToClient(string replyString, IPEndPoint ip)
+        public void SendToClient(string replyString, ClientID clientID)
         {
             new Task(() =>
             {
                 lock (lockThis)
                 {
                     TcpClient desired_client = null;
-                    try {
-                        foreach(TcpClient client in clients)
-                        {
-                            IPEndPoint ip_client = (IPEndPoint)client.Client.RemoteEndPoint;
-                            if (ip_client.ToString() == ip.ToString())
-                            {
-                                desired_client = client;
-                                break;
-                            }
-                        }
+                    TcpClientID tcpclientID = new TcpClientID(clientID.getArgs());
+                try
+                {
+                    TcpClient[] found = clients.Where(c => tcpclientID.compare(new TcpClientID(new string[] { c.Client.RemoteEndPoint.ToString() }))).ToArray();
+                    if(found.Length == 0)
+                    {
+                        return;
+                    }
 
-                        if(desired_client == null)
-                        {
-                            return;
-                        }
+                    desired_client = found[0];
                     BinaryWriter writer = new BinaryWriter(desired_client.GetStream());
                     writer.Write(replyString);
                     }catch(Exception e)
@@ -134,7 +130,7 @@ namespace ImageService.Comunication
                     IPEndPoint pass = (IPEndPoint)(client.Client.RemoteEndPoint);
                         clients.Add(client);
                         recieveRequests(client);
-                        clientConnected?.Invoke(this, pass);
+                        clientConnected?.Invoke(this, new TcpClientID(new string[] { pass.ToString() }));
                     }
                     catch (SocketException)
                     {
@@ -146,7 +142,10 @@ namespace ImageService.Comunication
         }
         public void Stop()
         {
-            listener.Stop();
+           
+                listener.Stop();
+
+            
         }        public void recieveRequests(TcpClient client)
         {
             Task task = new Task(() =>

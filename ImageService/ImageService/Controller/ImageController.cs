@@ -81,20 +81,17 @@ namespace ImageService.Controller
             bool result;
             ExecuteCommand((int)CommandEnum.SendLog,new string[] {((int)log.Type).ToString(), log.Message }, out result);
         }
-        public void ClientConnected(object sender, IPEndPoint p)
+        public void ClientConnected(object sender, ClientID clientID)
         {
             bool result;
-            string address = p.Address.ToString();
-            string port = p.Port.ToString();
-            string[] args = new string[] { address, port };
             try
             {
-                ExecuteCommand((int)CommandEnum.GetAllLogsCommand, args, out result);
+                ExecuteCommand((int)CommandEnum.GetAllLogsCommand, clientID.getArgs(), out result);
             } catch(Exception e)
             {
                 loggingService.Log(e.Message,MessageTypeEnum.FAIL);
             }
-            ExecuteCommand((int)CommandEnum.GetConfigCommand, args, out result);
+            ExecuteCommand((int)CommandEnum.GetConfigCommand, clientID.getArgs(), out result);
         }
         public void closeHandler(object sender,ContentEventArgs args)
         {

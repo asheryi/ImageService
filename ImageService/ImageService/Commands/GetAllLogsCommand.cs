@@ -22,10 +22,10 @@ namespace ImageService.Commands
         private ILoggingService logger;
         public string Execute(string[] args, out bool result)
         {
-            IPAddress address = IPAddress.Parse(args[0]);
-            int port = int.Parse(args[1]);
-            IPEndPoint p = new IPEndPoint(address, port);
-            singletonServer.SendToClient(this.replyGenerator.Generate(CommandEnum.GetAllLogsCommand,logs), p);
+           // IPAddress address = IPAddress.Parse(args[0]);
+            //int port = int.Parse(args[1]);
+           // IPEndPoint p = new IPEndPoint(address, port);
+            singletonServer.SendToClient(this.replyGenerator.Generate(CommandEnum.GetAllLogsCommand,logs), new ClientID(args));
             result = true;
             return "ok";
         }

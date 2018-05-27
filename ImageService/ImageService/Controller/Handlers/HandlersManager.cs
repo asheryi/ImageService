@@ -59,14 +59,6 @@ namespace ImageService.Controller.Handlers
             }
             return handler;
         }
-
-        public void killAllHandlers()
-        {
-            foreach(string key in handlers.Keys)
-            {
-                handlers[key].Close();
-            }
-        }
       
     }
 }

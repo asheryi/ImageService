@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="618.8" Width="601">
+        Title="MainWindow" Height="619" Width="601">
     <Grid>
+        <TextBlock x:Name="offline" Text="SERVICE IS OFFLINE" Visibility="Hidden" TextAlignment="Center" FontSize="50"> 
+            
+        </TextBlock>
         <TabControl x:Name="tabControl">
-            <TabItem x:Name="LogsViewTab"  Header="Logs" Margin="-2,-3,-2,1"/>
+            <TabItem x:Name="LogsViewTab" Header="Logs" Margin="-2,-3,-2,1"/>
             <TabItem x:Name="SettingsViewTab" Header="Settings"/>
         </TabControl>
     </Grid>

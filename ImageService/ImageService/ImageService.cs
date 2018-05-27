@@ -48,7 +48,7 @@ namespace ImageService
         private ILoggingService logger;//the logger of the system.
         private EventLog eventLogger;//writea to logger event.
        // private IContainer components;
-        private Comunication.SingletonServer server;
+        private Comunication.SingletonServer singleton_server;
         private ICollection<Log>  logs;//stores system logs.
         public event EventHandler<Log> LogAnnouncement;
         public ImageService()
@@ -100,7 +100,7 @@ namespace ImageService
                 //this function is subscribes to the event of logger.
                 logger.MessageRecieved += EventLogFunc;
                 EventLogFunc(this, new MessageRecievedEventArgs("MessageRecieved", MessageTypeEnum.INFO));
-                server = SingletonServer.Instance;
+                singleton_server = SingletonServer.Instance;
                 EventLogFunc(this, new MessageRecievedEventArgs("SingletonServer.Instance", MessageTypeEnum.INFO));
 
                 EventLogFunc(this, new MessageRecievedEventArgs("server.Start()", MessageTypeEnum.INFO));
@@ -144,8 +144,9 @@ namespace ImageService
         protected override void OnStop()
         {
             EventLogFunc(this, new MessageRecievedEventArgs("Stopping Service", MessageTypeEnum.WARNING));
+            singleton_server.Stop();
             m_imageServer.terminate();
-            server.Stop();
+            
 
         }
         /// <summary>

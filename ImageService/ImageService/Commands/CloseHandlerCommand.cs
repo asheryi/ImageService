@@ -26,7 +26,6 @@ namespace ImageService.Commands
                 return "";
             }
 
-            // ZARICH EIUN
             try
             {
                 handler.Close();
@@ -34,6 +33,7 @@ namespace ImageService.Commands
             {
                 result = false;
             }
+
             if (result)
             {
                 SingletonServer singletonServer = SingletonServer.Instance;

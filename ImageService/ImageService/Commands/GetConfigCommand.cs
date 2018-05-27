@@ -47,11 +47,11 @@ namespace ImageService.Commands
             }
             string send = this.replyGenerator.Generate(CommandEnum.GetConfigCommand, settings);
 
-            IPAddress address = IPAddress.Parse(args[0]);
-            int port = int.Parse(args[1]);
+            //IPAddress address = IPAddress.Parse(args[0]);
+            //int port = int.Parse(args[1]);
             //the client's IPEndPoint who need to get the massage
-            IPEndPoint p = new IPEndPoint(address, port);
-            singletonServer.SendToClient(send, p);
+            //IPEndPoint p = new IPEndPoint(address, port);
+            singletonServer.SendToClient(send, new ClientID(args));
             return "ok";
         }
        

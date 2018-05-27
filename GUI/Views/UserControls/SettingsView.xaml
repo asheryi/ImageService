@@ -56,7 +56,7 @@
         </Grid>
             <ListBox x:Name="listBox" ItemsSource="{Binding Settings.Handlers}" SelectedItem="{Binding Path=HandlerSelected ,Mode=OneWayToSource}"  DisplayMemberPath="DirectoryName" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="55,330,0,0" Width="387" Height="70" VerticalAlignment="Top"/>
 
-        <Button x:Name="SubmitButton" Command="{Binding SubmitCommand}" Grid.ColumnSpan="2" Content="Remove" HorizontalAlignment="Left" Margin="54,306,0,0" VerticalAlignment="Top" Width="387"  AutomationProperties.AutomationId="SubmitButton" />
+        <Button x:Name="RemoveCommand" Command="{Binding RemoveCommand}" Grid.ColumnSpan="2" Content="Remove" HorizontalAlignment="Left" Margin="54,306,0,0" VerticalAlignment="Top" Width="387"  AutomationProperties.AutomationId="SubmitButton" />
     </Grid>
 
 
