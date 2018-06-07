@@ -5,6 +5,7 @@ using SharedResources.Communication;
 using SharedResources.Commands;
 using System.Net.Sockets;
 using ImageService.Logging;
+using ShaeredResources.Comunication;
 
 namespace ImageService.Commands
 {

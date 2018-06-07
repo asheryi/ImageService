@@ -14,7 +14,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid ItemsSource="{Binding Logs}" x:Name="logsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" 
+        <DataGrid ItemsSource="{Binding Logs,Mode=OneWay}" x:Name="logsGrid" HorizontalAlignment="Left" VerticalAlignment="Top" 
                   AutoGenerateColumns="False" RenderTransformOrigin="5.714,1.566" Background="#FFF5EEEE" Margin="0,48,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type" Binding="{Binding Type,Mode = OneWay }">

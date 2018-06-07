@@ -3,6 +3,7 @@ using ImageService.Comunication;
 using ImageService.Controller.Handlers;
 using ImageService.Logging;
 using ImageService.Model;
+using ShaeredResources.Comunication;
 using SharedResources;
 using SharedResources.Commands;
 using SharedResources.Communication;
@@ -40,6 +41,8 @@ namespace ImageService.Controller
             CommunicationMessageHandler CommunicationMessageMessageHandler = new CommunicationMessageHandler();
             singletonServer.MessageHandler = CommunicationMessageMessageHandler;
             CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.CloseHandlerCommand, closeHandler);
+            CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.GetAllLogsCommand, getAllCommand);
+
             singletonServer.Start();
 
 
@@ -97,6 +100,13 @@ namespace ImageService.Controller
         {
             bool result;
             ExecuteCommand((int)CommandEnum.CloseHandlerCommand,new string[] { args.GetContent<DirectoryDetails>().DirectoryName }, out result);
+        }
+        public void getAllCommand(object sender, ContentEventArgs args)
+        {
+            bool result;
+            
+            loggingService.Log("web wants all logs "+args.ClientID.getArgs()[0], MessageTypeEnum.INFO);
+            ExecuteCommand((int)CommandEnum.GetAllLogsCommand, args.ClientID.getArgs(), out result);
         }
     }
 }

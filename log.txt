@@ -1,3 +1,94 @@
+commit 6e010bc90a42b14b7c81b57996e0716773dda944
+Author: Brain <avi19900@gmail.com>
+Date:   Sun May 27 16:03:08 2018 +0300
+
+    All comments are in place.
+
+commit 21b3b1be4fb685a619df4ef21546c486dfbe0e39
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Sun May 27 15:26:23 2018 +0300
+
+    Added comments in SharedResources and few in ImageService
+
+commit 2f3d5c49cc76424f87327c7d4996f33bb0add9d0
+Author: Brain <avi19900@gmail.com>
+Date:   Sun May 27 14:20:55 2018 +0300
+
+    Edit comments
+
+commit c9a7cbec222ae57eca0c85415e71b8375f8f9381
+Author: Brain <avi19900@gmail.com>
+Date:   Thu May 24 19:36:46 2018 +0300
+
+    fix exception throwing by double click on log item.
+
+commit 8d84d0221651ef45b150b5557d7a5b7d5987f596
+Author: Brain <avi19900@gmail.com>
+Date:   Thu May 24 16:08:14 2018 +0300
+
+    Finished Design wise
+
+commit f8fc89f8ab0f3c0fe8ba7196f797249ab3302856
+Author: Brain <avi19900@gmail.com>
+Date:   Thu May 24 13:37:30 2018 +0300
+
+    Remove Handlers Now works , and additional details.
+
+commit 742786a3a311d0efdfee20e2d70e4179c52cbb14
+Author: Brain <avi19900@gmail.com>
+Date:   Fri May 18 03:06:46 2018 +0300
+
+    Settings and all of that .
+
+commit e04bb472ae768c703415e30348124a7590f98aac
+Author: Brain <avi19900@gmail.com>
+Date:   Wed May 9 20:26:59 2018 +0300
+
+    handle send all previous logs. send new log
+    and view display and more...
+
+commit 60817a43ef6c2d7dc7d54c9153e124635b1f39f1
+Author: Brain <avi19900@gmail.com>
+Date:   Thu May 3 17:53:40 2018 +0300
+
+    Handlers Manger,Comunication
+
+commit abe9ce38577263e0becbae576c0b89ea8bdf8179
+Author: Brain <avi19900@gmail.com>
+Date:   Thu May 3 15:50:07 2018 +0300
+
+    Logs in gui covered .
+
+commit c7373e2caa0ad15690b91a2d1cdf11a616fbadaa
+Author: Brain <avi19900@gmail.com>
+Date:   Wed May 2 19:56:58 2018 +0300
+
+    GUI  and Log Files
+
+commit a4535d3ca2f3931ff1a71b610dfd7a384441120b
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Wed May 2 17:59:26 2018 +0300
+
+    updating gui
+
+commit a231396c351419ef827c497294a434bfab0726cd
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Wed May 2 17:51:36 2018 +0300
+
+    uploaded the skeleton of the GUI
+
+commit c84f78a7459012dffbf28cb24b9de6a9a01cb563
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Thu Apr 12 18:28:53 2018 +0300
+
+    Removing log debug messages .
+
+commit e9b5b7ea13d5bcf7476a61a09ab52ceceb48d163
+Author: yishay <rk.yishayasher@gmail.com>
+Date:   Thu Apr 12 18:23:52 2018 +0300
+
+    Removing unnecassary imports
+
 commit 1e0c51c2e90426222d5a112c11da8b103794528c
 Author: Brain <avi19900@gmail.com>
 Date:   Thu Apr 12 18:14:51 2018 +0300

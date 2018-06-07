@@ -1,5 +1,7 @@
-﻿using SharedResources.Commands;
+﻿using ShaeredResources.Comunication;
+using SharedResources.Commands;
 using System;
+using System.Net.Sockets;
 
 namespace SharedResources.Communication
 {
@@ -20,8 +22,6 @@ namespace SharedResources.Communication
         /// <param name="raw_data"></param>
         /// <returns></returns>
         bool Handle(string raw_data);
-
-
-
+        bool Handle(string request, TcpClientID client);
     }
 }

@@ -7,6 +7,7 @@ using SharedResources.Communication;
 using System.IO;
 using System.Windows.Data;
 using System.Linq;
+using ShaeredResources.Comunication;
 
 namespace ImageService.Comunication
 {
@@ -162,7 +163,10 @@ namespace ImageService.Comunication
 
                       BinaryReader reader = new BinaryReader(client.GetStream());
                       string request = reader.ReadString();
-                      MessageHandler.Handle(request);
+
+                  
+                      IPEndPoint pass = (IPEndPoint)(client.Client.RemoteEndPoint);
+                      MessageHandler.Handle(request, new TcpClientID(new string[] { pass.ToString() }));
                    
                   }
               });

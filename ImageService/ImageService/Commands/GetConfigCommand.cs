@@ -1,4 +1,5 @@
 ﻿using ImageService.Comunication;
+using ShaeredResources.Comunication;
 using SharedResources;
 using SharedResources.Commands;
 using SharedResources.Communication;

@@ -1,9 +1,11 @@
-﻿using SharedResources;
+﻿using ShaeredResources.Comunication;
+using SharedResources;
 using SharedResources.Commands;
 using SharedResources.Communication;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace SharedResources.Communication
@@ -48,8 +50,29 @@ namespace SharedResources.Communication
             }).Start();
             return true;
         }
+        public bool Handle(string raw_data, TcpClientID clientID)
+        {
+            new Task(() =>
+            {
+                try
+                {
+                    CommunicationMessage reply = ObjectConverter.Deserialize<CommunicationMessage>(raw_data);//<CommunicationMessage>
+                    EventHandler<ContentEventArgs> eventhandler = eventHandlerDictionary[reply.CommandID];
+                    ContentEventArgs c = new ContentEventArgs(reply.Content);
+                    c.ClientID = clientID;
+                    eventhandler?.Invoke(this, c);
+                }
+                catch (Exception)
+                {
 
-        
+                }
+
+            }).Start();
+            return true;
+        }
+       
+
+
         public bool RegisterFuncToEvent(CommandEnum c, EventHandler<ContentEventArgs> func)
         {
             if (!eventHandlerDictionary.Keys.Contains(c))

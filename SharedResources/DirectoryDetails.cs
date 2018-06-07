@@ -1,4 +1,6 @@
-﻿namespace SharedResources
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SharedResources
 {
     // Stores the direcory details
     public class DirectoryDetails
@@ -8,6 +10,9 @@
             this.directoryName = directoryName;
         }
         private string directoryName;
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "DirectoryName")]
         public string DirectoryName {
             get
             { return directoryName; }

@@ -1,20 +1,8 @@
 ﻿using GUI.Model;
 using GUI.Views.UserControls;
-using Microsoft.Practices.Prism.Commands;
-using SharedResources;
 using SharedResources.Commands;
 using SharedResources.Communication;
-using SharedResources.Logging;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace GUI.ViewModels
 {
@@ -34,7 +22,7 @@ namespace GUI.ViewModels
             handler = new CommunicationMessageHandler();
             createSettingsMVVM();
             createLogMVVM();
-            client = new Client(handler);
+            client = new Client();
             
   
         }
@@ -44,6 +32,7 @@ namespace GUI.ViewModels
         public void Connect()
         {
             client.Start();
+            client.messageHandler = handler;
             client.Recieve();
         }
         /// <summary>
