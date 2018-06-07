@@ -49,8 +49,30 @@ namespace ImageService.Controller
                 return imageServiceModel;
             }
         }
-       
-       
+        private ImageService imageService;
+        public ImageService ImageService
+        {
+            get
+            {
+                return imageService;
+            }
+            set
+            {
+                imageService = value;
+            }
+        }
+        private EventLog eventLog;
+        public EventLog EventLog
+        {
+            get
+            {
+                return eventLog;
+            }
+            set
+            {
+                eventLog = value;
+            }
+        }
         private EventHandler<DirectoryCloseEventArgs> handlerDirectoryClose;
        public EventHandler<DirectoryCloseEventArgs> HandlerDirectoryClose
         {

@@ -21,8 +21,9 @@ namespace ImageService.Commands
         private IMessageGenerator replyGenerator;
         private Settings settings;
         private ILoggingService logger;
+        private  EventLog loggg;
         private Func<ICollection<string>> getHandlersPaths;
-        public GetConfigCommand(IMessageGenerator replyGenerator,ILoggingService logger,Func<ICollection<string>> getHandlersPaths)
+        public GetConfigCommand(IMessageGenerator replyGenerator,ILoggingService logger,EventLog loggg,Func<ICollection<string>> getHandlersPaths)
         {
             singletonServer = SingletonServer.Instance;
             this.replyGenerator = replyGenerator;
@@ -32,7 +33,7 @@ namespace ImageService.Commands
             int thumbnailSize = Convert.ToInt32(ConfigurationManager.AppSettings["ThumbnailSize"]);
             settings = new Settings(outputDirectory, sourceName, logName, thumbnailSize);
             this.logger = logger;
-           
+            this.loggg = loggg;
             this.getHandlersPaths = getHandlersPaths;
 
         }

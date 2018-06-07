@@ -1,12 +1,18 @@
 ﻿using ImageService.Controller;
 using ImageService.Logging;
+using ImageService.Logging.Model;
 using ImageService.Model;
 using SharedResources.Logging;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ImageService.Server
 {
-    public class ImageServerArgs
+   public class ImageServerArgs
     {
         
         public EventHandler<Log> LogAnnouncement{
@@ -73,6 +79,9 @@ namespace ImageService.Server
                 imageControllerArgs = value;
             }
         }
-        
+        //public ImageServerArgs(string[] paths, ILoggingService logger, IImageServiceModel Model, ImageService service, EventLog eventLogger)
+        //{
+
+        //}
     }
 }

@@ -5,20 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GUI.Views.UserControls"
              mc:Ignorable="d" Width="505.263" Height="455.433">
-    
     <Grid HorizontalAlignment="Left"  Height="433" Margin="10,22,0,0" VerticalAlignment="Top" Width="495">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="Settings" Grid.ColumnSpan="2" Text="Settings" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" 
-                           Width="Auto"
-                           FontWeight="Bold"
-                           Foreground="Black"
-                           FontSize="36"
-                           FontFamily="Comic Sans MS"
-                            
-                            />
+        <TextBlock x:Name="Settings" Grid.ColumnSpan="2" Text="Settings" TextAlignment="Center" HorizontalAlignment="Center" Margin="0,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.686,-0.29" Width="495"/>
         <Grid Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="202" Margin="10,66,0,0" VerticalAlignment="Top" Width="475">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -31,32 +23,18 @@
                 <RowDefinition Height="1*" />
 
             </Grid.RowDefinitions>
-            <Label x:Name="OutputDirectory" Grid.Column ="0" Grid.Row="0" Content="Output Directory:"  Style="{StaticResource BoldLabel}"/>
-            <Label x:Name="label1"  Grid.Column ="0" Grid.Row="1" Content="Source Name:" Style="{StaticResource BoldLabel}" />
-            <Label x:Name="label2"  Grid.Column ="0" Grid.Row="2" Content="Log Name:" Style="{StaticResource BoldLabel}"/>
-            <Label x:Name="label3"  Grid.Column ="0" Grid.Row="3" Content="Thumbnail Size:" Style="{StaticResource BoldLabel}" />
-            <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource HeaderedBorderStyle}">
-                <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="{Binding Settings.OutputDirectory}"/>
-            </Border>
-            
-            <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource HeaderedBorderStyle}">
-            
-            <TextBlock x:Name="textBlock1"  TextWrapping="Wrap" Text="{Binding Settings.SourceName}" />
-            </Border>
-            <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource HeaderedBorderStyle}">
-
-                <TextBlock x:Name="textBlock2" TextWrapping="Wrap" Text="{Binding Settings.LogName}"/>
-            </Border>
-
-            <Border Grid.Column="1" Grid.Row="3" Style="{StaticResource HeaderedBorderStyle}">
-
-                    <TextBlock x:Name="textBlock3"  TextWrapping="Wrap" Text="{Binding Settings.ThumbnailSize}"/>
-            </Border>
-
+            <Label x:Name="OutputDirectory" Grid.Column ="0" Grid.Row="0" Content="Output Directory:"/>
+            <Label x:Name="label1"  Grid.Column ="0" Grid.Row="1" Content="Source Name:"  />
+            <Label x:Name="label2"  Grid.Column ="0" Grid.Row="2" Content="Log Name:"/>
+            <Label x:Name="label3"  Grid.Column ="0" Grid.Row="3" Content="Thumbnail Size:"  />
+            <TextBlock x:Name="textBlock" Grid.Column="1" Grid.Row="0" TextWrapping="Wrap"  Text="{Binding Settings.OutputDirectory}"/>
+            <TextBlock x:Name="textBlock1" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Settings.SourceName}" />
+            <TextBlock x:Name="textBlock2" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="{Binding Settings.LogName}"/>
+            <TextBlock x:Name="textBlock3" Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" Text="{Binding Settings.ThumbnailSize}"/>
         </Grid>
-            <ListBox x:Name="listBox" ItemsSource="{Binding Settings.Handlers}" SelectedItem="{Binding Path=HandlerSelected ,Mode=OneWayToSource}"  DisplayMemberPath="DirectoryName" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="55,330,0,0" Width="387" Height="70" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBox" ItemsSource="{Binding Settings.Handlers}" SelectedItem="{Binding Path=HandlerSelected ,Mode=OneWayToSource}"  DisplayMemberPath="DirectoryName" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="32,268,0,0" Width="387" Height="70" VerticalAlignment="Top"/>
 
-        <Button x:Name="SubmitButton" Command="{Binding SubmitCommand}" Grid.ColumnSpan="2" Content="Remove" HorizontalAlignment="Left" Margin="54,306,0,0" VerticalAlignment="Top" Width="387"  AutomationProperties.AutomationId="SubmitButton" />
+        <Button x:Name="SubmitButton" Command="{Binding SubmitCommand}" Grid.ColumnSpan="2" Content="Remove" HorizontalAlignment="Left" Margin="32,248,0,0" VerticalAlignment="Top" Width="387"  AutomationProperties.AutomationId="SubmitButton" />
     </Grid>
 
 

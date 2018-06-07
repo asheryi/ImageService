@@ -115,18 +115,16 @@ namespace GUI.ViewModels
         {
             Debug.WriteLine("WOW IT's HEREEEEEEE");
             DirectoryDetails directoryToRemove = args.GetContent<DirectoryDetails>();
+           
+            Stack<DirectoryDetails> directoryToRemoveStack = new Stack<DirectoryDetails>();
+            foreach (DirectoryDetails d in Settings.Handlers)
+            {
+                if (d.DirectoryName == directoryToRemove.DirectoryName)
+                    directoryToRemoveStack.Push(d);
 
-            model.RemoveDirectoryHandler(directoryToRemove);
-
-            //Stack<DirectoryDetails> directoryToRemoveStack = new Stack<DirectoryDetails>();
-            //foreach (DirectoryDetails d in Settings.Handlers)
-            //{
-            //    if (d.DirectoryName == directoryToRemove.DirectoryName)
-            //        directoryToRemoveStack.Push(d);
-
-            //}
-            //while (directoryToRemoveStack.Count > 0)
-            //    Settings.Handlers.Remove(directoryToRemoveStack.Pop());
+            }
+            while (directoryToRemoveStack.Count > 0)
+                Settings.Handlers.Remove(directoryToRemoveStack.Pop());
 
 
         }

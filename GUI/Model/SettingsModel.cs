@@ -2,7 +2,6 @@
 using SharedResources;
 using System.Windows.Data;
 using System;
-using System.Linq;
 
 namespace GUI.Model
 {
@@ -47,14 +46,7 @@ namespace GUI.Model
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RemoveDirectoryHandler(DirectoryDetails directoryToRemove)
-        {
-            var directoriesToRemove = settings.Handlers.Where(x => x.DirectoryName == directoryToRemove.DirectoryName);
-            DirectoryDetails[] directoriesToRemoveArray = directoriesToRemove.ToArray();
-            foreach (DirectoryDetails d in directoriesToRemoveArray)
-                settings.Handlers.Remove(d);
-        }
+       
     }
 }
 

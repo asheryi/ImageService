@@ -29,7 +29,7 @@ namespace ImageService.Commands
             result = true;
             return "ok";
         }
-        public GetAllLogsCommand(ICollection<Log> logs,IMessageGenerator generator, ILoggingService logger)
+        public GetAllLogsCommand(ICollection<Log> logs,EventLog eventlogger,IMessageGenerator generator, ILoggingService logger)
         {
             singletonServer = SingletonServer.Instance;
             logsClients = new List<TcpClient>();
