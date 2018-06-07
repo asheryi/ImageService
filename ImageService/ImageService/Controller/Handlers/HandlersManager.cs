@@ -16,7 +16,7 @@ namespace ImageService.Controller.Handlers
         private IDictionary<string, IDirectoryHandler> handlers;
         private object handlersLock = new object();
         public delegate string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful);
-        public HandlersManager(IImageController m_controller,string[] paths,ILoggingService logger,EventHandler<DirectoryCloseEventArgs> closeHandler,ref Action serverDown)
+        public HandlersManager(IImageController m_controller,string[] paths,ILoggingService logger,EventHandler<DirectoryCloseEventArgs> Handler_DirectoryClose, Action serverDown)
         {
             handlers = new Dictionary<string, IDirectoryHandler>();
             for (int i = 0; i < paths.Length; i++)
@@ -24,7 +24,7 @@ namespace ImageService.Controller.Handlers
                 string path = paths[i];
                 IDirectoryHandler handler = new DirectoyHandler(m_controller, logger, path);
                 Add(path, handler);
-                handler.DirectoryClose += closeHandler;
+                handler.DirectoryClose += Handler_DirectoryClose;
                 serverDown += handler.Close;
                 handler.StartHandleDirectory();
             }

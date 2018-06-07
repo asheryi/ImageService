@@ -103,6 +103,7 @@ namespace ImageService
                 server = SingletonServer.Instance;
                 EventLogFunc(this, new MessageRecievedEventArgs("SingletonServer.Instance", MessageTypeEnum.INFO));
 
+               // server.Start();
                 EventLogFunc(this, new MessageRecievedEventArgs("server.Start()", MessageTypeEnum.INFO));
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
@@ -143,20 +144,22 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            EventLogFunc(this, new MessageRecievedEventArgs("Stopping Service", MessageTypeEnum.WARNING));
-            m_imageServer.terminate();
             server.Stop();
-
+            Log log = new Log(MessageTypeEnum.INFO, "Stopping Service");
+        
+            logs.Add(log);
+            eventLogger.WriteEntry(log.Message);
+            m_imageServer.terminate();
         }
         /// <summary>
         /// InitializeComponent.
         /// </summary>
         private void InitializeComponent()
         {
-            this.eventLogger = new EventLog();
-            ((ISupportInitialize)(this.eventLogger)).BeginInit();
+            this.eventLogger = new System.Diagnostics.EventLog();
+            ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
             this.ServiceName = "ImageService";
-            ((ISupportInitialize)(this.eventLogger)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
 
         }
         /// <summary>

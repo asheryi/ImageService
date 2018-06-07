@@ -26,7 +26,7 @@ namespace ImageService.Controller
         /// ImageController constructor.
         /// </summary>
         /// <param name="Model">The Model Of The System.</param>
-        public ImageController(ImageControllerArgs imageControllerArgs,ref EventHandler<Log> logAnoun,ref Action serverDown)
+        public ImageController(ImageControllerArgs imageControllerArgs,ref EventHandler<Log> logAnoun)
         {
             imageControllerArgs.ImageServiceModelArgs.LoggingService = imageControllerArgs.LoggingService;
             loggingService = imageControllerArgs.LoggingService;
@@ -44,7 +44,7 @@ namespace ImageService.Controller
 
 
             singletonServer.ClientConnected += ClientConnected;
-            HandlersManager handlersManager = new HandlersManager(this, imageControllerArgs.DirectoriesPaths, loggingService, imageControllerArgs.HandlerDirectoryClose,ref serverDown);
+            HandlersManager handlersManager = new HandlersManager(this, imageControllerArgs.DirectoriesPaths, loggingService, imageControllerArgs.HandlerDirectoryClose, imageControllerArgs.ServerDown);
 
             commands = new Dictionary<int, ICommand>()
             {

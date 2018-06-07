@@ -33,9 +33,9 @@ namespace SharedResources.Communication
                     EventHandler<ContentEventArgs> eventhandler = eventHandlerDic[reply.CommandID];
                     eventhandler?.Invoke(this, new ContentEventArgs(reply.Content));
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                   
+                    Debug.WriteLine(e.StackTrace);
                 }
 
             }).Start();

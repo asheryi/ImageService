@@ -27,7 +27,7 @@ namespace ImageService.Server
             imageServerArgs.ImageControllerArgs.LoggingService = imageServerArgs.LoggingService;
             imageServerArgs.ImageControllerArgs.HandlerDirectoryClose = Handler_DirectoryClose;
             imageServerArgs.ImageControllerArgs.ServerDown = serverDown;
-            m_controller = new ImageController(imageServerArgs.ImageControllerArgs,ref LogAnnouncement,ref serverDown);
+            m_controller = new ImageController(imageServerArgs.ImageControllerArgs,ref LogAnnouncement);
            
         }
 
@@ -41,9 +41,8 @@ namespace ImageService.Server
         {
             // unsubsribe the DH from the event of CommandRecieved .
             serverDown -= ((IDirectoryHandler)sender).Close;
-
             // Logging the message of the closed directory
-            m_logger.Log(e.Message,MessageTypeEnum.WARNING);
+            m_logger.Log(e.Message,MessageTypeEnum.INFO);
         }
 
 
