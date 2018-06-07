@@ -11,10 +11,7 @@ using ImageService.Model;
 using SharedResources.Logging;
 using ImageService.Logging.Model;
 using ImageService.Comunication;
-using SharedResources;
 using ImageService.Controller;
-//using ImageService.Logging.Model;
-//using ImageService.Model;
 
 namespace ImageService
 {
@@ -95,6 +92,9 @@ namespace ImageService
                 logs = new List<Log>();
 
                 EventLogFunc(this, new MessageRecievedEventArgs("Service is ON", MessageTypeEnum.INFO));
+               
+
+
 
                 logger = new LoggingService();
                 //this function is subscribes to the event of logger.
@@ -119,20 +119,15 @@ namespace ImageService
                 //Create Controller Args
                 ImageControllerArgs imageControllerArgs = new ImageControllerArgs();
                 imageControllerArgs.DirectoriesPaths = directoriesPaths;
-                imageControllerArgs.ImageService = this;
-                imageControllerArgs.EventLog = eventLogger;
+               
                 //Create ImageServiceModelArgs
                 ImageServiceModelArgs imageServiceModelArgs = new ImageServiceModelArgs();
                 imageServiceModelArgs.ManagePath = manage_path;
                 imageServiceModelArgs.ThumbnailsSize = thumbnailSize;
                 imageControllerArgs.ImageServiceModelArgs = imageServiceModelArgs;
-                //LogAnnouncement += imageControllerArgs.LogAnnouncement;
                 imageServerArgs.ImageControllerArgs = imageControllerArgs;
-                //  ImageController m_controller = new ImageController(imageServerArgs.ImageServiceModel, imageServerArgs.LoggingService, imageServerArgs.EventLog, imageServerArgs.DirectoriesPaths, Handler_DirectoryClose, serverDown);
-               // ImageController m_controller = new ImageController(imageControllerArgs);
-               //imageControllerArgs.LogAnnouncement=LogAnnouncement;
+               
                 m_imageServer = new ImageServer(imageServerArgs,ref LogAnnouncement);
-               // m_imageServer = new ImageServer(directoriesPaths, logger,new ImageServiceModel(logger,manage_path,thumbnailSize), this,eventLogger);
                 EventLogFunc(this, new MessageRecievedEventArgs(" new ImageServer", MessageTypeEnum.INFO));
 
             }
@@ -178,18 +173,6 @@ namespace ImageService
             eventLogger.WriteEntry(args.Message);
 
         }
-
-
-
-
-
-        /// <summary>
-        /// GetAllLogs returns all logs since the system started.
-        /// </summary>
-        //private ICollection<Log> GetAllLogs()
-        //{
-        //    return logs;
-        //}
 
     }
 
