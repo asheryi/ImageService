@@ -60,7 +60,7 @@ namespace WebApplication2.Controllers
 
                 client.Start();
                 client.Recieve();
-            } else
+            } else        //////////////NOOOOOOOOOOOOOOOOOOOOOOOoo
             {
                 messHandler = null;
             }
@@ -109,11 +109,17 @@ namespace WebApplication2.Controllers
         }
 
         // GET: First/Details
-        public ActionResult Logs(string filter="n")
+        public ActionResult Logs(string filter = "")
         {
-            return View(logsModel.filterLogsBy(filter));
+            logsModel.Filter = filter;
+            var x = View(logsModel.Logs);
+            return x;
         }
-
+        [HttpPost]
+        public void filterTable(string filter)
+        {
+            logsModel.Filter = filter;
+        }
         public void getAllLogs()
         {
             client.Send(messGenerator.Generate(CommandEnum.GetAllLogsCommand,""));

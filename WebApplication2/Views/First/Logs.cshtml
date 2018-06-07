@@ -12,23 +12,89 @@
 <td>Filter By:  </td>
 <input type="text" id="txtFilter" size="5" />
 <button type="button" id="btnFilter" style="margin:10px">OK</button>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Create" class="btn btn-default" />
+    </div>
+</div>
+@CreateTable()
+
+<button id="goog" class="edit btn btn-info btn-xs"
+        data-url="@Url.Action("First","filterTable",new { filter= "hfghf" })">
+    Edit
+</button>
+
 <script>
-    $("#btnFilter").click(function () {
+    function myFunction() {
+        location.reload();
+    
+  // Declare variables
+  //var input, filter, table, tr, td, i;
+  //input = document.getElementById("txtFilter");
+  //filter = input.value.toUpperCase();
+  //table = document.getElementById("logsTable");
+  //tr = table.getElementsByTagName("tr");
 
-        //document.getElementById("btnFilter").disabled = true;
-        @*$.getJSON("@Url.Action("Logs")", filter: $("#txtFilter").val(),function(){} );*@
-        var x =$("#txtFilter").val();
+  //// Loop through all table rows, and hide those who don't match the search query
+  //for (i = 1000; i < tr.length; i++) {
+  //  th = tr[i].getElementsByTagName("th")[0];
+  //  if (th) {
+  //    if (th.innerHTML.toUpperCase().indexOf(filter) > -1) {
+  //      th[i].style.display = "";
+  //    } else {
+  //      th[i].style.display = "none";
+  //    }
+  //  }
 
-        $.getJSON("@Url.Action("Logs")", { filter: $("#txtFilter").val() });
-        //document.getElementById("btnFilter").disabled = false;
-
-        @*$.getJSON("@Url.Action("GetEmployee")", function (empl) {
-            $("#prodId").text(empl.FirstName);
-            $("#prodName").text(empl.LastName);
-        });*@
-    });
+  //}
+  //location.reload();
+}
 </script>
-<table class="table" id="logsTable">
+<script>
+    //$(function(){
+
+    //    $("#goog").click(function () {
+    //        var ajaxUrl= $(this).data("url");
+    //        $("#modal").load(ajaxUrl, function () {
+    //            $("#modal").modal();
+    //        })
+    //    });
+
+
+
+    $("#btnFilter").click(function () { 
+        $.post("@Url.Action("filterTable")", { filter: $("#txtFilter").val() }, function () { location.reload(); });
+    });
+   
+</script>
+@helper CreateTable()
+{
+    <table class="table" id="logsTable">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Message)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+@*<table class="table" id="logsTable">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Type)
@@ -61,8 +127,8 @@
             @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
         <td>
             @Html.ActionLink("Delete", "Delete", new { id=0 })
-        </td>*@
+        </td>
     </tr>
 }
 
-</table>
+</table>*@

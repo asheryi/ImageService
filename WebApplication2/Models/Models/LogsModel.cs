@@ -12,15 +12,16 @@ namespace WebApplication2.Models.Models
     class LogsModel
     {
       
-        private ObservableCollection<Log> logs;//Contains the log sent by the server.
+        private ICollection<Log> logs;//Contains the log sent by the server.
        /// <summary>
        /// Logs collection property.
        /// </summary>
-        public ObservableCollection<Log> Logs
+        public ICollection<Log> Logs
         {
             get
             {
-                return logs;
+                return filterLogsBy(filter);
+                //return logs;
             }
             private set
             {
@@ -33,9 +34,10 @@ namespace WebApplication2.Models.Models
         /// </summary>
         public LogsModel()
         {
-            this.Logs = new ObservableCollection<Log>();
+            this.Logs = new List<Log>();
+            Filter = "";
             //Allows more than one thread access the collection.
-            BindingOperations.EnableCollectionSynchronization(Logs, Logs);
+           
 
         }
 
@@ -63,15 +65,27 @@ namespace WebApplication2.Models.Models
 
             Logs.Add(args.GetContent<Log>());
         }
-        public ICollection<Log> filterLogsBy(string type)
+        public ICollection<Log> filterLogsBy(string filter)
         {
             ICollection<Log> FilterLogs = new List<Log>();
-            if(type == "")
+            if(filter == "")
             {
-                return Logs;
+                return logs;
             }
-            Log[] found = Logs.Where(log => log.Type.ToString() == type).ToArray();
+            Log[] found = logs.Where(log => log.Type.ToString() == filter).ToArray();
             return found;
+        }
+       private string filter;
+        public string Filter
+        {
+            set
+            {
+                filter = value;
+            }
+            get
+            {
+                return filter;
+            }
         }
     }
 }
