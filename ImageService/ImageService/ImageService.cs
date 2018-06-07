@@ -51,7 +51,7 @@ namespace ImageService
         private ILoggingService logger;//the logger of the system.
         private EventLog eventLogger;//writea to logger event.
        // private IContainer components;
-        private Comunication.SingletonServer server;
+        private Comunication.SingletonServer singleton_server;
         private ICollection<Log>  logs;//stores system logs.
         public event EventHandler<Log> LogAnnouncement;
         public ImageService()
@@ -100,10 +100,9 @@ namespace ImageService
                 //this function is subscribes to the event of logger.
                 logger.MessageRecieved += EventLogFunc;
                 EventLogFunc(this, new MessageRecievedEventArgs("MessageRecieved", MessageTypeEnum.INFO));
-                server = SingletonServer.Instance;
+                singleton_server = SingletonServer.Instance;
                 EventLogFunc(this, new MessageRecievedEventArgs("SingletonServer.Instance", MessageTypeEnum.INFO));
 
-               // server.Start();
                 EventLogFunc(this, new MessageRecievedEventArgs("server.Start()", MessageTypeEnum.INFO));
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
@@ -149,22 +148,21 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            server.Stop();
-            Log log = new Log(MessageTypeEnum.INFO, "Stopping Service");
-        
-            logs.Add(log);
-            eventLogger.WriteEntry(log.Message);
+            EventLogFunc(this, new MessageRecievedEventArgs("Stopping Service", MessageTypeEnum.WARNING));
+            singleton_server.Stop();
             m_imageServer.terminate();
+            
+
         }
         /// <summary>
         /// InitializeComponent.
         /// </summary>
         private void InitializeComponent()
         {
-            this.eventLogger = new System.Diagnostics.EventLog();
-            ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).BeginInit();
+            this.eventLogger = new EventLog();
+            ((ISupportInitialize)(this.eventLogger)).BeginInit();
             this.ServiceName = "ImageService";
-            ((System.ComponentModel.ISupportInitialize)(this.eventLogger)).EndInit();
+            ((ISupportInitialize)(this.eventLogger)).EndInit();
 
         }
         /// <summary>

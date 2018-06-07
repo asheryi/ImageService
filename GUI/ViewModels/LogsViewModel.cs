@@ -9,7 +9,11 @@ namespace GUI.ViewModels
 {
     class LogsViewModel
     {
-        private LogsModel model;
+        
+        private LogsModel model;//logsModel.
+        /// <summary>
+        /// Logs collection property.
+        /// </summary>
         public ObservableCollection<Log> Logs
         {
             get
@@ -17,12 +21,20 @@ namespace GUI.ViewModels
                 return model.Logs;
             }
         }
-
+        /// <summary>
+        /// LogViewModel constructor.
+        /// </summary>
+        /// <param name="model">logsModel</param>
         public LogsViewModel(LogsModel model)
         {
             this.model = model;
 
         }
+        /// <summary>
+        /// Handles the logs sent by server.
+        /// </summary>
+        /// <param name="sender">The object which raise the event</param>
+        /// <param name="args">ContentEventArgs that contains Logs collection object</param>
         public void recieveLogs(object sender, ContentEventArgs args)
         {
             ICollection<Log> logs = args.GetContent<ICollection<Log>>();
@@ -32,7 +44,11 @@ namespace GUI.ViewModels
             }
 
         }
-
+        /// <summary>
+        /// Handles with lonely log sent by server.
+        /// </summary>
+        /// <param name="sender">The object which raise the event</param>
+        /// <param name="args">ContentEventArgs that contains Log object</param>
         public void recieveOneLog(object sender, ContentEventArgs args)
         {
 

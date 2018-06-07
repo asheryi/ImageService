@@ -15,54 +15,31 @@ using System.Threading.Tasks;
 
 namespace GUI.Model
 {
+    /// <summary>
+    /// Responsible of communication on the GUI side.
+    /// </summary>
     class Client
     {
+       
         private TcpClient client;
         private NetworkStream stream;
         private BinaryReader reader;
         private BinaryWriter writer ;
-        private IMessageHandler messageHandler;
+        private IMessageHandler messageHandler;//handling received messages.
         private IPEndPoint ep;
-        //private EventHandler<ContentEventArgs> logReceive;
-        //private EventHandler<ContentEventArgs> configReceive;
-        // IDictionary<int, EventHandler<Log>> eventHandlerDic;
-
-
-
-
-        //public bool register(CommandEnum command,<ContentEventArgs>)
-
-
-
-
-        //public EventHandler<ContentEventArgs> LogReceive
-        //{
-        //    set
-        //    {
-        //        logReceive = value;
-        //        eventHandlerDic.Add(CommandEnum.SendLog, null);
-        //    }
-        //    get
-        //    {
-        //        return logReceive;
-        //    }
-        //}
-        //EventArgs<Service>
+        /// <summary>
+        /// Client's constructor
+        /// </summary>
+        /// <param name="responser">handling received messages.</param>
         public Client(IMessageHandler responser)
         {
            ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-            client = new TcpClient();
-            this.messageHandler = responser;
-
-            //eventHandlerDic = new Dictionary<int, EventHandler<EventArgs>>()
-            //{
-            //    { (int)CommandEnum.SendLog,logReceive }
-
-            //};
-
-           
-
+           client = new TcpClient();
+           this.messageHandler = responser;
         }
+        /// <summary>
+        /// statint the communiction.
+        /// </summary>
         public void Start()
         {
 
@@ -73,7 +50,9 @@ namespace GUI.Model
             reader = new BinaryReader(stream);
             writer = new BinaryWriter(stream);
         }
-        private object lockThis = new object();
+        /// <summary>
+        /// recieves message from server.
+        /// </summary>
         public void Recieve()
         {
             new Task(() =>
@@ -82,17 +61,24 @@ namespace GUI.Model
                 {
                     try
                     {
+                      
                             string responseData = reader.ReadString();
                             messageHandler.Handle(responseData);
+                       
+                           
                     }
                     catch(Exception)
                     {
-                        Debug.WriteLine("Deserialize fails");
+                        break;
                     }
                 }
 
             }).Start();
         }
+        /// <summary>
+        /// sending message to server.
+        /// </summary>
+        /// <param name="requestString">the message for the server</param>
         public void Send(string requestString)
         {
             new Task(() =>
@@ -103,9 +89,8 @@ namespace GUI.Model
                 }
                 catch (Exception)
                     {
-                        Debug.WriteLine("Deserialize fails");
 
-                    }
+                }
             }).Start();
         }
 

@@ -1,20 +1,8 @@
 ﻿using GUI.Model;
 using GUI.Views.UserControls;
-using Microsoft.Practices.Prism.Commands;
-using SharedResources;
 using SharedResources.Commands;
 using SharedResources.Communication;
-using SharedResources.Logging;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace GUI.ViewModels
 {
@@ -25,26 +13,41 @@ namespace GUI.ViewModels
         private IMessageHandler handler;
         LogsView logsView;
         private SettingsView settingsView;
-   
+        /// <summary>
+        /// MainWindowViewModel constructor.
+        /// </summary>
         public MainWindowViewModel()
         {
             
             handler = new CommunicationMessageHandler();
             createSettingsMVVM();
             createLogMVVM();
-            client = new Client(handler);
+            client = new Client();
+            
   
         }
+        /// <summary>
+        /// Start the communication with the server.
+        /// </summary>
         public void Connect()
         {
             client.Start();
+            client.messageHandler = handler;
             client.Recieve();
         }
+        /// <summary>
+        /// Send message to the server.
+        /// </summary>
+        /// <param name="o">The object which raise the event</param>
+        /// <param name="request">The message to be send.</param>
         public void Send(object o,string request)
         {
             Debug.WriteLine(request);
             client.Send(request);
         }
+        /// <summary>
+        /// Creates the MVVM of the SettingsTab
+        /// </summary>
         public void createSettingsMVVM()
         {
             SettingsModel settingsModel = new SettingsModel();
@@ -57,6 +60,9 @@ namespace GUI.ViewModels
             settingsView.DataContext = settingsViewModel;
 
         }
+        /// <summary>
+        /// SerttingsView property.
+        /// </summary>
         public SettingsView SettingsView
         {
             get
@@ -64,6 +70,9 @@ namespace GUI.ViewModels
                 return settingsView;
             }
         }
+        /// <summary>
+        /// Creates the MVVM of the LogsTab.
+        /// </summary>
         public void createLogMVVM()
         {
             LogsModel logsModel = new LogsModel();
@@ -73,6 +82,9 @@ namespace GUI.ViewModels
             handler.RegisterFuncToEvent(CommandEnum.GetAllLogsCommand, logViewModel.recieveLogs);
             handler.RegisterFuncToEvent(CommandEnum.SendLog, logViewModel.recieveOneLog);
         }
+        /// <summary>
+        /// LogView property.
+        /// </summary>
         public LogsView LogView
         {
             get
@@ -80,6 +92,9 @@ namespace GUI.ViewModels
                 return logsView;
             }
         }
+        /// <summary>
+        /// SettingsViewModel property.
+        /// </summary>
         public SettingsViewModel SettingsViewModel
         {
             set
@@ -91,8 +106,5 @@ namespace GUI.ViewModels
                 return this.svm;
             }
         }
-       
-       
-       
     }
 }

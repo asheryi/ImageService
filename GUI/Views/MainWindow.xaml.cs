@@ -36,7 +36,10 @@ namespace GUI
             {
                 Debug.WriteLine(e.ToString());
                 this.Background=Brushes.Gray;
+                this.tabControl.Visibility = Visibility.Hidden;
+                this.offline.Visibility = Visibility.Visible;
             }      
         }
+        
     }
 }

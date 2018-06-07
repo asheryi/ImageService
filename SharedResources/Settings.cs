@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 namespace SharedResources
 {
+    // Stores the settings as they appear in the appconfig.
     public class Settings : INotifyPropertyChanged
     {
         public Settings()

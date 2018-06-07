@@ -41,14 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandEnum.cs" />
+    <Compile Include="Communication\Client.cs" />
+    <Compile Include="Communication\ClientID.cs" />
     <Compile Include="Communication\IMessageGenerator.cs" />
     <Compile Include="Communication\IMessageHandler.cs" />
     <Compile Include="Communication\CommunicationMessage.cs" />
     <Compile Include="Communication\Logging\Log.cs" />
     <Compile Include="Communication\Logging\MessageTypeEnum.cs" />
-    <Compile Include="Communication\CommunicationMessageEnum.cs" />
     <Compile Include="Communication\CommunicationMessageGenerator.cs" />
     <Compile Include="Communication\CommunicationMessageHandler.cs" />
+    <Compile Include="Communication\TcpClientID.cs" />
     <Compile Include="ContentEventArgs.cs" />
     <Compile Include="DirectoryDetails.cs" />
     <Compile Include="ObjectConverter.cs" />
@@ -60,6 +62,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,48 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using SharedResources.Communication;
 using System.IO;
-using SharedResources;
-using System.Collections;
-using SharedResources.Logging;
-using ImageService.Logging;
-using SharedResources.Commands;
 using System.Windows.Data;
+using System.Linq;
+using ShaeredResources.Comunication;
 
 namespace ImageService.Comunication
 {
     class SingletonServer
     {
-
+        // Locks the Tcp COnnections
         private object lockThis = new object();
-        private  EventHandler<IPEndPoint> clientConnected;
 
+        private EventHandler<ClientID> clientConnected; // invokes when client is connected to get all logs etc..
         public int Port { get; set; }
         private TcpListener listener;
-        public IClientHandler CH {
-            get;
-            set; }
-
 
         private ICollection<TcpClient> clients;
 
-        private static SingletonServer singleServer;
+        private static SingletonServer singleServer; // This is singleton
 
-        public EventLog logger { get; set; }
-        public IMessageHandler MessageHandler { get; set; }
+        public IMessageHandler MessageHandler { get; set; } // Handle the messages through the communication
         private SingletonServer()
         {
             clients = new List<TcpClient>();
             BindingOperations.EnableCollectionSynchronization(clients, clients);
-            this.Port = 8000;
-            this.CH = new ClientHandler();
-
-
+            Port = 8000;
         }
 
         public static SingletonServer Instance
@@ -57,7 +44,7 @@ namespace ImageService.Comunication
                 return singleServer;
             }
         }
-        public EventHandler<IPEndPoint> ClientConnected
+        public EventHandler<ClientID> ClientConnected
         {
             get
             {
@@ -69,59 +56,62 @@ namespace ImageService.Comunication
             }
         }
       
+        /// <summary>
+        /// Send the given string (the data) through the connection to all connected clients.
+        /// </summary>
+        /// <param name="replyString">The data to send to all</param>
         public void SendToAll(string replyString)
         {
+            // On new task ..
             new Task(() =>
-            {
-                foreach (TcpClient client in new List<TcpClient>(clients))
-                {
-                    try
+            {   
+                    
+                    foreach (TcpClient client in new List<TcpClient>(clients))
                     {
-                        lock (lockThis)
+                        try
                         {
-                            BinaryWriter writer = new BinaryWriter(client.GetStream());
-                            logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString());
-                            writer.Write(replyString);
+                            lock (lockThis)
+                            {
+                                BinaryWriter writer = new BinaryWriter(client.GetStream());
+                                writer.Write(replyString);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // If occured a problem , remoes it from the connectes clients as requested.
+                            clients.Remove(client);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        clients.Remove(client);
-                    }
-
-                }
+                
             }).Start();
 
         }
-        public void SendToClient(string replyString, IPEndPoint ip)
+        /// <summary>
+        /// Send to specific client
+        /// </summary>
+        /// <param name="replyString">The data to send</param>
+        /// <param name="clientID">Client details</param>
+        public void SendToClient(string replyString, ClientID clientID)
         {
             new Task(() =>
             {
                 lock (lockThis)
                 {
                     TcpClient desired_client = null;
-                    try {
-                        foreach(TcpClient client in clients)
-                        {
-                            IPEndPoint ip_client = (IPEndPoint)client.Client.RemoteEndPoint;
-                            if (ip_client.ToString() == ip.ToString())
-                            {
-                                desired_client = client;
-                                break;
-                            }
-                        }
-
-                        if(desired_client == null)
+                    TcpClientID tcpclientID = new TcpClientID(clientID.getArgs());
+                    try
+                    {
+                        TcpClient[] found = clients.Where(c => tcpclientID.compare(new TcpClientID(new string[] { c.Client.RemoteEndPoint.ToString() }))).ToArray();
+                        if(found.Length == 0)
                         {
                             return;
                         }
-                    logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString() + " before get stream");
-                    BinaryWriter writer = new BinaryWriter(desired_client.GetStream());
-                    logger.WriteEntry(ObjectConverter.Deserialize<CommunicationMessage>(replyString).CommandID.ToString() + " before write ");
-                    writer.Write(replyString);
-                    }catch(Exception e)
+
+                        desired_client = found[0];
+                        BinaryWriter writer = new BinaryWriter(desired_client.GetStream());
+                        writer.Write(replyString);
+                    }catch(Exception)
                     {
-                        logger.WriteEntry(e.Message);
 
                     }
                 }
@@ -137,6 +127,7 @@ namespace ImageService.Comunication
             IPEndPoint(IPAddress.Parse("127.0.0.1"), Port);
             listener = new TcpListener(ep);
             listener.Start();
+            // STARTS RECIEVING NEW CLIENTS IN NEW TASK
             Task task = new Task(() => {
             while (true)
             {
@@ -146,7 +137,8 @@ namespace ImageService.Comunication
                     IPEndPoint pass = (IPEndPoint)(client.Client.RemoteEndPoint);
                         clients.Add(client);
                         recieveRequests(client);
-                        clientConnected?.Invoke(this, pass);
+                        // invokes client connected
+                        clientConnected?.Invoke(this, new TcpClientID(new string[] { pass.ToString() }));
                     }
                     catch (SocketException)
                     {
@@ -158,8 +150,11 @@ namespace ImageService.Comunication
         }
         public void Stop()
         {
-            listener.Stop();
-        }        public void recieveRequests(TcpClient client)
+                listener.Stop();
+        }        /// <summary>
+        /// Recieves data from the specific client
+        /// </summary>
+        /// <param name="client"></param>        public void recieveRequests(TcpClient client)
         {
             Task task = new Task(() =>
               {
@@ -168,7 +163,10 @@ namespace ImageService.Comunication
 
                       BinaryReader reader = new BinaryReader(client.GetStream());
                       string request = reader.ReadString();
-                      MessageHandler.Handle(request);
+
+                  
+                      IPEndPoint pass = (IPEndPoint)(client.Client.RemoteEndPoint);
+                      MessageHandler.Handle(request, new TcpClientID(new string[] { pass.ToString() }));
                    
                   }
               });

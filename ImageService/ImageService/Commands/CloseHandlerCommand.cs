@@ -10,7 +10,10 @@ namespace ImageService.Commands
     class CloseHandlerCommand : ICommand
     {
         private HandlersManager handlersManager; 
-
+        /// <summary>
+        /// Recieves the handlers manager.
+        /// </summary>
+        /// <param name="handlersManager"></param>
         public CloseHandlerCommand(HandlersManager handlersManager)
         {
             this.handlersManager = handlersManager;
@@ -18,6 +21,7 @@ namespace ImageService.Commands
 
         public string Execute(string[] args, out bool result)
         {
+            // Removes and closes the handler.
             IDirectoryHandler handler = handlersManager.Remove(args[0]);
             result = true;
             if (handler == null)
@@ -26,14 +30,14 @@ namespace ImageService.Commands
                 return "";
             }
 
-            // ZARICH EIUN
             try
             {
                 handler.Close();
-            }catch(Exception e)
+            }catch(Exception)
             {
                 result = false;
             }
+
             if (result)
             {
                 SingletonServer singletonServer = SingletonServer.Instance;

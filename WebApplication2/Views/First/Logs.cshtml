@@ -1,0 +1,68 @@
+﻿@model IEnumerable<WebApplication2.Models.Logging.Log>
+
+@{
+    ViewBag.Title = "Logs";
+}
+
+<h2>Logs</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<td>Filter By:  </td>
+<input type="text" id="txtFilter" size="5" />
+<button type="button" id="btnFilter" style="margin:10px">OK</button>
+<script>
+    $("#btnFilter").click(function () {
+
+        //document.getElementById("btnFilter").disabled = true;
+        @*$.getJSON("@Url.Action("Logs")", filter: $("#txtFilter").val(),function(){} );*@
+        var x =$("#txtFilter").val();
+
+        $.getJSON("@Url.Action("Logs")", { filter: $("#txtFilter").val() });
+        //document.getElementById("btnFilter").disabled = false;
+
+        @*$.getJSON("@Url.Action("GetEmployee")", function (empl) {
+            $("#prodId").text(empl.FirstName);
+            $("#prodName").text(empl.LastName);
+        });*@
+    });
+</script>
+<table class="table" id="logsTable">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Message)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem=>item.Message)
+        </td>
+    @*<td>
+        @Html.DisplayFor(modelItem => item.Salary)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Phone)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Email)
+    </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id= item.ID }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+        <td>
+            @Html.ActionLink("Delete", "Delete", new { id=0 })
+        </td>*@
+    </tr>
+}
+
+</table>
