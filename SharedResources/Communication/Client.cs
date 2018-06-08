@@ -38,11 +38,15 @@ namespace SharedResources.Communication
         /// </summary>
         public void Start()
         {
-
+            if (Connected)
+            {
+                client.Close();
+            }
             client.Connect(ep);
             Debug.WriteLine("You are connected");
+            
 
-            if(Connected == false)
+            if (!Connected)
             {
                 return;
             }

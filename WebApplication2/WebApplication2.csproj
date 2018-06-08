@@ -127,6 +127,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Models\Models\ImageWebModel\details.txt" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="scripts\bootstrap.js" />
@@ -157,6 +158,7 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Logging\Log.cs" />
     <Compile Include="Models\Logging\MessageTypeEnum.cs" />
+    <Compile Include="Models\Models\ImageWebModel\ImageWebModel.cs" />
     <Compile Include="Models\Models\LogsModel.cs" />
     <Compile Include="Models\Models\SettingsModel.cs" />
     <Compile Include="Models\Settings.cs" />
@@ -184,6 +186,7 @@
     <Content Include="scripts\jquery-3.0.0.min.map" />
     <Content Include="scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="Views\First\RemoveHandler.cshtml" />
+    <Content Include="Views\First\ImageWeb.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -193,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="photos\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GUI\GUI.csproj">

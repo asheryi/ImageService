@@ -14,6 +14,7 @@ using WebApplication2.Model.Communication;
 using WebApplication2.Models;
 using WebApplication2.Models.Logging;
 using WebApplication2.Models.Models;
+using WebApplication2.Models.Models.ImageWebModel;
 
 namespace WebApplication2.Controllers
 {
@@ -41,6 +42,11 @@ namespace WebApplication2.Controllers
         static SettingsModel settingsModel = new SettingsModel();
         static LogsModel logsModel = new LogsModel();
         static IMessageHandler messHandler; // MAYBE NOT
+        static ImageWebModel webModel = new ImageWebModel();
+
+        static FirstController()
+        {
+        }
 
 
         public FirstController()
@@ -108,12 +114,10 @@ namespace WebApplication2.Controllers
             return null;
         }
 
-        // GET: First/Details
-        public ActionResult Logs(string filter = "")
+        // GET: First/Logs
+        public ActionResult Logs()
         {
-            logsModel.Filter = filter;
-            var x = View(logsModel.Logs);
-            return x;
+            return View(logsModel.Logs);
         }
         [HttpPost]
         public void filterTable(string filter)
@@ -124,6 +128,17 @@ namespace WebApplication2.Controllers
         {
             client.Send(messGenerator.Generate(CommandEnum.GetAllLogsCommand,""));
         }
+
+        // GET: First/ImageWeb
+        public ActionResult ImageWeb()
+        {
+            ViewBag.Connected = client.Connected;
+            webModel.OutputPath = settingsModel.Settings.OutputDirectory;
+            ViewBag.PhotosCount = webModel.GetPhotosCount();
+            return View();
+        }
+
+
 
 
         public ActionResult RemoveHandlerq(string id)
