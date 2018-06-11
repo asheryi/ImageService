@@ -116,11 +116,11 @@ namespace ImageService.Model
                 Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
                 
                 CreateFolder(thumbsDstPath);
-
-                thumb.Save(Path.ChangeExtension(thumbsDstPath + @"\" + newName, fileInfo.Extension));
+                string thumbPath = Path.ChangeExtension(thumbsDstPath + @"\" + newName, fileInfo.Extension);
+                thumb.Save(thumbPath);
                 result = true;
 
-                return dstPath;
+                return dstPath+";"+ thumbPath;
             } catch(IOException e)
             {
                 result = false;

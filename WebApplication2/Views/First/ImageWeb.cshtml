@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "ImageWeb";
+}
+
+<h2>Image Web</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <table class="table">
+         
+
+            <tr>
+                <td>
+                    @Html.Label(@ViewBag.Connected ? "Service Is Connected" : "Service Is NOT Connected")
+                </td>
+            </tr>
+            @if (ViewBag.Connected)
+            {
+            <tr>
+                <td>
+                    @Html.Label("Photos watched currently: ")
+                </td>
+                <td align="center">
+                    @ViewBag.PhotosCount
+                </td>
+            </tr>
+            }
+
+
+        </table>
+
+    </div>
+}
+
+
+        @*CreateTable()*@
+
+        @*
+
+            @helper CreateTable()
+            {
+                <table class="table" id="logsTable">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Type)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Message)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Message)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+
+        *@
+
+
+
+

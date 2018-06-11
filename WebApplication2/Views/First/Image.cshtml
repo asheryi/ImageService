@@ -1,0 +1,10 @@
+﻿@model WebApplication2.Models.Photo
+@{
+    ViewBag.Title = "Image";
+}
+<label>@Model.Name</label>
+<h4>@Model.Date</h4>
+@Html.ActionLink("Delete", "DeleteImage", new { path = Model.Path, name = Model.Name, descreption = Model.Descreption, thumbnailPath = Model.ThumbnailPath }, new { @class = "btn btn-danger" })
+<img src="@Model.Path" />
+<h2>Image</h2>
+

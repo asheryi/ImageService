@@ -1,0 +1,23 @@
+﻿@model WebApplication2.Models.Photo
+
+@{
+    ViewBag.Title = "DeleteImage";
+}
+
+<h2>DeleteImage</h2>
+
+
+<label>You are about to delete the following Image:</label>
+<br />
+<label id="lbhandler">@Model.Name</label>
+<h4>@Model.Descreption</h4>
+<img src="@Model.ThumbnailPath" width="@ViewBag.thumnailSize" height="@ViewBag.thumnailSize" />
+
+<br />
+@Html.ActionLink("Delete", "DeleteImageRequest", new { path = Model.Path}, new { @class = "btn btn-danger" })
+<button type="button" id="btnCancel" class = "btn btn-primary"  style="margin:10px" onclick="ReturnToPhotos()">Cancel</button>
+<script>
+    function ReturnToPhotos() {
+        document.location.href = 'Photos';
+    }
+</script>

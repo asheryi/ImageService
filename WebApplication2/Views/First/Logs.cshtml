@@ -6,69 +6,36 @@
 
 <h2>Logs</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<td>Filter By:  </td>
-<input type="text" id="txtFilter" size="5" />
-<button type="button" id="btnFilter" style="margin:10px">OK</button>
-<div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Create" class="btn btn-default" />
-    </div>
-</div>
-@CreateTable()
-
-<button id="goog" class="edit btn btn-info btn-xs"
-        data-url="@Url.Action("First","filterTable",new { filter= "hfghf" })">
-    Edit
-</button>
+<select id="combo" onchange="filterTable()">
+    <option value="">ALL</option>
+    @foreach (Enum logType in Enum.GetValues(typeof(SharedResources.Logging.MessageTypeEnum)))
+    {
+        <option value="@logType">@logType</option>
+    }
+</select>
 
 <script>
-    function myFunction() {
-        location.reload();
-    
-  // Declare variables
-  //var input, filter, table, tr, td, i;
-  //input = document.getElementById("txtFilter");
-  //filter = input.value.toUpperCase();
-  //table = document.getElementById("logsTable");
-  //tr = table.getElementsByTagName("tr");
+    function filterTable() {
+        var logTable = document.getElementById(logsTable);
+        var tableRows = logsTable.getElementsByTagName("tr");
+        //i=0 is table columns titles.
+        var i = 1;
+        var e = document.getElementById("combo");
+        var filterBy = e.options[e.selectedIndex].value;
+        var tableRowsCount = tableRows.length;
+        for (; i < tableRowsCount; i++) {
+            var log = tableRows[i].getElementsByTagName("td");
+            var logTypeTd = log[0];
+            var logType = $(logTypeTd).text();
 
-  //// Loop through all table rows, and hide those who don't match the search query
-  //for (i = 1000; i < tr.length; i++) {
-  //  th = tr[i].getElementsByTagName("th")[0];
-  //  if (th) {
-  //    if (th.innerHTML.toUpperCase().indexOf(filter) > -1) {
-  //      th[i].style.display = "";
-  //    } else {
-  //      th[i].style.display = "none";
-  //    }
-  //  }
-
-  //}
-  //location.reload();
+            if ((filterBy != "") && (logType.trim() != filterBy)) {
+                tableRows[i].style.display = "none";
+            } else {
+                tableRows[i].style.display = 'table-row'
+            }
+        }
 }
 </script>
-<script>
-    //$(function(){
-
-    //    $("#goog").click(function () {
-    //        var ajaxUrl= $(this).data("url");
-    //        $("#modal").load(ajaxUrl, function () {
-    //            $("#modal").modal();
-    //        })
-    //    });
-
-
-
-    $("#btnFilter").click(function () { 
-        $.post("@Url.Action("filterTable")", { filter: $("#txtFilter").val() }, function () { location.reload(); });
-    });
-   
-</script>
-@helper CreateTable()
-{
     <table class="table" id="logsTable">
         <tr>
             <th>
@@ -93,42 +60,4 @@
         }
 
     </table>
-}
-@*<table class="table" id="logsTable">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Message)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem=>item.Message)
-        </td>
-    @*<td>
-        @Html.DisplayFor(modelItem => item.Salary)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Phone)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Email)
-    </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id= item.ID }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-        <td>
-            @Html.ActionLink("Delete", "Delete", new { id=0 })
-        </td>
-    </tr>
-}
-
-</table>*@

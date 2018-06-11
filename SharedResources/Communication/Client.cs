@@ -36,21 +36,25 @@ namespace SharedResources.Communication
         /// <summary>
         /// statint the communiction.
         /// </summary>
-        public void Start()
+        public bool Start()
         {
-
-            client.Connect(ep);
-            Debug.WriteLine("You are connected");
-
-            if(Connected == false)
+            try
             {
-                return;
+                client.Connect(ep);
+
             }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Connect: "+e.Message);
+                return false;
+            }
+
+           
 
             stream = client.GetStream();
             reader = new BinaryReader(stream);
             writer = new BinaryWriter(stream);
-
+            return true;
 
         }
         /// <summary>

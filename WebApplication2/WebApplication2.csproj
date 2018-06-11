@@ -127,6 +127,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Models\Models\ImageWebModel\details.txt" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="scripts\bootstrap.js" />
@@ -141,7 +142,6 @@
     <Content Include="scripts\jquery-3.0.0.slim.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
-    <Content Include="Views\First\Create.cshtml" />
     <Content Include="Views\First\Logs.cshtml">
       <BrowseToURL>~/First/Logs</BrowseToURL>
     </Content>
@@ -157,7 +157,10 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Logging\Log.cs" />
     <Compile Include="Models\Logging\MessageTypeEnum.cs" />
+    <Compile Include="Models\Models\ImageWebModel\ImageWebModel.cs" />
     <Compile Include="Models\Models\LogsModel.cs" />
+    <Compile Include="Models\Models\Photo.cs" />
+    <Compile Include="Models\Models\PhotosModel.cs" />
     <Compile Include="Models\Models\SettingsModel.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\Student.cs" />
@@ -179,11 +182,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\First\Edit.cshtml" />
-    <Content Include="Views\First\Error.cshtml" />
-    <Content Include="Views\First\AjaxView.cshtml" />
+    <Content Include="Views\First\Photos.cshtml" />
     <Content Include="scripts\jquery-3.0.0.min.map" />
     <Content Include="scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="Views\First\RemoveHandler.cshtml" />
+    <Content Include="Views\First\Image.cshtml" />
+    <Content Include="Views\First\ImageWeb.cshtml" />
+    <Content Include="Views\First\DeleteImage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -192,7 +197,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\UploadedFiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GUI\GUI.csproj">

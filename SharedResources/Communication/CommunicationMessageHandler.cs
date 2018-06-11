@@ -23,6 +23,7 @@ namespace SharedResources.Communication
             eventHandlerDictionary.Add(CommandEnum.GetConfigCommand, null);
             eventHandlerDictionary.Add(CommandEnum.SendLog, null);
             eventHandlerDictionary.Add(CommandEnum.CloseHandlerCommand, null);
+            eventHandlerDictionary.Add(CommandEnum.NewFileCommand, null);
         }
 
         /// <summary>

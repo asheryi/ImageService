@@ -1,0 +1,52 @@
+﻿@model WebApplication2.Models.PhotosModel
+@{
+    ViewBag.Title = "Photos";
+}
+
+<style>
+    #divider {
+        width: 200px;
+        height: auto;
+        display: inline-block;
+    }
+</style>
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<h2>Photos</h2>
+@if (Model != null)
+{
+<div class="row">
+    @foreach (WebApplication2.Models.Photo photo in Model.Photos)
+    {
+
+        <div class="column">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img src="@photo.ThumbnailPath" class="img-circle" width="@Model.ThumbnailSize" height="@Model.ThumbnailSize">
+                    <div class="caption">
+                        <h3>@photo.Name</h3>
+                        <p>@photo.Date</p>
+                        <p>@photo.Descreption</p>
+                        <p>
+                            @Html.ActionLink("View", "Image", new { path = photo.Path, name = photo.Name, date = photo.Date , descreption=photo.Descreption, thumbnailPath=photo.ThumbnailPath },new { @class = "btn btn-primary" })
+                        <a id="divider"></a>
+                            @Html.ActionLink("Delete", "DeleteImage", new { path = photo.Path, name = photo.Name, descreption = photo.Descreption,thumbnailPath=photo.ThumbnailPath }, new { @class = "btn btn-danger" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+}
+
+
+

@@ -6,13 +6,16 @@ using WebApplication2.Model.Communication;
 using System.Collections.Generic;
 using SharedResources;
 using System.Linq;
+using System;
 
 namespace WebApplication2.Models.Models
 {
     class LogsModel
     {
+        public  Action recieveLogsEvent = null;
       
         private ICollection<Log> logs;//Contains the log sent by the server.
+        public bool recievedAllLogs { get; private set; }
        /// <summary>
        /// Logs collection property.
        /// </summary>
@@ -20,8 +23,8 @@ namespace WebApplication2.Models.Models
         {
             get
             {
-                return filterLogsBy(filter);
-                //return logs;
+              
+                return logs;
             }
             private set
             {
@@ -35,7 +38,7 @@ namespace WebApplication2.Models.Models
         public LogsModel()
         {
             this.Logs = new List<Log>();
-            Filter = "";
+            this.recievedAllLogs = false;
             //Allows more than one thread access the collection.
            
 
@@ -53,7 +56,7 @@ namespace WebApplication2.Models.Models
             {
                 Logs.Add(log);
             }
-
+            recieveLogsEvent?.Invoke();
         }
         /// <summary>
         /// Handles with lonely log sent by server.
@@ -65,27 +68,8 @@ namespace WebApplication2.Models.Models
 
             Logs.Add(args.GetContent<Log>());
         }
-        public ICollection<Log> filterLogsBy(string filter)
-        {
-            ICollection<Log> FilterLogs = new List<Log>();
-            if(filter == "")
-            {
-                return logs;
-            }
-            Log[] found = logs.Where(log => log.Type.ToString() == filter).ToArray();
-            return found;
-        }
-       private string filter;
-        public string Filter
-        {
-            set
-            {
-                filter = value;
-            }
-            get
-            {
-                return filter;
-            }
-        }
+        // GET: First/ImageWeb
+       
+
     }
 }

@@ -2,13 +2,24 @@
 @{
     ViewBag.Title = "RemoveHandler";
 }
-
 <h2>RemoveHandler</h2>
 
-
-
-
-
+<label>You are about to delete the following handler:</label> 
+<br />
+<label id="lbhandler">@ViewBag.handlerToRemove</label> 
+<br />
+<button type="button" id="btnOK" style="margin:10px">OK</button>
+<button type="button" id="btnCancel" style="margin:10px">Cancel</button>
+<script>
+    $("#btnOK").click(function () {
+        document.getElementById("btnOK").disabled = true;
+        document.getElementById("btnCancel").disabled = true;
+        $.post("@Url.Action("RemoveHandlerRequest")", { handler: $("#lbhandler").text() }, function () { document.location.href = 'Config'; });
+    });
+    $("#btnCancel").click(function () {
+        document.location.href = 'Config';
+    });
+</script>
 
 
 

@@ -8,7 +8,8 @@ namespace WebApplication2.Models.Models
 {
     public class SettingsModel
     {
-        
+        public EventHandler<DirectoryDetails> HandlerRemoveEvent;
+        public EventHandler SettingsRecievedEvent;
         private Settings settings;//Contains settings details sent by server.
        /// <summary>
        /// SettingsModel constructor.
@@ -65,6 +66,8 @@ namespace WebApplication2.Models.Models
             DirectoryDetails[] directoriesToRemoveArray = directoriesToRemove.ToArray();
             foreach (DirectoryDetails d in directoriesToRemoveArray)
                 settings.Handlers.Remove(d);
+
+            HandlerRemoveEvent?.Invoke(this, directoryToRemove);
         }
 
 
@@ -78,6 +81,7 @@ namespace WebApplication2.Models.Models
 
             Settings settings = args.GetContent<Settings>();
             Settings.updateSettings(settings);
+            SettingsRecievedEvent?.Invoke(this,null);
 
         }
         /// <summary>
@@ -89,6 +93,7 @@ namespace WebApplication2.Models.Models
         {
             DirectoryDetails directoryToRemove = args.GetContent<DirectoryDetails>();
             RemoveDirectoryHandler(directoryToRemove);
+           
         }
 
 
