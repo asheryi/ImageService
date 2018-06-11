@@ -21,8 +21,7 @@ namespace SharedResources.Communication
 
         public IMessageHandler messageHandler { get; set; } //handling received messages.
         public bool Connected
-        { get
-            { return client.Connected; }}
+        { get; set; }
 
         /// <summary>
         /// Client's constructor
@@ -30,6 +29,7 @@ namespace SharedResources.Communication
         /// <param name="responser">handling received messages.</param>
         public Client()
         {
+            Connected = false;
            ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
            client = new TcpClient();
         }
@@ -46,14 +46,17 @@ namespace SharedResources.Communication
             catch(Exception e)
             {
                 Debug.WriteLine("Connect: "+e.Message);
+                client.EndConnect(null);
+                Connected = false;
                 return false;
             }
 
            
-
+            
             stream = client.GetStream();
             reader = new BinaryReader(stream);
             writer = new BinaryWriter(stream);
+            Connected = true;
             return true;
 
         }
@@ -76,6 +79,8 @@ namespace SharedResources.Communication
                     }
                     catch(Exception)
                     {
+                        Connected = false;
+                        client.EndConnect(null);
                         break;
                     }
                 }
@@ -88,7 +93,7 @@ namespace SharedResources.Communication
         /// <param name="requestString">the message for the server</param>
         public void Send(string requestString)
         {
-            if(Connected == false)
+            if(!Connected)
             {
                 return;
             }
@@ -100,7 +105,8 @@ namespace SharedResources.Communication
                 }
                 catch (Exception)
                     {
-
+                    client.EndConnect(null);
+                    Connected = false;
                 }
             }).Start();
         }
