@@ -1,5 +1,4 @@
 ﻿using ImageService.Logging;
-using SharedResources.Logging;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
