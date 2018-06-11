@@ -30,9 +30,10 @@ namespace SharedResources.Communication
         public Client()
         {
             Connected = false;
-           ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-           client = new TcpClient();
+           
+            
         }
+       
         /// <summary>
         /// statint the communiction.
         /// </summary>
@@ -40,13 +41,20 @@ namespace SharedResources.Communication
         {
             try
             {
+                ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+                client = new TcpClient();
                 client.Connect(ep);
-
+                
             }
             catch(Exception e)
             {
                 Debug.WriteLine("Connect: "+e.Message);
-                client.EndConnect(null);
+                //client.GetStream().Close();
+                client.Close();
+                client = null;
+                //client.EndConnect(null);
+                //client.Client.Disconnect(true);
+
                 Connected = false;
                 return false;
             }
@@ -80,7 +88,9 @@ namespace SharedResources.Communication
                     catch(Exception)
                     {
                         Connected = false;
-                        client.EndConnect(null);
+                        //client.GetStream().Close();
+                        client.Close();
+                        client = null;
                         break;
                     }
                 }
@@ -105,7 +115,11 @@ namespace SharedResources.Communication
                 }
                 catch (Exception)
                     {
-                    client.EndConnect(null);
+                    //client.GetStream().Close();
+                    client.Close();
+                    client = null;
+
+                    //client.EndConnect(null);
                     Connected = false;
                 }
             }).Start();

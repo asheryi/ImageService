@@ -150,8 +150,6 @@ namespace ImageService.Comunication
         }
         public void Stop()
         {
-            foreach (TcpClient client in clients)
-                client.Close();
                 listener.Stop();
         }        /// <summary>
         /// Recieves data from the specific client
