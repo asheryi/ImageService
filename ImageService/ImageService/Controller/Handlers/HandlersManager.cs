@@ -41,12 +41,11 @@ namespace ImageService.Controller.Handlers
         /// HandlersPath collection property
         /// </summary>
         /// <returns></returns>
-       public ICollection<string> getHandlersPaths()
+       public IList<string> getHandlersPaths()
         {
                 lock (handlersLock)
                 {
-
-                    return handlers.Keys;
+                    return handlers.Keys.ToList();
                 }
         }
         /// <summary>

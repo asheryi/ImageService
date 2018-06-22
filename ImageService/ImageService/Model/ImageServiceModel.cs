@@ -175,10 +175,12 @@ namespace ImageService.Model
         /// <param name="newName">new name of the file</param>
         private void MoveFile(string srcPathWithFileName,string dstPath,string newName)
         {
+
+           
             File.Move(srcPathWithFileName, Path.Combine(dstPath,newName));
-
+        
         }
-
+       
         /**********This is used to take the date of the picture taken*********/
 
         //we init this once so that if the function is repeatedly called
@@ -187,7 +189,7 @@ namespace ImageService.Model
         private ImageServiceModelArgs imageServiceModelArgs;
 
         //retrieves the datetime WITHOUT loading the whole image
-        private DateTime GetDateTakenFromImage(string path)
+        public DateTime GetDateTakenFromImage(string path)
         {
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromStream(fs, false, false))

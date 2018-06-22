@@ -10,10 +10,6 @@ using SharedResources.Communication;
 using SharedResources.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace ImageService.Controller
 {
@@ -23,6 +19,8 @@ namespace ImageService.Controller
         private Dictionary<int, ICommand> commands;
         private IMessageGenerator messageGenerator;
         private ILoggingService loggingService;
+        private HandlersManager handlersManager;
+
         /// <summary>
         /// ImageController constructor.
         /// </summary>
@@ -31,24 +29,24 @@ namespace ImageService.Controller
         {
             imageControllerArgs.ImageServiceModelArgs.LoggingService = imageControllerArgs.LoggingService;
             loggingService = imageControllerArgs.LoggingService;
-
             //imageControllerArgs.LogAnnouncement += ReceiveLog;
-            logAnoun += ReceiveLog;
+            //logAnoun += ReceiveLog;
             messageGenerator = new CommunicationMessageGenerator();
            
             // m_Model = imageControllerArgs.ImageServiceModel; //Storing the Model Of The System
             SingletonServer singletonServer = SingletonServer.Instance;
             CommunicationMessageHandler CommunicationMessageMessageHandler = new CommunicationMessageHandler();
             singletonServer.MessageHandler = CommunicationMessageMessageHandler;
-            CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.CloseHandlerCommand, closeHandler);
-            CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.GetAllLogsCommand, getAllCommand);
+            //CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.CloseHandlerCommand, closeHandler);
+            //CommunicationMessageMessageHandler.RegisterFuncToEvent(CommandEnum.GetAllLogsCommand, getAllCommand);
 
             singletonServer.Start();
 
 
-            singletonServer.ClientConnected += ClientConnected;
-            HandlersManager handlersManager = new HandlersManager(this, imageControllerArgs.DirectoriesPaths, loggingService, imageControllerArgs.HandlerDirectoryClose,ref serverDown);
-
+            singletonServer.ClientConnected += ClientConnectedAndroid;
+            singletonServer.BitmapTransfer += ImageTransfer;
+            handlersManager = new HandlersManager(this, imageControllerArgs.DirectoriesPaths, loggingService, imageControllerArgs.HandlerDirectoryClose,ref serverDown);
+           
             commands = new Dictionary<int, ICommand>()
             {
                 { (int)CommandEnum.NewFileCommand,new NewFileCommand(new ImageServiceModel(imageControllerArgs.ImageServiceModelArgs)) }
@@ -57,6 +55,32 @@ namespace ImageService.Controller
                       new GetAllLogsCommand(loggingService.Logs,messageGenerator) },{ (int)CommandEnum.GetConfigCommand,
                       new GetConfigCommand(messageGenerator,handlersManager.getHandlersPaths) }
             };
+        }
+
+        private void ClientConnectedAndroid(object sender, ClientID e)
+        {
+            loggingService.Log("Client connected", MessageTypeEnum.INFO);
+        }
+
+        private void ImageTransfer(object sender, Bitmap bitmap)
+        {
+
+            string watchFolder = (handlersManager.getHandlersPaths()[0]);
+            
+    
+            string path = watchFolder + @"\" + bitmap.Name;
+            try
+            {
+
+                
+                bitmap.Image.Save(path);
+
+               
+            }
+            catch(Exception e)
+            {
+
+            }
         }
 
 
@@ -86,6 +110,7 @@ namespace ImageService.Controller
         }
         public void ClientConnected(object sender, ClientID clientID)
         {
+            loggingService.Log("Client connected",MessageTypeEnum.INFO);
             bool result;
             try
             {
@@ -100,6 +125,7 @@ namespace ImageService.Controller
         {
             bool result;
             ExecuteCommand((int)CommandEnum.CloseHandlerCommand,new string[] { args.GetContent<DirectoryDetails>().DirectoryName }, out result);
+           
         }
         public void getAllCommand(object sender, ContentEventArgs args)
         {

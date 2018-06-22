@@ -41,7 +41,7 @@ namespace SharedResources.Communication
         {
             try
             {
-                ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+                ep = new IPEndPoint(IPAddress.Parse("192.168.0.12"), 45632);
                 client = new TcpClient();
                 client.Connect(ep);
                 

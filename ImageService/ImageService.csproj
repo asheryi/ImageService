@@ -79,6 +79,7 @@
     <Compile Include="ImageService\Commands\NewFileCommand.cs" />
     <Compile Include="ImageService\Commands\SendLogCommand.cs" />
     <Compile Include="ImageService\Comunication\SingletonServer.cs" />
+    <Compile Include="ImageService\Controller\Bitmap.cs" />
     <Compile Include="ImageService\Controller\Handlers\DirectoyHandler.cs" />
     <Compile Include="ImageService\Controller\Handlers\HandlersManager.cs" />
     <Compile Include="ImageService\Controller\Handlers\IDirectoryHandler.cs" />

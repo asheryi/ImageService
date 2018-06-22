@@ -101,8 +101,9 @@ namespace ImageService
                 logger.MessageRecieved += EventLogFunc;
                 EventLogFunc(this, new MessageRecievedEventArgs("MessageRecieved", MessageTypeEnum.INFO));
                 singleton_server = SingletonServer.Instance;
+               
                 EventLogFunc(this, new MessageRecievedEventArgs("SingletonServer.Instance", MessageTypeEnum.INFO));
-
+                
                 EventLogFunc(this, new MessageRecievedEventArgs("server.Start()", MessageTypeEnum.INFO));
 
                 string manage_path = @ConfigurationManager.AppSettings["OutputDir"];
@@ -129,6 +130,7 @@ namespace ImageService
                
                 m_imageServer = new ImageServer(imageServerArgs,ref LogAnnouncement);
                 EventLogFunc(this, new MessageRecievedEventArgs(" new ImageServer", MessageTypeEnum.INFO));
+               
 
             }
             catch (Exception ex)
@@ -146,7 +148,8 @@ namespace ImageService
             EventLogFunc(this, new MessageRecievedEventArgs("Stopping Service", MessageTypeEnum.WARNING));
             singleton_server.Stop();
             m_imageServer.terminate();
-            
+           
+
 
         }
         /// <summary>
